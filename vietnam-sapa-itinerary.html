@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanoi + Sapa, Vietnam Trip · May 30 – June 5, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+  :root {
+    --sage: #7a9178;
+    --sage-light: #b5c9b3;
+    --sage-pale: #e8f0e6;
+    --beige: #f5efe6;
+    --cream: #faf7f2;
+    --gold: #c5a96a;
+    --gold-light: #e8d4a8;
+    --gold-pale: #f7f0e0;
+    --terracotta: #c47a5a;
+    --terra-light: #e8b49a;
+    --brown: #7a5c44;
+    --text-dark: #2d2a26;
+    --text-mid: #5c5448;
+    --text-soft: #9a9088;
+    --border: #e0d8cc;
+    --white: #ffffff;
+    --shadow: 0 2px 16px rgba(90,70,50,0.07);
+    --shadow-card: 0 4px 24px rgba(90,70,50,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ─── PRINT HIDE ─── */
+  .print-itinerary { display: none; }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(160deg, #3b5240 0%, #526b52 40%, #7a9178 80%, #a8b89a 100%);
+    color: white;
+    padding: 64px 24px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 200'%3E%3Cpolygon points='0,200 0,140 120,80 250,120 380,60 500,100 620,40 750,90 870,30 1000,80 1100,50 1200,70 1200,200' fill='rgba(255,255,255,0.04)'/%3E%3Cpolygon points='0,200 0,160 100,110 200,140 320,85 440,120 560,65 680,100 800,50 920,95 1050,55 1200,85 1200,200' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E") bottom/cover no-repeat;
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 18px;
+    border-radius: 40px;
+    margin-bottom: 24px;
+    color: rgba(255,255,255,0.9);
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 7vw, 68px);
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+  .hero-dates {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.75);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-divider {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin: 20px 0;
+  }
+  .hero-divider span { height: 1px; width: 60px; background: rgba(255,255,255,0.3); }
+  .hero-divider svg { opacity: 0.5; }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .hero-sapadates {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 1px;
+  }
+
+  .print-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.4);
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.25s;
+    backdrop-filter: blur(4px);
+  }
+  .print-btn:hover { background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.7); }
+
+  /* ─── QUICK INFO ─── */
+  .section { padding: 40px 24px; max-width: 900px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 16px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .info-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 14px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .info-icon { font-size: 20px; margin-bottom: 4px; }
+  .info-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); font-weight: 500; }
+  .info-val { font-size: 13px; font-weight: 500; color: var(--text-dark); line-height: 1.3; }
+  .info-val.accent { color: var(--sage); }
+  .info-val.warn { color: var(--terracotta); }
+
+  /* ─── DAY SECTION ─── */
+  .day-section { padding: 12px 24px 40px; max-width: 900px; margin: 0 auto; }
+  .day-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--sage-light);
+    flex-shrink: 0;
+    min-width: 60px;
+  }
+  .day-meta { padding-top: 4px; }
+  .day-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--gold-pale);
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 40px;
+    margin-bottom: 6px;
+  }
+  .day-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--text-dark);
+  }
+  .day-theme {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--text-soft);
+    margin-top: 2px;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--sage-light), var(--border));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -24px;
+    top: 6px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--sage);
+    border: 2px solid var(--cream);
+    flex-shrink: 0;
+  }
+  .timeline-dot.gold { background: var(--gold); }
+  .timeline-dot.terra { background: var(--terracotta); }
+  .tl-time {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--sage);
+    white-space: nowrap;
+    padding-top: 2px;
+    min-width: 80px;
+    letter-spacing: 0.5px;
+  }
+  .tl-text {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .tl-text strong { color: var(--text-dark); font-weight: 500; }
+
+  /* ─── INFO ROW ─── */
+  .day-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .day-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 16px;
+    box-shadow: var(--shadow);
+  }
+  .day-card-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .day-card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .day-card ul { list-style: none; }
+  .day-card ul li {
+    font-size: 13px;
+    color: var(--text-mid);
+    padding: 3px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .day-card ul li::before {
+    content: '·';
+    color: var(--sage);
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .weather-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sage-pale);
+    color: var(--sage);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 40px;
+    margin-bottom: 8px;
+  }
+  .crowd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff4ef;
+    color: var(--terracotta);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 40px;
+  }
+
+  /* ─── PHOTO SPOTS ─── */
+  .photo-spots {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--gold-pale);
+    border-radius: 12px;
+    border-left: 3px solid var(--gold);
+  }
+  .photo-spots-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .photo-spots-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .photo-tag {
+    font-size: 12px;
+    background: white;
+    border: 1px solid var(--gold-light);
+    color: var(--brown);
+    padding: 4px 12px;
+    border-radius: 40px;
+  }
+
+  /* ─── DIVIDER ─── */
+  .day-divider {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .day-divider hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+  }
+
+  /* ─── BUDGET ─── */
+  .budget-section { background: var(--sage-pale); }
+  .budget-section .section { padding-top: 44px; padding-bottom: 44px; }
+  .budget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .budget-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .budget-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--sage), var(--sage-light));
+  }
+  .budget-card.total::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+  .budget-icon { font-size: 22px; margin-bottom: 8px; }
+  .budget-cat { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-soft); font-weight: 500; margin-bottom: 8px; }
+  .budget-vnd { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--sage); line-height: 1.2; }
+  .budget-php { font-size: 12px; color: var(--text-soft); margin-top: 4px; }
+  .budget-card.total .budget-vnd { color: var(--gold); font-size: 22px; }
+
+  /* ─── TIPS ─── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+  }
+  .tip-icon { font-size: 20px; flex-shrink: 0; }
+  .tip-text { font-size: 13px; color: var(--text-mid); line-height: 1.4; }
+
+  /* ─── EMERGENCY ─── */
+  .emergency-bar {
+    background: #fff8f5;
+    border: 1px solid #f0c5b0;
+    border-radius: 14px;
+    padding: 20px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .emergency-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 100px;
+  }
+  .emergency-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-soft); }
+  .emergency-val { font-size: 14px; font-weight: 600; color: var(--terracotta); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 36px 24px;
+    font-size: 12px;
+    color: var(--text-soft);
+    border-top: 1px solid var(--border);
+  }
+  footer strong { color: var(--sage); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .hero { padding: 48px 20px 40px; }
+    .day-num { font-size: 48px; }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .budget-grid { grid-template-columns: repeat(2, 1fr); }
+    .day-cards { grid-template-columns: 1fr; }
+  }
+
+  /* ═══════════════════════════════════════
+     PRINT STYLES
+  ═══════════════════════════════════════ */
+  @media print {
+    * { box-sizing: border-box; }
+    body {
+      background: white !important;
+      color: black !important;
+      font-family: 'DM Sans', Georgia, serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+    .screen-itinerary,
+    .print-btn { display: none !important; }
+    .print-itinerary { display: block !important; }
+
+    /* Print layout */
+    .p-page { max-width: 100%; padding: 18mm 16mm; }
+    .p-header { border-bottom: 2pt solid black; padding-bottom: 10pt; margin-bottom: 16pt; }
+    .p-trip-title { font-family: Georgia, serif; font-size: 20pt; font-weight: bold; }
+    .p-trip-dates { font-size: 11pt; color: #333; margin-top: 2pt; }
+    .p-sapa-dates { font-size: 10pt; font-style: italic; color: #555; }
+    .p-hotel { font-size: 10pt; margin-top: 4pt; }
+
+    .p-info-row {
+      display: flex; flex-wrap: wrap; gap: 10pt;
+      border: 1pt solid #aaa; border-radius: 4pt;
+      padding: 8pt; margin-bottom: 14pt; background: #f9f9f9;
+    }
+    .p-info-item { min-width: 120pt; }
+    .p-info-lbl { font-size: 7pt; text-transform: uppercase; letter-spacing: 1pt; color: #666; }
+    .p-info-v { font-size: 10pt; font-weight: 600; }
+
+    .p-day { margin-bottom: 18pt; page-break-inside: avoid; }
+    .p-day-header { background: #f0f0f0; padding: 6pt 10pt; border-left: 3pt solid black; margin-bottom: 8pt; }
+    .p-day-title { font-size: 13pt; font-weight: bold; }
+    .p-day-theme { font-size: 10pt; font-style: italic; color: #444; }
+    .p-day-weather { font-size: 9pt; color: #333; margin-bottom: 6pt; padding: 4pt 8pt; border: 1pt solid #bbb; border-radius: 3pt; }
+
+    .p-tl { padding-left: 0; }
+    .p-tl-row { display: flex; gap: 12pt; border-bottom: 0.5pt dotted #ccc; padding: 3pt 0; }
+    .p-tl-time { font-size: 9pt; font-weight: 600; min-width: 90pt; flex-shrink: 0; }
+    .p-tl-desc { font-size: 9pt; color: #222; }
+
+    .p-foods { margin-top: 6pt; font-size: 9pt; }
+    .p-foods strong { font-weight: 600; }
+
+    .p-budget { margin-bottom: 14pt; page-break-inside: avoid; }
+    .p-budget-title { font-size: 12pt; font-weight: bold; border-bottom: 1pt solid black; margin-bottom: 6pt; }
+    .p-budget-row { display: flex; gap: 20pt; flex-wrap: wrap; font-size: 9.5pt; border-bottom: 0.5pt solid #ddd; padding: 3pt 0; }
+    .p-budget-cat { min-width: 90pt; font-weight: 600; }
+    .p-budget-vnd { min-width: 160pt; }
+    .p-budget-php { color: #444; }
+    .p-budget-note { font-size: 9pt; font-style: italic; margin-top: 6pt; color: #555; border-left: 2pt solid #888; padding-left: 8pt; }
+
+    .p-emergency { margin-top: 12pt; font-size: 10pt; page-break-inside: avoid; }
+    .p-emergency-title { font-size: 12pt; font-weight: bold; border-bottom: 1pt solid black; margin-bottom: 6pt; }
+    .p-emergency-grid { display: flex; flex-wrap: wrap; gap: 8pt; }
+    .p-emergency-item { border: 0.5pt solid #aaa; padding: 4pt 8pt; border-radius: 3pt; min-width: 90pt; }
+    .p-emergency-lbl { font-size: 7pt; text-transform: uppercase; color: #666; }
+    .p-emergency-val { font-size: 10pt; font-weight: 700; }
+
+    .p-sunrise-bar { display: flex; gap: 24pt; font-size: 9.5pt; margin-bottom: 14pt; }
+    .p-sunrise-item strong { display: block; font-size: 12pt; }
+
+    @page { margin: 15mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SCREEN VERSION
+═══════════════════════════════════════════ -->
+<div class="screen-itinerary">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-tag">✈ Vietnam Travel Itinerary 2026</div>
+    <h1 class="hero-title"><em>Hanoi</em> + Sapa,<br>Vietnam Trip</h1>
+    <p class="hero-dates">May 30 – June 5, 2026</p>
+    <div class="hero-divider">
+      <span></span>
+      <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+        <path d="M0 12 L5 4 L10 8 L15 2 L20 12" stroke="white" stroke-width="1.2" fill="none"/>
+      </svg>
+      <span></span>
+    </div>
+    <p class="hero-sub">3-Day Sapa, Vietnam Itinerary</p>
+    <p class="hero-sapadates">Sapa Dates: May 30 – June 1, 2026</p>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Important Details
+    </button>
+  </header>
+
+  <!-- QUICK INFO -->
+  <div class="section">
+    <p class="section-label">Quick Reference</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">🏨</div>
+        <div class="info-label">Hotel</div>
+        <div class="info-val">Sapa Valley Hotel</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🚌</div>
+        <div class="info-label">Transport</div>
+        <div class="info-val">Bus + Walk / Grab</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🌤</div>
+        <div class="info-label">Weather</div>
+        <div class="info-val accent">Cool Mountain</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">💰</div>
+        <div class="info-label">Currency</div>
+        <div class="info-val">VND + PHP ref</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🆘</div>
+        <div class="info-label">Emergency</div>
+        <div class="info-val warn">Police: 113<br>Ambul: 115</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🌅</div>
+        <div class="info-label">Sunrise</div>
+        <div class="info-val">5:19 AM</div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">🌇</div>
+        <div class="info-label">Sunset</div>
+        <div class="info-val">6:48 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DAY 1 ─── -->
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-num">01</div>
+      <div class="day-meta">
+        <span class="day-tag">May 30, 2026 · Hanoi → Sapa</span>
+        <div class="day-title">Arrival & Sapa Night Exploration</div>
+        <div class="day-theme">"The journey begins under mountain stars"</div>
+      </div>
+    </div>
+
+    <div class="weather-badge">🌡 14–20°C</div>
+    <span style="display:inline-block;width:8px"></span>
+    <div class="crowd-badge">👥 Night Market: Crowded</div>
+
+    <div style="margin-top:20px">
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-dot terra"></div><div class="tl-time">12:00 AM</div><div class="tl-text"><strong>NAIA Terminal 3</strong> · Departure</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:40 AM</div><div class="tl-text"><strong>Noi Bai Int'l Airport</strong> · Arrive Terminal 2</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:40–10:30 AM</div><div class="tl-text">Immigration + brunch near airport</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">10:30 AM</div><div class="tl-text"><strong>HK Bus Terminal</strong> · Column 1</div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">11:15 AM–6:15 PM</div><div class="tl-text"><strong>Bus Transfer</strong> · Hanoi → Sapa (~7 hrs)</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">6:15–7:00 PM</div><div class="tl-text"><strong>Check-in</strong> · Sapa Valley Hotel</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:00 PM</div><div class="tl-text">Walk / Grab to <strong>Sun Plaza</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">7:30–10:30 PM</div><div class="tl-text"><strong>Sun Plaza · Sapa Night Market</strong> · Dinner + street food crawl</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">10:30 PM</div><div class="tl-text">Return to hotel</div></div>
+      </div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">🍜 Foods to Try</div>
+        <ul>
+          <li>Pho Bo</li>
+          <li>Bun Cha</li>
+          <li>Egg coffee</li>
+          <li>Grilled skewers</li>
+          <li>Hotpot</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">☕ Drinks</div>
+        <ul>
+          <li>Salt coffee</li>
+          <li>Vietnamese iced coffee</li>
+        </ul>
+        <div style="margin-top:12px">
+          <div class="day-card-title">🛍 Souvenirs</div>
+          <ul>
+            <li>Handwoven textiles</li>
+            <li>Local embroidery</li>
+            <li>Dried fruits</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-spots">
+      <div class="photo-spots-label">📷 Photo Spots</div>
+      <div class="photo-spots-list">
+        <span class="photo-tag">Sun Plaza Clock Tower</span>
+        <span class="photo-tag">Stone Church</span>
+        <span class="photo-tag">Night Market Lanterns</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-divider"><hr></div>
+
+  <!-- ─── DAY 2 ─── -->
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-num">02</div>
+      <div class="day-meta">
+        <span class="day-tag">May 31, 2026 · Sapa Adventure Day</span>
+        <div class="day-title">Villages, Waterfalls & Scenic Cafés</div>
+        <div class="day-theme">"Chasing mist through rice terraces"</div>
+      </div>
+    </div>
+
+    <div class="weather-badge">🧥 10–22°C · Light jacket recommended</div>
+    <span style="display:inline-block;width:8px"></span>
+    <div class="crowd-badge">👥 Cat Cat Midday: Very Crowded</div>
+
+    <div style="margin-top:20px">
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:00 AM</div><div class="tl-text">Breakfast</div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">8:00 AM</div><div class="tl-text"><strong>Cat Cat Village</strong> · Best time: 8–10 AM</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">9:30 AM</div><div class="tl-text"><strong>Alpine Coaster</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">10:15 AM</div><div class="tl-text"><strong>Mat Pet Farm</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">12:00 PM</div><div class="tl-text">Lunch</div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">1:00 PM</div><div class="tl-text"><strong>Viettrekking Cafe</strong> · Best view: 1–4 PM</div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">2:00 PM</div><div class="tl-text"><strong>Moana Sapa</strong> · Infinity pool views</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">2:45 PM</div><div class="tl-text"><strong>Silver Waterfall</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">3:30 PM</div><div class="tl-text"><strong>Love Waterfall</strong> · Best: 2–5 PM</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">4:15 PM</div><div class="tl-text">Free time</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">6:30 PM</div><div class="tl-text">Dinner</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:30 PM</div><div class="tl-text">Evening stroll near Sapa Valley Hotel</div></div>
+      </div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">🍜 Foods to Try</div>
+        <ul>
+          <li>Thang Co</li>
+          <li>Salmon hotpot</li>
+          <li>Bamboo sticky rice</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">☕ Coffee Stops</div>
+        <ul>
+          <li>Viettrekking Cafe</li>
+          <li>Moana Cafe</li>
+        </ul>
+        <div style="margin-top:12px">
+          <div class="day-card-title">🛍 Shopping</div>
+          <ul>
+            <li>Hmong handmade crafts</li>
+            <li>Sapa textiles</li>
+            <li>Local handicrafts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-spots">
+      <div class="photo-spots-label">📷 Photo Spots</div>
+      <div class="photo-spots-list">
+        <span class="photo-tag">Cat Cat Bridge</span>
+        <span class="photo-tag">Viettrekking Balcony</span>
+        <span class="photo-tag">Moana Infinity Pool</span>
+        <span class="photo-tag">Silver Waterfall</span>
+        <span class="photo-tag">Love Waterfall</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-divider"><hr></div>
+
+  <!-- ─── DAY 3 ─── -->
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-num">03</div>
+      <div class="day-meta">
+        <span class="day-tag">June 1, 2026 · Fansipan + Free Time</span>
+        <div class="day-title">Clouds, Peaks & Sunset Views</div>
+        <div class="day-theme">"Above the clouds, above the world"</div>
+      </div>
+    </div>
+
+    <div class="weather-badge">🧥 5–18°C · Cold & windy at summit · Rain cover recommended</div>
+    <span style="display:inline-block;width:8px"></span>
+    <div class="crowd-badge">👥 Fansipan: Busiest 9 AM–12 PM</div>
+
+    <div style="margin-top:20px">
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:00 AM</div><div class="tl-text">Breakfast</div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">8:00 AM</div><div class="tl-text"><strong>Sun Plaza</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot gold"></div><div class="tl-time">8:30 AM</div><div class="tl-text"><strong>Fansipan Experience</strong> · Rope of Indochina · Peak: 3,143m</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">12:00 PM</div><div class="tl-text">Lunch</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">1:00 PM</div><div class="tl-text"><strong>O Quy Ho Pass</strong></div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">2:00 PM</div><div class="tl-text">Scenic viewpoints + free strolls</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">4:00 PM</div><div class="tl-text">Return to Sapa · O Quy Ho calmer after 4 PM</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">5:30 PM</div><div class="tl-text">Shopping + free time</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">6:30 PM</div><div class="tl-text">Dinner</div></div>
+        <div class="timeline-item"><div class="timeline-dot"></div><div class="tl-time">7:30 PM</div><div class="tl-text">Return to hotel · Prepare for overnight bus</div></div>
+        <div class="timeline-item"><div class="timeline-dot terra"></div><div class="tl-time">11:30 PM</div><div class="tl-text"><strong>Overnight Bus</strong> · Sapa → Hanoi</div></div>
+      </div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">🛍 Souvenirs</div>
+        <ul>
+          <li>Coffee beans</li>
+          <li>Local tea</li>
+          <li>Handmade bags</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="photo-spots">
+      <div class="photo-spots-label">📷 Photo Spots</div>
+      <div class="photo-spots-list">
+        <span class="photo-tag">Fansipan Summit</span>
+        <span class="photo-tag">Sun Plaza</span>
+        <span class="photo-tag">Heaven's Gate</span>
+        <span class="photo-tag">O Quy Ho Sunset</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-divider"><hr></div>
+
+  <!-- ─── BUDGET ─── -->
+  <div class="budget-section">
+    <div class="section">
+      <p class="section-label">Estimated Budget · 1 PHP ≈ 450 VND</p>
+      <div class="budget-grid">
+        <div class="budget-card">
+          <div class="budget-icon">🚌</div>
+          <div class="budget-cat">Transport</div>
+          <div class="budget-vnd">₫650,000–₫1,800,000</div>
+          <div class="budget-php">₱1,450 – ₱4,000</div>
+        </div>
+        <div class="budget-card">
+          <div class="budget-icon">🍜</div>
+          <div class="budget-cat">Food</div>
+          <div class="budget-vnd">₫700,000–₫1,200,000</div>
+          <div class="budget-php">₱1,550 – ₱2,700</div>
+        </div>
+        <div class="budget-card">
+          <div class="budget-icon">🎟</div>
+          <div class="budget-cat">Attractions</div>
+          <div class="budget-vnd">₫700,000–₫1,500,000</div>
+          <div class="budget-php">₱1,550 – ₱3,350</div>
+        </div>
+        <div class="budget-card">
+          <div class="budget-icon">🛍</div>
+          <div class="budget-cat">Shopping</div>
+          <div class="budget-vnd">₫400,000–₫1,300,000</div>
+          <div class="budget-php">₱900 – ₱2,900</div>
+        </div>
+        <div class="budget-card total">
+          <div class="budget-icon">💼</div>
+          <div class="budget-cat">Total Estimated</div>
+          <div class="budget-vnd">₫2,450,000–₫5,800,000</div>
+          <div class="budget-php">₱5,450 – ₱12,950</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TIPS ─── -->
+  <div class="section">
+    <p class="section-label">Travel Tips</p>
+    <div class="tips-grid">
+      <div class="tip-item"><div class="tip-icon">💵</div><div class="tip-text">Carry cash in VND — most local vendors are cash-only</div></div>
+      <div class="tip-item"><div class="tip-icon">📱</div><div class="tip-text">Download offline maps before heading to remote areas</div></div>
+      <div class="tip-item"><div class="tip-icon">🧥</div><div class="tip-text">Wear layered clothing — mornings can be very cold</div></div>
+      <div class="tip-item"><div class="tip-icon">🔋</div><div class="tip-text">Bring a power bank for long travel days</div></div>
+      <div class="tip-item"><div class="tip-icon">🙏</div><div class="tip-text">Respect local culture and Hmong village customs</div></div>
+      <div class="tip-item"><div class="tip-icon">💴</div><div class="tip-text">Keep small bills ready for markets and taxis</div></div>
+      <div class="tip-item"><div class="tip-icon">🚌</div><div class="tip-text">Check bus pickup details early — confirm with hotel</div></div>
+    </div>
+
+    <div style="margin-top:28px">
+      <p class="section-label">Emergency Reminders</p>
+      <div class="emergency-bar">
+        <div class="emergency-item">
+          <div class="emergency-label">🚨 Police</div>
+          <div class="emergency-val">113</div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">🚑 Ambulance</div>
+          <div class="emergency-val">115</div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">📡 SIM Card</div>
+          <div class="emergency-val">Get on arrival</div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">💱 Cash Exchange</div>
+          <div class="emergency-val">Airport / bank</div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">📶 WiFi</div>
+          <div class="emergency-val">Portable WiFi</div>
+        </div>
+        <div class="emergency-item">
+          <div class="emergency-label">🌐 Apps</div>
+          <div class="emergency-val">Translation app</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Safe travels ✈ · <strong>Hanoi + Sapa, Vietnam</strong> · May 30 – June 5, 2026
+  </footer>
+
+</div><!-- /screen-itinerary -->
+
+
+<!-- ═══════════════════════════════════════════
+     PRINT VERSION (hidden on screen)
+═══════════════════════════════════════════ -->
+<div class="print-itinerary">
+  <div class="p-page">
+
+    <!-- Header -->
+    <div class="p-header">
+      <div class="p-trip-title">Hanoi + Sapa, Vietnam Trip</div>
+      <div class="p-trip-dates">May 30 – June 5, 2026 &nbsp;|&nbsp; 3-Day Sapa, Vietnam Itinerary</div>
+      <div class="p-sapa-dates">Sapa Dates: May 30 – June 1, 2026</div>
+      <div class="p-hotel">🏨 Hotel: Sapa Valley Hotel &nbsp;|&nbsp; 🚌 Transport: Bus + Walk/Grab</div>
+    </div>
+
+    <!-- Sunrise/Sunset & Emergency -->
+    <div class="p-sunrise-bar">
+      <div class="p-sunrise-item">🌅 Sunrise <strong>5:19 AM</strong></div>
+      <div class="p-sunrise-item">🌇 Sunset <strong>6:48 PM</strong></div>
+      <div class="p-sunrise-item">🚨 Police <strong>113</strong></div>
+      <div class="p-sunrise-item">🚑 Ambulance <strong>115</strong></div>
+    </div>
+
+    <!-- Quick Info -->
+    <div class="p-info-row">
+      <div class="p-info-item">
+        <div class="p-info-lbl">Weather Type</div>
+        <div class="p-info-v">Cool Mountain</div>
+      </div>
+      <div class="p-info-item">
+        <div class="p-info-lbl">Currency</div>
+        <div class="p-info-v">VND (carry cash!)</div>
+      </div>
+      <div class="p-info-item">
+        <div class="p-info-lbl">Conversion</div>
+        <div class="p-info-v">1 PHP ≈ 450 VND</div>
+      </div>
+      <div class="p-info-item">
+        <div class="p-info-lbl">SIM / WiFi</div>
+        <div class="p-info-v">Get at airport</div>
+      </div>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 1 — May 30, 2026 · Hanoi → Sapa</div>
+        <div class="p-day-theme">Arrival & Sapa Night Exploration</div>
+      </div>
+      <div class="p-day-weather">🌡 Weather: 14–20°C, cool mountain evening, possible fog &nbsp;|&nbsp; 👥 Crowd: Sun Plaza = moderate, Night Market = crowded</div>
+      <div class="p-tl">
+        <div class="p-tl-row"><div class="p-tl-time">12:00 AM</div><div class="p-tl-desc">NAIA Terminal 3 — Departure</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">7:40 AM</div><div class="p-tl-desc">Arrive Noi Bai Int'l Airport Terminal 2</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">7:40–10:30 AM</div><div class="p-tl-desc">Immigration + brunch near airport</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">10:30 AM</div><div class="p-tl-desc">HK Bus Terminal — Column 1</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">11:15 AM–6:15 PM</div><div class="p-tl-desc">Bus transfer Hanoi → Sapa (~7 hrs)</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">6:15–7:00 PM</div><div class="p-tl-desc">Check-in: Sapa Valley Hotel</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">7:30–10:30 PM</div><div class="p-tl-desc">Sun Plaza · Night Market · Dinner · Street food</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">10:30 PM</div><div class="p-tl-desc">Return to hotel</div></div>
+      </div>
+      <div class="p-foods"><strong>Must-Try Foods:</strong> Pho Bo, Bun Cha, Egg coffee, Grilled skewers, Hotpot &nbsp;|&nbsp; <strong>Drinks:</strong> Salt coffee, Vietnamese iced coffee</div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 2 — May 31, 2026 · Sapa Adventure Day</div>
+        <div class="p-day-theme">Villages, Waterfalls & Scenic Cafés</div>
+      </div>
+      <div class="p-day-weather">🌡 Weather: 10–22°C, chilly morning, light jacket required &nbsp;|&nbsp; 👥 Crowd: Cat Cat Village = very crowded midday; Waterfalls = lighter afternoon</div>
+      <div class="p-tl">
+        <div class="p-tl-row"><div class="p-tl-time">7:00 AM</div><div class="p-tl-desc">Breakfast</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">8:00 AM</div><div class="p-tl-desc">Cat Cat Village (Best: 8–10 AM)</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">9:30 AM</div><div class="p-tl-desc">Alpine Coaster</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">10:15 AM</div><div class="p-tl-desc">Mat Pet Farm</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">12:00 PM</div><div class="p-tl-desc">Lunch</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">1:00 PM</div><div class="p-tl-desc">Viettrekking Cafe (Best: 1–4 PM)</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">2:00 PM</div><div class="p-tl-desc">Moana Sapa</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">2:45 PM</div><div class="p-tl-desc">Silver Waterfall (Best: 2–5 PM)</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">3:30 PM</div><div class="p-tl-desc">Love Waterfall</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">6:30 PM</div><div class="p-tl-desc">Dinner</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">7:30 PM</div><div class="p-tl-desc">Evening stroll near Sapa Valley Hotel</div></div>
+      </div>
+      <div class="p-foods"><strong>Must-Try Foods:</strong> Thang Co, Salmon hotpot, Bamboo sticky rice</div>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 3 — June 1, 2026 · Fansipan + Free Time</div>
+        <div class="p-day-theme">Clouds, Peaks & Sunset Views</div>
+      </div>
+      <div class="p-day-weather">🌡 Weather: 5–18°C, COLD & WINDY at summit, fog possible — jacket + rain cover required &nbsp;|&nbsp; 👥 Fansipan busiest 9 AM–12 PM</div>
+      <div class="p-tl">
+        <div class="p-tl-row"><div class="p-tl-time">7:00 AM</div><div class="p-tl-desc">Breakfast</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">8:00–8:30 AM</div><div class="p-tl-desc">Sun Plaza → Fansipan Experience (3,143m)</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">12:00 PM</div><div class="p-tl-desc">Lunch</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">1:00 PM</div><div class="p-tl-desc">O Quy Ho Pass</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">2:00–4:00 PM</div><div class="p-tl-desc">Scenic viewpoints + free strolls</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">4:00 PM</div><div class="p-tl-desc">Return to Sapa</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">5:30 PM</div><div class="p-tl-desc">Shopping + free time</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">6:30 PM</div><div class="p-tl-desc">Dinner</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">7:30 PM</div><div class="p-tl-desc">Return to hotel — prepare for overnight bus</div></div>
+        <div class="p-tl-row"><div class="p-tl-time">11:30 PM</div><div class="p-tl-desc">⚠ Overnight bus departs — Sapa → Hanoi</div></div>
+      </div>
+      <div class="p-foods"><strong>Must-Try Souvenirs:</strong> Coffee beans, Local tea, Handmade bags</div>
+    </div>
+
+    <!-- Budget -->
+    <div class="p-budget">
+      <div class="p-budget-title">Estimated Budget (1 PHP ≈ 450 VND)</div>
+      <div class="p-budget-row">
+        <div class="p-budget-cat">Transport</div>
+        <div class="p-budget-vnd">₫650,000 – ₫1,800,000</div>
+        <div class="p-budget-php">₱1,450 – ₱4,000</div>
+      </div>
+      <div class="p-budget-row">
+        <div class="p-budget-cat">Food</div>
+        <div class="p-budget-vnd">₫700,000 – ₫1,200,000</div>
+        <div class="p-budget-php">₱1,550 – ₱2,700</div>
+      </div>
+      <div class="p-budget-row">
+        <div class="p-budget-cat">Attractions</div>
+        <div class="p-budget-vnd">₫700,000 – ₫1,500,000</div>
+        <div class="p-budget-php">₱1,550 – ₱3,350</div>
+      </div>
+      <div class="p-budget-row">
+        <div class="p-budget-cat">Shopping</div>
+        <div class="p-budget-vnd">₫400,000 – ₫1,300,000</div>
+        <div class="p-budget-php">₱900 – ₱2,900</div>
+      </div>
+      <div class="p-budget-row" style="font-weight:700; border-top: 1pt solid black;">
+        <div class="p-budget-cat">TOTAL</div>
+        <div class="p-budget-vnd">₫2,450,000 – ₫5,800,000</div>
+        <div class="p-budget-php">₱5,450 – ₱12,950</div>
+      </div>
+      <div class="p-budget-note">⚠ Carry emergency cash in VND. Most mountain vendors and local markets do not accept cards.</div>
+    </div>
+
+    <!-- Emergency -->
+    <div class="p-emergency">
+      <div class="p-emergency-title">Emergency Reminders</div>
+      <div class="p-emergency-grid">
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Police</div>
+          <div class="p-emergency-val">113</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Ambulance</div>
+          <div class="p-emergency-val">115</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">SIM Card</div>
+          <div class="p-emergency-val">Get at airport</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Cash Exchange</div>
+          <div class="p-emergency-val">Airport or bank</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">WiFi</div>
+          <div class="p-emergency-val">Portable WiFi</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Translation</div>
+          <div class="p-emergency-val">Download offline app</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Maps</div>
+          <div class="p-emergency-val">Download offline</div>
+        </div>
+        <div class="p-emergency-item">
+          <div class="p-emergency-lbl">Bus Pickup</div>
+          <div class="p-emergency-val">Confirm with hotel</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /print-itinerary -->
+
+</body>
+</html>
