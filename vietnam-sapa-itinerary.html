@@ -31,11 +31,43 @@
 
 body{
   font-family:'DM Sans',sans-serif;
-  background:var(--cream);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(197,169,106,.11), transparent 24%),
+    radial-gradient(circle at 86% 6%, rgba(196,122,90,.10), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(110,140,107,.10), transparent 30%),
+    linear-gradient(180deg,#fbf8f3 0%,#f7f1e8 100%);
   color:var(--text-dark);
-  font-size:15px;
+  font-size:16px;
   line-height:1.6;
+  overflow-x:hidden;
+  position:relative;
+  isolation:isolate;
 }
+
+body::before,
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+body::before{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(110,140,107,.10), transparent 16%),
+    radial-gradient(circle at 78% 12%, rgba(196,122,90,.08), transparent 14%),
+    radial-gradient(circle at 50% 52%, rgba(255,255,255,.55), transparent 35%);
+  opacity:.9;
+}
+body::after{
+  background-image:
+    linear-gradient(rgba(120,92,68,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,92,68,.03) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity:.35;
+  mix-blend-mode:multiply;
+}
+body > *{position:relative;z-index:1}
 
 /* ── PRINT HIDE ── */
 .print-itinerary{display:none}
@@ -44,12 +76,41 @@ body{
    HERO
 ════════════════════════════════════════ */
 .hero{
-  background:linear-gradient(155deg,#2e4032 0%,#3d5542 35%,#6e8c6b 75%,#96b08a 100%);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.18), transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(255,227,199,.12), transparent 16%),
+    linear-gradient(155deg,#324335 0%,#46604a 34%,#6f8e6d 70%,#93ac88 100%);
   color:white;
-  padding:60px 24px 50px;
+  padding:64px 24px 54px;
   text-align:center;
   position:relative;
   overflow:hidden;
+  box-shadow:0 18px 38px rgba(58,46,32,.18);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.hero::before,
+.hero::after{
+  content:'';
+  position:absolute;
+  inset:auto;
+  pointer-events:none;
+}
+.hero::before{
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,.14), transparent 25%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 42%);
+  opacity:.8;
+}
+.hero::after{
+  left:-8%;
+  right:-8%;
+  bottom:-2px;
+  height:92px;
+  background:
+    radial-gradient(closest-side at 10% 70%, rgba(250,247,242,.10), transparent 60%),
+    linear-gradient(180deg, rgba(250,247,242,.05), rgba(250,247,242,.18) 70%, #faf7f2 71%);
+  clip-path:polygon(0 100%,0 64%,8% 50%,15% 68%,24% 36%,34% 62%,45% 22%,56% 56%,67% 32%,78% 64%,88% 42%,100% 60%,100% 100%);
 }
 .hero-mountains{
   position:absolute;
@@ -95,11 +156,17 @@ body{
    LEGEND
 ════════════════════════════════════════ */
 .legend-wrap{
-  background:white;
-  border-bottom:1px solid var(--border);
-  padding:12px 20px;
-
-  overflow: visible;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(224,216,204,.85);
+  padding:12px 18px;
+  margin:-18px auto 8px;
+  width:min(920px,calc(100% - 24px));
+  border-radius:18px;
+  box-shadow:var(--shadow-card);
+  position:relative;
+  z-index:2;
+  overflow:hidden;
 }
 
 .legend-inner{
@@ -135,6 +202,17 @@ body{
 .section-label{
   font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;
   color:var(--sage);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::before,
+.section-label::after{
+  content:'';
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg, rgba(110,140,107,.18), rgba(110,140,107,.75));
+}
+.section-label::after{
+  background:linear-gradient(90deg, rgba(110,140,107,.75), rgba(110,140,107,.18));
 }
 .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
 .info-card{
@@ -162,21 +240,51 @@ body{
    DAY SECTION
 ════════════════════════════════════════ */
 .day-wrap{
-  background:white;
-  border-radius:20px;
-  margin:0 12px 28px;
-  box-shadow:var(--shadow-card);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(197,169,106,.10), transparent 18%),
+    radial-gradient(circle at 92% 18%, rgba(196,122,90,.08), transparent 16%),
+    linear-gradient(180deg, rgba(255,255,255,.98), rgba(252,248,242,.98));
+  border-radius:24px;
+  margin:0 auto 28px;
+  width:min(896px,calc(100% - 24px));
+  box-shadow:0 18px 44px rgba(88,67,46,.10);
   overflow:hidden;
-  max-width:896px;
-  margin-left:auto;margin-right:auto;
+  position:relative;
+}
+.day-wrap::before,
+.day-wrap::after{
+  content:'';
+  position:absolute;
+  pointer-events:none;
+}
+.day-wrap::before{
+  inset:0;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(110,140,107,.08), transparent 12%),
+    radial-gradient(circle at 94% 16%, rgba(196,122,90,.10), transparent 14%),
+    linear-gradient(180deg, rgba(255,255,255,.10), transparent 30%);
+  opacity:.8;
+}
+.day-wrap::after{
+  right:16px;
+  top:16px;
+  width:84px;
+  height:28px;
+  background:
+    radial-gradient(circle at 10% 55%, rgba(196,122,90,.25) 0 3px, transparent 4px),
+    radial-gradient(circle at 35% 45%, rgba(197,169,106,.25) 0 3px, transparent 4px),
+    radial-gradient(circle at 60% 55%, rgba(110,140,107,.22) 0 3px, transparent 4px),
+    radial-gradient(circle at 86% 48%, rgba(196,122,90,.20) 0 3px, transparent 4px);
+  opacity:.45;
 }
 .day-top-bar{
-  height:5px;
-  background:linear-gradient(90deg,var(--sage),var(--sage-light));
+  height:7px;
+  background:
+    linear-gradient(90deg,var(--sage) 0%,var(--sage-light) 34%,var(--gold) 68%,var(--terra-light) 100%);
 }
 .day-top-bar.d2{background:linear-gradient(90deg,var(--gold),var(--gold-light))}
 .day-top-bar.d3{background:linear-gradient(90deg,var(--terracotta),var(--terra-light))}
-.day-inner{padding:28px 28px 24px}
+.day-inner{padding:30px 28px 26px;position:relative;z-index:1}
 
 .day-header{
   display:flex;align-items:flex-start;gap:16px;
@@ -185,12 +293,12 @@ body{
 }
 .day-num{
   font-family:'Cormorant Garamond',serif;
-  font-size:58px;font-weight:300;line-height:1;
+  font-size:64px;font-weight:300;line-height:.9;
   color:var(--sage-light);flex-shrink:0;min-width:54px;
 }
 .d2 .day-num{color:var(--gold-light)}
 .d3 .day-num{color:var(--terra-light)}
-.day-meta{padding-top:3px}
+.day-meta{padding-top:1px}
 .day-tag{
   font-size:9.5px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;
   color:var(--gold);background:var(--gold-pale);
@@ -198,23 +306,25 @@ body{
 }
 .d2 .day-tag{color:var(--sage);background:var(--sage-pale)}
 .d3 .day-tag{color:var(--terracotta);background:#fff2ec}
-.day-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;line-height:1.2;color:var(--text-dark)}
+.day-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;line-height:1.14;color:var(--text-dark)}
 .day-theme{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--text-soft);margin-top:2px}
 
 /* ── WEATHER + CROWD ROW ── */
 .wcrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;align-items:center}
 .weather-badge{
   display:inline-flex;align-items:center;gap:5px;
-  background:var(--sage-pale);color:var(--sage);
+  background:linear-gradient(180deg,#f4faf1, #e8f0e4);color:var(--sage);
   font-size:11.5px;font-weight:500;padding:4px 12px;border-radius:40px;
+  border:1px solid rgba(110,140,107,.12);
 }
 .fog-badge{background:#f0f0f5;color:#666}
 .rain-badge{background:#eef3f8;color:#4a7090}
 .cold-badge{background:#eef6f4;color:#3a7060}
 .crowd-badge{
   display:inline-flex;align-items:center;gap:6px;
-  background:#fff4ef;color:var(--terracotta);
+  background:linear-gradient(180deg,#fff7f2,#fff0e8);color:var(--terracotta);
   font-size:11.5px;font-weight:500;padding:4px 12px;border-radius:40px;
+  border:1px solid rgba(196,122,90,.12);
 }
 .crowd-dots{display:flex;gap:3px;align-items:center}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
@@ -252,13 +362,18 @@ body{
 /* ── MINI ROUTE ── */
 .route-flow{
   display:flex;align-items:center;flex-wrap:wrap;gap:0;
-  background:var(--cream);border:1px solid var(--border);
-  border-radius:12px;padding:12px 16px;margin-bottom:18px;
-  overflow-x:auto;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,241,232,.94)),
+    radial-gradient(circle at 10% 20%, rgba(110,140,107,.08), transparent 16%),
+    radial-gradient(circle at 90% 15%, rgba(196,122,90,.08), transparent 14%);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:18px;padding:14px 16px;margin-bottom:18px;
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
 }
 .route-stop{
   display:flex;flex-direction:column;align-items:center;
-  text-align:center;min-width:80px;
+  text-align:center;min-width:84px;
 }
 .route-dot{
   width:10px;height:10px;border-radius:50%;
@@ -278,10 +393,12 @@ body{
 .route-duration{font-size:9px;color:var(--text-soft);white-space:nowrap;letter-spacing:0.3px}
 
 /* ── DAY CARDS ── */
-.day-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:16px}
+.day-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px}
 .day-card{
-  background:var(--cream);border:1px solid var(--border);
-  border-radius:13px;padding:14px 15px;
+  background:linear-gradient(180deg,#fffdf9 0%,#f8f2ea 100%);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:16px;padding:15px 15px 14px;
+  box-shadow:var(--shadow);
 }
 .day-card-title{
   font-size:9.5px;letter-spacing:2px;text-transform:uppercase;
@@ -302,14 +419,127 @@ body{
 
 /* ── PHOTO SPOTS ── */
 .photo-spots{
-  padding:12px 14px;background:var(--gold-pale);
-  border-radius:11px;border-left:3px solid var(--gold);margin-bottom:14px;
+  padding:14px 15px;background:linear-gradient(180deg,#fff7e8,#f8efe1);
+  border-radius:14px;border:1px solid rgba(197,169,106,.18);margin-bottom:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
 }
 .photo-spots-label{font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:7px}
 .photo-tags{display:flex;flex-wrap:wrap;gap:6px}
 .photo-tag{
   font-size:11.5px;background:white;border:1px solid var(--gold-light);
   color:var(--brown);padding:3px 11px;border-radius:40px;
+}
+
+/* ── HANOI MAPS + LIFESTYLE ── */
+.hanoi-map{
+  background:
+    radial-gradient(circle at 18% 16%, rgba(197,169,106,.12), transparent 18%),
+    radial-gradient(circle at 84% 20%, rgba(196,122,90,.10), transparent 16%),
+    linear-gradient(180deg,#fffdf8,#f6efe6);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:18px;
+  padding:14px 14px 12px;
+  margin-bottom:16px;
+  position:relative;
+  overflow:hidden;
+}
+.hanoi-map::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 10% 14%, rgba(196,122,90,.12), transparent 6px),
+    radial-gradient(circle at 86% 16%, rgba(197,169,106,.12), transparent 7px),
+    radial-gradient(circle at 76% 70%, rgba(110,140,107,.10), transparent 18%);
+  opacity:.65;
+  pointer-events:none;
+}
+.hanoi-map-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-end;
+  margin-bottom:10px;
+  position:relative;
+  z-index:1;
+}
+.hanoi-map-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;
+  font-weight:500;
+  line-height:1.1;
+  color:var(--text-dark);
+}
+.hanoi-map-note{font-size:10px;color:var(--text-soft);text-align:right}
+.hanoi-map-body{
+  position:relative;
+  min-height:122px;
+  z-index:1;
+}
+.hanoi-map svg{display:block;width:100%;height:auto}
+.map-node{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  text-align:center;
+  min-width:68px;
+}
+.map-pin{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--sage);
+  border:2px solid white;
+  box-shadow:0 0 0 1px rgba(110,140,107,.24);
+}
+.map-node.gold .map-pin{background:var(--gold);box-shadow:0 0 0 1px rgba(197,169,106,.28)}
+.map-node.terra .map-pin{background:var(--terracotta);box-shadow:0 0 0 1px rgba(196,122,90,.28)}
+.map-node.sage .map-pin{background:var(--sage)}
+.map-label{
+  font-size:9.5px;
+  font-weight:500;
+  color:var(--text-dark);
+  line-height:1.2;
+}
+.map-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+.map-chip{
+  font-size:10.5px;
+  padding:3px 9px;
+  border-radius:40px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(224,216,204,.9);
+  color:var(--text-mid);
+}
+.lifestyle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.lifestyle-card{
+  background:linear-gradient(180deg,#fffdf9 0%,#f8f1e8 100%);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:16px;
+  padding:14px 14px 13px;
+  box-shadow:var(--shadow);
+}
+.lifestyle-title{
+  font-size:9.5px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--sage);
+  font-weight:500;
+  margin-bottom:8px;
+}
+.lifestyle-list{display:flex;flex-wrap:wrap;gap:6px}
+.lifestyle-pill{
+  font-size:11.5px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:40px;
+  padding:4px 10px;
+  color:var(--text-mid);
 }
 
 /* ── MINI LANDMARKS ── */
@@ -329,13 +559,14 @@ body{
 .facility{
   display:inline-flex;align-items:center;gap:5px;
   font-size:11px;color:var(--text-soft);
-  background:white;border:1px solid var(--border);
+  background:rgba(255,255,255,.82);border:1px solid var(--border);
   border-radius:8px;padding:4px 10px;
 }
 
 /* ── ELEVATION BAR ── */
 .elev-bar{
-  background:var(--cream);border:1px solid var(--border);border-radius:12px;
+  background:linear-gradient(180deg,#fffdf8,#f7f0e7);
+  border:1px solid rgba(224,216,204,.95);border-radius:16px;
   padding:12px 16px;margin-bottom:14px;
   display:flex;align-items:flex-end;gap:12px;
 }
@@ -357,7 +588,7 @@ body{
 .budget-section .section{padding-top:40px;padding-bottom:40px}
 .budget-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:14px}
 .budget-card{
-  background:white;border:1px solid var(--border);border-radius:14px;
+  background:linear-gradient(180deg,#fff 0%,#fbf7f1 100%);border:1px solid rgba(224,216,204,.95);border-radius:16px;
   padding:18px 15px;box-shadow:var(--shadow);position:relative;overflow:hidden;
 }
 .budget-card::before{
@@ -382,7 +613,7 @@ body{
 .tips-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .tip-chip{
   display:inline-flex;align-items:center;gap:6px;
-  background:white;border:1px solid var(--border);border-radius:40px;
+  background:linear-gradient(180deg,#fffdf9,#f6efe6);border:1px solid rgba(224,216,204,.95);border-radius:40px;
   padding:6px 14px;font-size:12px;color:var(--text-mid);box-shadow:var(--shadow);
 }
 
@@ -390,7 +621,7 @@ body{
    EMERGENCY
 ════════════════════════════════════════ */
 .emergency-bar{
-  background:#fff8f5;border:1px solid #f0c5b0;border-radius:14px;
+  background:linear-gradient(180deg,#fff8f5,#fff1ea);border:1px solid #f0c5b0;border-radius:14px;
   padding:18px 18px;display:flex;flex-wrap:wrap;gap:12px;
 }
 .emergency-item{min-width:95px}
@@ -400,39 +631,104 @@ body{
 /* ════════════════════════════════════════
    HANOI PREVIEW CARD
 ════════════════════════════════════════ */
-.hanoi-preview{
-  background:linear-gradient(135deg,#2e3d48 0%,#3d5060 50%,#4a6070 100%);
-  border-radius:18px;color:white;padding:28px;
-  margin:0 auto 28px;max-width:896px;
-  position:relative;overflow:hidden;box-shadow:var(--shadow-card);
+.before-fly{
+  max-width:920px;
+  margin:0 auto 24px;
 }
-.hanoi-preview::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 80% 50%,rgba(197,169,106,0.12) 0%,transparent 70%);
+.before-fly-head{
+  margin-bottom:14px;
 }
-.hanoi-tag{
-  font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;
-  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);
-  display:inline-block;padding:3px 12px;border-radius:40px;margin-bottom:12px;
-  color:rgba(255,255,255,0.75);
+.before-fly-sub{
+  font-size:12px;
+  color:var(--text-soft);
+  margin-top:4px;
 }
-.hanoi-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:28px;font-weight:300;color:var(--gold-light);margin-bottom:6px;
+.before-fly-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
 }
-.hanoi-sub{font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:16px}
-.hanoi-places{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
-.hanoi-place{
-  font-size:11.5px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);
-  color:rgba(255,255,255,0.85);padding:4px 12px;border-radius:40px;
+.bf-panel{
+  background:linear-gradient(180deg,#fffdf9 0%,#f8f2ea 100%);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:18px;
+  padding:15px 15px 14px;
+  box-shadow:var(--shadow);
 }
-.hanoi-weather{
-  display:flex;gap:8px;flex-wrap:wrap;
+.bf-panel.span-2{grid-column:1 / -1}
+.bf-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:9.5px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--sage);font-weight:500;margin-bottom:10px;
 }
-.hanoi-badge{
-  font-size:11px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);
-  color:rgba(255,255,255,0.8);padding:4px 11px;border-radius:40px;
+.bf-title::before{
+  content:'';
+  width:8px;height:8px;border-radius:50%;
+  background:var(--terracotta);
+  box-shadow:0 0 0 3px rgba(196,122,90,.12);
+  flex-shrink:0;
 }
+.bf-list{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.bf-list.tight{grid-template-columns:1fr}
+.bf-list li{
+  display:flex;align-items:flex-start;gap:7px;
+  font-size:12.5px;color:var(--text-mid);line-height:1.35;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(224,216,204,.8);
+  border-radius:12px;
+  padding:8px 10px;
+}
+.bf-list li::before{
+  content:'✓';
+  color:var(--terracotta);
+  font-weight:700;
+  line-height:1;
+  margin-top:1px;
+}
+.bf-chip-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.bf-chip{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(224,216,204,.8);
+  border-radius:12px;
+  padding:9px 10px;
+  font-size:12.5px;
+  color:var(--text-mid);
+}
+.bf-chip strong{color:var(--text-dark)}
+.bf-note{
+  margin-top:10px;
+  font-size:11.5px;
+  color:var(--terracotta);
+  background:#fff4ef;
+  border:1px solid #f0d0c0;
+  border-radius:12px;
+  padding:9px 11px;
+}
+.bf-timeline{display:grid;gap:8px}
+.bf-step{
+  display:flex;gap:10px;align-items:flex-start;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(224,216,204,.8);
+  border-radius:12px;
+  padding:9px 10px;
+}
+.bf-step-num{
+  width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--sage-pale);
+  color:var(--sage);
+  font-size:10px;font-weight:700;flex-shrink:0;
+}
+.bf-step-text{font-size:12.5px;color:var(--text-mid);line-height:1.35}
 
 /* ════════════════════════════════════════
    FOOTER
@@ -448,14 +744,57 @@ footer strong{color:var(--sage)}
    RESPONSIVE
 ════════════════════════════════════════ */
 @media(max-width:600px){
+  body{font-size:16px}
   .hero{padding:44px 18px 38px}
-  .day-inner{padding:20px 18px 18px}
+  .legend-wrap{width:calc(100% - 16px);margin:-14px auto 8px;padding:10px 12px;border-radius:16px}
+  .section{padding:30px 16px}
+  .day-wrap{width:calc(100% - 16px);border-radius:20px}
+  .day-inner{padding:20px 16px 18px}
   .day-num{font-size:44px}
-  .info-grid{grid-template-columns:repeat(2,1fr)}
-  .budget-grid{grid-template-columns:repeat(2,1fr)}
+  .info-grid{grid-template-columns:1fr}
+  .budget-grid{grid-template-columns:1fr}
   .day-cards{grid-template-columns:1fr}
-  .route-flow{padding:10px 12px}
-  .hanoi-preview{margin:0 12px 24px;padding:22px}
+  .lifestyle-grid{grid-template-columns:1fr}
+  .route-flow{
+    padding:10px 12px;
+    gap:4px;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .route-stop{
+    min-width:0;
+    flex-direction:row;
+    justify-content:flex-start;
+    align-items:center;
+    gap:8px;
+    text-align:left;
+  }
+  .route-arrow{
+    width:100%;
+    padding:0 0 6px;
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:8px;
+  }
+  .route-arrow-line{display:none}
+  .route-duration{font-size:10px}
+  .hanoi-map-body{min-height:0}
+  .hanoi-map svg{height:92px}
+  .map-node{
+    position:static;
+    transform:none;
+    flex-direction:row;
+    justify-content:flex-start;
+    align-items:center;
+    gap:8px;
+    min-width:0;
+    text-align:left;
+    margin-top:6px;
+  }
+  .map-label{font-size:10px}
+  .before-fly-grid{grid-template-columns:1fr}
+  .bf-list,.bf-chip-grid{grid-template-columns:1fr}
+  .bf-panel.span-2{grid-column:auto}
 }
 
 /* ════════════════════════════════════════
@@ -469,6 +808,7 @@ footer strong{color:var(--sage)}
     font-size:10.5pt;line-height:1.5;margin:0;padding:0;
   }
   .screen-itinerary,.print-btn{display:none!important}
+  body::before,body::after{display:none!important}
   .print-itinerary{display:block!important}
 
   .p-page{max-width:100%;padding:14mm 15mm}
@@ -540,8 +880,8 @@ footer strong{color:var(--sage)}
     <svg width="22" height="13" viewBox="0 0 22 13" fill="none"><path d="M0 13 L4 6 L8 10 L11 4 L14 8 L18 2 L22 13" stroke="rgba(255,255,255,0.45)" stroke-width="1.2" fill="none"/></svg>
     <span></span>
   </div>
-  <p class="hero-sub">3-Day Sapa, Vietnam Itinerary</p>
-  <p class="hero-sapadates">Sapa Dates: May 30 – June 1, 2026</p>
+  <p class="hero-sub">3-Days Sapa, 4-Days Hanoi Vietnam Itinerary</p>
+  <p class="hero-sapadates">Sapa Dates: May 30 – June 1, 2026<br>Hanoi Dates: June 2 – June 5, 2026</p>
   <button class="print-btn" onclick="window.print()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
     Print Important Details
@@ -598,21 +938,70 @@ footer strong{color:var(--sage)}
     <div class="info-card"><div class="info-icon">🚌</div><div class="info-label">Transport</div><div class="info-val">Bus + Walk/Grab</div></div>
     <div class="info-card"><div class="info-icon">🌤</div><div class="info-label">Weather</div><div class="info-val accent">Cool Mountain</div></div>
     <div class="info-card"><div class="info-icon">💰</div><div class="info-label">Currency</div><div class="info-val">VND + PHP ref</div></div>
-    <div class="info-card"><div class="info-icon">🆘</div><div class="info-label">Emergency</div><div class="info-val warn">Police: 113<br>Ambul: 115</div></div>
     <div class="info-card"><div class="info-icon">🌅</div><div class="info-label">Sunrise</div><div class="info-val">5:19 AM</div></div>
     <div class="info-card"><div class="info-icon">🌇</div><div class="info-label">Sunset</div><div class="info-val">6:48 PM</div></div>
-    <div class="info-card"><div class="info-icon">💱</div><div class="info-label">Rate</div><div class="info-val">1 PHP ≈ 450 VND</div></div>
+    <div class="info-card"><div class="info-icon">📶</div><div class="info-label">SIM / WiFi</div><div class="info-val">Airport setup</div></div>
   </div>
 </div>
 
-<!-- MTN DIVIDER -->
-<div class="mtn-divider">
-  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,40 L0,28 L80,12 L160,24 L260,6 L360,22 L460,2 L560,18 L660,8 L760,22 L860,10 L960,26 L1060,14 L1160,24 L1200,18 L1200,40 Z" fill="none" stroke="#e0d8cc" stroke-width="1"/>
-    <circle cx="460" cy="2" r="2.5" fill="#b5c9b3"/>
-    <circle cx="260" cy="6" r="2" fill="#c5a96a"/>
-    <circle cx="660" cy="8" r="2" fill="#b5c9b3"/>
-  </svg>
+<!-- BEFORE YOU FLY -->
+<div class="section before-fly">
+  <div class="before-fly-head">
+    <p class="section-label">Before You Fly</p>
+    <div class="before-fly-sub">Airport reminders, travel prep & IO checklist</div>
+  </div>
+  <div class="before-fly-grid">
+    <div class="bf-panel">
+      <div class="bf-title">What to Bring</div>
+      <ul class="bf-list">
+        <li>Passport</li><li>Boarding pass</li><li>Hotel bookings</li><li>Travel insurance</li><li>Cash (PHP + VND)</li><li>Credit/debit card</li><li>Power bank</li><li>Charging cable</li><li>Universal adapter</li><li>Jacket for Sapa</li><li>Umbrella</li><li>Medicines</li><li>Toiletries</li><li>SIM ejector pin</li><li>Reusable water bottle</li>
+      </ul>
+    </div>
+    <div class="bf-panel">
+      <div class="bf-title">Do Not Forget</div>
+      <ul class="bf-list">
+        <li>Check passport validity</li><li>Online check-in</li><li>Download offline maps</li><li>Screenshot hotel addresses</li><li>Notify bank about travel</li><li>Charge devices before flight</li><li>Prepare immigration documents</li>
+      </ul>
+    </div>
+    <div class="bf-panel span-2">
+      <div class="bf-title">PH Immigration / IO Requirements</div>
+      <div class="bf-chip-grid">
+        <div class="bf-chip"><strong>Passport</strong><br>6 months valid</div>
+        <div class="bf-chip"><strong>Roundtrip ticket</strong><br>Return booking ready</div>
+        <div class="bf-chip"><strong>Hotel bookings</strong><br>Printed or on phone</div>
+        <div class="bf-chip"><strong>Proof of funds</strong><br>Cards + cash available</div>
+        <div class="bf-chip"><strong>Travel itinerary</strong><br>Trip outline at hand</div>
+        <div class="bf-chip"><strong>Return flight details</strong><br>Easy to show</div>
+        <div class="bf-chip"><strong>Employment / company ID</strong><br>If applicable</div>
+        <div class="bf-chip"><strong>Credit/debit cards</strong><br>Access to funds</div>
+        <div class="bf-chip"><strong>Travel insurance</strong><br>Optional but recommended</div>
+      </div>
+      <div class="bf-note">Answer immigration questions calmly and confidently.</div>
+    </div>
+    <div class="bf-panel">
+      <div class="bf-title">Airport Timeline</div>
+      <div class="bf-timeline">
+        <div class="bf-step"><div class="bf-step-num">1</div><div class="bf-step-text">Arrive at airport 3–4 hours early</div></div>
+        <div class="bf-step"><div class="bf-step-num">2</div><div class="bf-step-text">Check-in counter</div></div>
+        <div class="bf-step"><div class="bf-step-num">3</div><div class="bf-step-text">Immigration</div></div>
+        <div class="bf-step"><div class="bf-step-num">4</div><div class="bf-step-text">Security check</div></div>
+        <div class="bf-step"><div class="bf-step-num">5</div><div class="bf-step-text">Boarding gate</div></div>
+        <div class="bf-step"><div class="bf-step-num">6</div><div class="bf-step-text">Currency exchange</div></div>
+        <div class="bf-step"><div class="bf-step-num">7</div><div class="bf-step-text">SIM / WiFi setup if needed</div></div>
+      </div>
+    </div>
+    <div class="bf-panel">
+      <div class="bf-title">Airport Tips</div>
+      <ul class="bf-list tight">
+        <li>Wear comfortable clothes</li>
+        <li>Keep documents accessible</li>
+        <li>Bring snacks</li>
+        <li>Empty power bank fully charged</li>
+        <li>Keep valuables in carry-on</li>
+        <li>Avoid overpacking liquids</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <!-- ══════ DAY 1 ══════ -->
@@ -1007,10 +1396,464 @@ footer strong{color:var(--sage)}
   </div>
 </div>
 
+<!-- ══════ DAY 4 ══════ -->
+<div class="day-wrap">
+  <div class="day-top-bar" style="background:linear-gradient(90deg,var(--sage),var(--gold),var(--terracotta))"></div>
+  <div class="day-inner">
+    <div class="day-header">
+      <div class="day-num" style="color:var(--sage)">04</div>
+      <div class="day-meta">
+        <span class="day-tag">🏮 June 2, 2026 · Hanoi Arrival</span>
+        <div class="day-title">Old Quarter & Hanoi Classics</div>
+        <div class="day-theme">"Lantern light, lake breezes, and first tastes of Hanoi"</div>
+      </div>
+    </div>
+
+    <div class="wcrow">
+      <div class="weather-badge">🌡 Warm & humid</div>
+      <div class="weather-badge fog-badge">☂ Bring water + umbrella</div>
+      <div class="crowd-badge">
+        Old Quarter
+        <div class="crowd-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+        Busy
+      </div>
+      <div class="crowd-badge">
+        Night Market
+        <div class="crowd-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div></div>
+        Crowded
+      </div>
+    </div>
+
+    <div class="hanoi-map">
+      <div class="hanoi-map-head">
+        <div class="hanoi-map-title">Illustrated Old Quarter Walk</div>
+        <div class="hanoi-map-note">Lantern route · lake loop · evening street crawl</div>
+      </div>
+      <div class="hanoi-map-body">
+        <svg viewBox="0 0 640 180" aria-hidden="true">
+          <defs>
+            <filter id="softDay4" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.2"/>
+            </filter>
+          </defs>
+          <rect x="0" y="0" width="640" height="180" rx="18" fill="rgba(255,255,255,.22)"/>
+          <path d="M66 52 C120 28, 180 34, 230 58 S330 90, 378 72 S468 34, 538 52" fill="none" stroke="#d7c6b3" stroke-width="2" stroke-dasharray="5 5"/>
+          <path d="M118 118 C160 90, 210 86, 256 112 S350 152, 412 124 S520 82, 574 104" fill="none" stroke="#c47a5a" stroke-width="2.5" stroke-dasharray="4 6"/>
+          <ellipse cx="360" cy="112" rx="44" ry="18" fill="#cfe0d5" stroke="#6e8c6b" stroke-width="2"/>
+          <path d="M322 112 C336 96, 384 96, 398 112" fill="none" stroke="#6e8c6b" stroke-width="1.5"/>
+          <circle cx="154" cy="62" r="7" fill="#c47a5a" opacity=".24" filter="url(#softDay4)"/>
+          <circle cx="498" cy="56" r="7" fill="#c5a96a" opacity=".24" filter="url(#softDay4)"/>
+          <circle cx="208" cy="122" r="7" fill="#6e8c6b" opacity=".22" filter="url(#softDay4)"/>
+        </svg>
+        <div class="map-node terra" style="left:12%;top:34%">
+          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel & Spa</div>
+        </div>
+        <div class="map-node gold" style="left:28%;top:28%">
+          <div class="map-pin"></div><div class="map-label">Cafe Giang</div>
+        </div>
+        <div class="map-node sage" style="left:41%;top:38%">
+          <div class="map-pin"></div><div class="map-label">St. Joseph<br>Cathedral</div>
+        </div>
+        <div class="map-node terra" style="left:52%;top:55%">
+          <div class="map-pin"></div><div class="map-label">Pho 10</div>
+        </div>
+        <div class="map-node gold" style="left:66%;top:48%">
+          <div class="map-pin"></div><div class="map-label">Hoan Kiem<br>Lake</div>
+        </div>
+        <div class="map-node sage" style="left:78%;top:28%">
+          <div class="map-pin"></div><div class="map-label">Cong Caphe</div>
+        </div>
+        <div class="map-node terra" style="left:87%;top:60%">
+          <div class="map-pin"></div><div class="map-label">Train Street</div>
+        </div>
+        <div class="map-node gold" style="left:92%;top:34%">
+          <div class="map-pin"></div><div class="map-label">Night<br>Market</div>
+        </div>
+      </div>
+      <div class="map-legend">
+        <span class="map-chip">🚶 Walking route</span>
+        <span class="map-chip">🏮 Lanterns</span>
+        <span class="map-chip">💧 Lake loop</span>
+      </div>
+    </div>
+
+    <div class="route-flow">
+      <div class="route-stop">
+        <div class="route-dot" style="background:var(--terracotta);box-shadow:0 0 0 1.5px var(--terra-light)"></div>
+        <div class="route-stop-name">La Renta<br>Hotel & Spa</div>
+      </div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~7 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Cafe<br>Giang</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~8 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--sage)"></div><div class="route-stop-name">St. Joseph<br>Cathedral</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~9 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">Pho 10</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~10 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Hoan Kiem<br>Lake</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~6 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--sage)"></div><div class="route-stop-name">Cong<br>Caphe</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~12 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">Train<br>Street</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~15 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Night<br>Market</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot terra big"></div><div class="tl-time">Arrive</div><div class="tl-text">🏨 Check-in at <strong>La Renta Hotel & Spa</strong></div></div>
+      <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-time">9:00 AM</div><div class="tl-text">☕ <strong>Cafe Giang</strong> — Egg coffee start</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">10:00 AM</div><div class="tl-text">⛪ <strong>St. Joseph Cathedral</strong> and cathedral square</div></div>
+      <div class="tl-item"><div class="tl-dot terra"></div><div class="tl-time">12:00 PM</div><div class="tl-text">🍜 <strong>Pho 10</strong> — lunch stop</div></div>
+      <div class="tl-item"><div class="tl-dot gold big"></div><div class="tl-time">1:00 PM</div><div class="tl-text">💧 <strong>Hoan Kiem Lake</strong> walk and Turtle Tower views</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">3:00 PM</div><div class="tl-text">☕ <strong>Cong Caphe</strong> — cool down break</div></div>
+      <div class="tl-item"><div class="tl-dot terra"></div><div class="tl-time">5:30 PM</div><div class="tl-text">🚶 <strong>Train Street</strong> and alley stroll</div></div>
+      <div class="tl-item"><div class="tl-dot gold big"></div><div class="tl-time">7:00 PM</div><div class="tl-text">🏮 <strong>Night Market</strong> dinner and night walk</div></div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">🍜 Foods to Try</div>
+        <ul>
+          <li>Pho</li>
+          <li>Egg Coffee</li>
+          <li>Banh Mi</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">☕ Coffee Stops</div>
+        <ul>
+          <li>Cafe Giang</li>
+          <li>Cong Caphe</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">📷 Photo Spots</div>
+        <ul>
+          <li>Cathedral</li>
+          <li>Turtle Tower</li>
+          <li>Train Street</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MTN DIVIDER -->
+<div class="mtn-divider" style="margin:8px 0">
+  <svg viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 L0,30 L120,16 L240,30 L360,10 L480,26 L600,4 L720,22 L840,8 L960,24 L1080,14 L1200,28 L1200,40 Z" fill="none" stroke="#e0d8cc" stroke-width="1"/>
+    <circle cx="600" cy="4" r="2.5" fill="#c5a96a"/>
+  </svg>
+</div>
+
+<!-- ══════ DAY 5 ══════ -->
+<div class="day-wrap">
+  <div class="day-top-bar" style="background:linear-gradient(90deg,var(--gold),var(--sage),var(--terracotta))"></div>
+  <div class="day-inner">
+    <div class="day-header">
+      <div class="day-num" style="color:var(--gold-light)">05</div>
+      <div class="day-meta">
+        <span class="day-tag d2">🌿 June 3, 2026 · Hanoi Landmarks</span>
+        <div class="day-title">History, Pagodas & Shopping</div>
+        <div class="day-theme">"Pagoda roofs, grand avenues, and evening city glow"</div>
+      </div>
+    </div>
+
+    <div class="wcrow">
+      <div class="weather-badge">🌡 Warm & mixed shade</div>
+      <div class="weather-badge fog-badge">💧 Light water + sun protection</div>
+      <div class="crowd-badge">
+        Mausoleum
+        <div class="crowd-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+        Busy morning
+      </div>
+      <div class="crowd-badge">
+        Tran Quoc
+        <div class="crowd-dots"><div class="dot on"></div><div class="dot on sage"></div><div class="dot"></div></div>
+        Scenic
+      </div>
+    </div>
+
+    <div class="hanoi-map">
+      <div class="hanoi-map-head">
+        <div class="hanoi-map-title">Heritage Route</div>
+        <div class="hanoi-map-note">Pagodas · government quarter · opera district</div>
+      </div>
+      <div class="hanoi-map-body">
+        <svg viewBox="0 0 640 180" aria-hidden="true">
+          <rect x="0" y="0" width="640" height="180" rx="18" fill="rgba(255,255,255,.2)"/>
+          <path d="M60 138 C120 118, 162 106, 210 114 S306 144, 352 126 S442 82, 498 88 S564 110, 600 94" fill="none" stroke="#6e8c6b" stroke-width="2.5" stroke-dasharray="5 5"/>
+          <path d="M84 44 L92 30 L100 44" fill="#c47a5a" opacity=".9"/>
+          <path d="M480 56 L488 38 L496 56" fill="#c5a96a" opacity=".85"/>
+          <circle cx="334" cy="114" r="42" fill="#dfead9" stroke="#6e8c6b" stroke-width="2"/>
+          <path d="M298 114 C314 102, 354 102, 370 114" fill="none" stroke="#6e8c6b" stroke-width="1.5"/>
+          <circle cx="200" cy="122" r="5" fill="#c47a5a" opacity=".35"/>
+          <circle cx="556" cy="96" r="5" fill="#c5a96a" opacity=".35"/>
+        </svg>
+        <div class="map-node terra" style="left:12%;top:70%">
+          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel & Spa</div>
+        </div>
+        <div class="map-node gold" style="left:28%;top:54%">
+          <div class="map-pin"></div><div class="map-label">Ho Chi Minh<br>Mausoleum</div>
+        </div>
+        <div class="map-node sage" style="left:39%;top:48%">
+          <div class="map-pin"></div><div class="map-label">Presidential<br>Palace</div>
+        </div>
+        <div class="map-node terra" style="left:54%;top:62%">
+          <div class="map-pin"></div><div class="map-label">Imperial<br>Citadel</div>
+        </div>
+        <div class="map-node gold" style="left:68%;top:40%">
+          <div class="map-pin"></div><div class="map-label">Tran Quoc<br>Pagoda</div>
+        </div>
+        <div class="map-node sage" style="left:82%;top:50%">
+          <div class="map-pin"></div><div class="map-label">Puppet<br>Theater</div>
+        </div>
+        <div class="map-node terra" style="left:92%;top:42%">
+          <div class="map-pin"></div><div class="map-label">Mega Grand<br>World</div>
+        </div>
+      </div>
+      <div class="map-legend">
+        <span class="map-chip">🏯 Heritage stops</span>
+        <span class="map-chip">🪷 Pagoda accents</span>
+        <span class="map-chip">🚶 Decorative paths</span>
+      </div>
+    </div>
+
+    <div class="route-flow">
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">La Renta<br>Hotel & Spa</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~15 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Ho Chi Minh<br>Mausoleum</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~10 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--sage)"></div><div class="route-stop-name">Presidential<br>Palace</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚶 ~12 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">Imperial<br>Citadel</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~20 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Tran Quoc<br>Pagoda</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~25 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--sage)"></div><div class="route-stop-name">Puppet<br>Theater</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~30 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">Mega Grand<br>World</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot gold big"></div><div class="tl-time">8:00 AM</div><div class="tl-text">🏯 <strong>Ho Chi Minh Mausoleum</strong></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">9:00 AM</div><div class="tl-text">🌳 <strong>Presidential Palace</strong> grounds</div></div>
+      <div class="tl-item"><div class="tl-dot terra"></div><div class="tl-time">10:30 AM</div><div class="tl-text">🏛 <strong>Imperial Citadel</strong></div></div>
+      <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-time">1:00 PM</div><div class="tl-text">🪷 <strong>Tran Quoc Pagoda</strong> and lakeside pause</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">3:30 PM</div><div class="tl-text">🎭 <strong>Puppet Theater</strong> show</div></div>
+      <div class="tl-item"><div class="tl-dot terra big"></div><div class="tl-time">6:00 PM</div><div class="tl-text">✨ <strong>Mega Grand World</strong> evening stroll</div></div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">🍜 Foods to Try</div>
+        <ul>
+          <li>Bun Cha</li>
+          <li>Trang Tien Ice Cream</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">📷 Photo Spots</div>
+        <ul>
+          <li>Tran Quoc Pagoda</li>
+          <li>Hanoi Opera House</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">🛍 City Stops</div>
+        <ul>
+          <li>Opera House district</li>
+          <li>Lakefront night walk</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ DAY 6 ══════ -->
+<div class="day-wrap">
+  <div class="day-top-bar" style="background:linear-gradient(90deg,var(--sage),var(--cream),var(--gold))"></div>
+  <div class="day-inner">
+    <div class="day-header">
+      <div class="day-num" style="color:var(--sage)">06</div>
+      <div class="day-meta">
+        <span class="day-tag d2">🌿 June 4, 2026 · Slow Hanoi</span>
+        <div class="day-title">Free Day / Slow Hanoi City Day</div>
+        <div class="day-theme">"Coffee, shopping, spa time, and one last easy city loop"</div>
+      </div>
+    </div>
+
+    <div class="wcrow">
+      <div class="weather-badge">🌡 Warm & flexible</div>
+      <div class="weather-badge fog-badge">☕ Slow coffee stops</div>
+      <div class="weather-badge rain-badge">👜 Shopping + indoor breaks</div>
+    </div>
+
+    <div class="lifestyle-grid">
+      <div class="lifestyle-card">
+        <div class="lifestyle-title">Coffee Hopping</div>
+        <div class="lifestyle-list">
+          <span class="lifestyle-pill">Cafe Giang</span>
+          <span class="lifestyle-pill">Cong Caphe</span>
+          <span class="lifestyle-pill">Egg coffee</span>
+        </div>
+      </div>
+      <div class="lifestyle-card">
+        <div class="lifestyle-title">Spa / Rest</div>
+        <div class="lifestyle-list">
+          <span class="lifestyle-pill">Foot massage</span>
+          <span class="lifestyle-pill">Quiet hotel break</span>
+          <span class="lifestyle-pill">Light lunch</span>
+        </div>
+      </div>
+      <div class="lifestyle-card">
+        <div class="lifestyle-title">Shopping Loop</div>
+        <div class="lifestyle-list">
+          <span class="lifestyle-pill">Uniqlo</span>
+          <span class="lifestyle-pill">Dong Xuan Market</span>
+          <span class="lifestyle-pill">Souvenirs</span>
+        </div>
+      </div>
+      <div class="lifestyle-card">
+        <div class="lifestyle-title">Lotte / Skyline</div>
+        <div class="lifestyle-list">
+          <span class="lifestyle-pill">Lotte Mall</span>
+          <span class="lifestyle-pill">Sky view</span>
+          <span class="lifestyle-pill">Dinner nearby</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">Morning</div><div class="tl-text">☕ Cafe hopping around the Old Quarter</div></div>
+      <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-time">Midday</div><div class="tl-text">🧖 Spa / slow hotel break / easy lunch</div></div>
+      <div class="tl-item"><div class="tl-dot terra"></div><div class="tl-time">Afternoon</div><div class="tl-text">🛍 <strong>Uniqlo</strong> and <strong>Dong Xuan Market</strong></div></div>
+      <div class="tl-item"><div class="tl-dot big"></div><div class="tl-time">Evening</div><div class="tl-text">🏬 <strong>Lotte Mall</strong> and final city views</div></div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">☕ Coffee</div>
+        <ul>
+          <li>Cafe hopping</li>
+          <li>Egg coffee repeat</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">🛍 Shopping</div>
+        <ul>
+          <li>Uniqlo</li>
+          <li>Dong Xuan Market</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">🏬 Lotte</div>
+        <ul>
+          <li>Lotte Mall</li>
+          <li>Skyline snack stop</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ DAY 7 ══════ -->
+<div class="day-wrap">
+  <div class="day-top-bar" style="background:linear-gradient(90deg,var(--terracotta),var(--gold),var(--cream))"></div>
+  <div class="day-inner">
+    <div class="day-header">
+      <div class="day-num" style="color:var(--terra-light)">07</div>
+      <div class="day-meta">
+        <span class="day-tag d3">🏮 June 5, 2026 · Departure Day</span>
+        <div class="day-title">Goodbye Vietnam</div>
+        <div class="day-theme">"A quiet dawn, one last airport run, and homeward flight"</div>
+      </div>
+    </div>
+
+    <div class="wcrow">
+      <div class="weather-badge" style="background:#fff0eb;color:var(--terracotta)">🌅 Dawn departure</div>
+      <div class="weather-badge fog-badge">☕ Keep water + snacks ready</div>
+      <div class="crowd-badge">
+        Airport
+        <div class="crowd-dots"><div class="dot on"></div><div class="dot on"></div><div class="dot"></div></div>
+        Early rush
+      </div>
+    </div>
+
+    <div class="hanoi-map">
+      <div class="hanoi-map-head">
+        <div class="hanoi-map-title">Airport Route</div>
+        <div class="hanoi-map-note">Plane path · dawn tones · final transfer</div>
+      </div>
+      <div class="hanoi-map-body">
+        <svg viewBox="0 0 640 180" aria-hidden="true">
+          <rect x="0" y="0" width="640" height="180" rx="18" fill="rgba(255,255,255,.2)"/>
+          <path d="M90 120 C170 98, 224 92, 286 104 S402 138, 470 102 S556 56, 606 60" fill="none" stroke="#c47a5a" stroke-width="2.5" stroke-dasharray="6 6"/>
+          <path d="M58 140 L76 130 L82 145 L96 150" fill="none" stroke="#6e8c6b" stroke-width="1.5" opacity=".7"/>
+          <circle cx="184" cy="118" r="42" fill="#f2e6d6" stroke="#c5a96a" stroke-width="2"/>
+          <circle cx="476" cy="86" r="6" fill="#c47a5a" opacity=".25"/>
+          <circle cx="540" cy="60" r="6" fill="#c5a96a" opacity=".22"/>
+        </svg>
+        <div class="map-node terra" style="left:12%;top:64%">
+          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel</div>
+        </div>
+        <div class="map-node gold" style="left:55%;top:48%">
+          <div class="map-pin"></div><div class="map-label">Noi Bai<br>Airport</div>
+        </div>
+        <div class="map-node sage" style="left:90%;top:28%">
+          <div class="map-pin"></div><div class="map-label">Manila /<br>NAIA T3</div>
+        </div>
+      </div>
+      <div class="map-legend">
+        <span class="map-chip">✈ Plane path</span>
+        <span class="map-chip">🌅 Dawn palette</span>
+        <span class="map-chip">🚗 Airport transfer</span>
+      </div>
+    </div>
+
+    <div class="route-flow">
+      <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">La Renta<br>Hotel</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~45 min</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Noi Bai<br>Airport</div></div>
+      <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">✈ Flight</div></div>
+      <div class="route-stop"><div class="route-dot" style="background:var(--sage)"></div><div class="route-stop-name">Manila /<br>NAIA T3</div></div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot terra big"></div><div class="tl-time">Early AM</div><div class="tl-text">🏨 Checkout from <strong>La Renta Hotel & Spa</strong></div></div>
+      <div class="tl-item"><div class="tl-dot gold"></div><div class="tl-time">Before sunrise</div><div class="tl-text">🚗 Transfer to <strong>Noi Bai Airport</strong></div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-time">Departure</div><div class="tl-text">✈ Flight back to <strong>Manila / NAIA Terminal 3</strong></div></div>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card">
+        <div class="day-card-title">Travel Notes</div>
+        <ul>
+          <li>Passport and tickets ready</li>
+          <li>Keep snacks and water in hand</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">Last Checks</div>
+        <ul>
+          <li>Chargers and power bank</li>
+          <li>Wallet, cash, and hotel key</li>
+        </ul>
+      </div>
+      <div class="day-card">
+        <div class="day-card-title">Farewell</div>
+        <ul>
+          <li>Final lake glance</li>
+          <li>Goodbye Vietnam</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════ BUDGET ══════ -->
 <div class="budget-section" style="margin-top:16px">
   <div class="section">
-    <p class="section-label">Estimated Budget · 1 PHP ≈ 450 VND</p>
+    <p class="section-label">Estimated Budget</p>
     <div class="budget-grid">
       <div class="budget-card"><div class="budget-icon">🚌</div><div class="budget-cat">Transport</div><div class="budget-vnd">₫650,000–₫1,800,000</div><div class="budget-php">₱1,450 – ₱4,000</div></div>
       <div class="budget-card"><div class="budget-icon">🍜</div><div class="budget-cat">Food</div><div class="budget-vnd">₫700,000–₫1,200,000</div><div class="budget-php">₱1,550 – ₱2,700</div></div>
@@ -1018,7 +1861,7 @@ footer strong{color:var(--sage)}
       <div class="budget-card"><div class="budget-icon">🛍</div><div class="budget-cat">Shopping</div><div class="budget-vnd">₫400,000–₫1,300,000</div><div class="budget-php">₱900 – ₱2,900</div></div>
       <div class="budget-card total"><div class="budget-icon">💼</div><div class="budget-cat">Total Estimated</div><div class="budget-vnd">₫2,450,000–₫5,800,000</div><div class="budget-php">₱5,450 – ₱12,950</div></div>
     </div>
-    <div class="budget-note">⚠️ Carry emergency cash in VND. Most mountain vendors and local markets are cash-only. Keep small bills handy for taxis and markets.</div>
+    <div class="budget-note">⚠️ Mountain vendors and local markets may be cash-only.</div>
   </div>
 </div>
 
@@ -1026,13 +1869,11 @@ footer strong{color:var(--sage)}
 <div class="section">
   <p class="section-label">Travel Tips</p>
   <div class="tips-chips">
-    <div class="tip-chip">💵 Carry cash in VND</div>
     <div class="tip-chip">📱 Download offline maps</div>
     <div class="tip-chip">🔋 Bring power bank</div>
     <div class="tip-chip">🧥 Layered clothing</div>
-    <div class="tip-chip">🌐 Translation apps</div>
-    <div class="tip-chip">🙏 Respect local culture</div>
-    <div class="tip-chip">💴 Keep small bills</div>
+    <div class="tip-chip">☂ Umbrella</div>
+    <div class="tip-chip">🔒 Passport safety</div>
     <div class="tip-chip">🚌 Confirm bus pickup early</div>
   </div>
 
@@ -1044,7 +1885,6 @@ footer strong{color:var(--sage)}
     <div class="emergency-item"><div class="emergency-label">💱 Cash Exchange</div><div class="emergency-val">Airport/bank</div></div>
     <div class="emergency-item"><div class="emergency-label">📶 WiFi</div><div class="emergency-val">Portable WiFi</div></div>
     <div class="emergency-item"><div class="emergency-label">🌐 Translation</div><div class="emergency-val">Offline app</div></div>
-    <div class="emergency-item"><div class="emergency-label">🗺 Maps</div><div class="emergency-val">Download offline</div></div>
   </div>
 </div>
 
@@ -1055,31 +1895,8 @@ footer strong{color:var(--sage)}
   </svg>
 </div>
 
-<!-- ══════ HANOI PREVIEW ══════ -->
-<div class="hanoi-preview">
-  <div class="hanoi-tag">🏮 Next Stop · June 2–5, 2026</div>
-  <div class="hanoi-title">Hanoi Awaits</div>
-  <div class="hanoi-sub">Old Quarter · Street food · Colonial charm · Lake reflections</div>
-  <div class="hanoi-places">
-    <span class="hanoi-place">🏘 Old Quarter</span>
-    <span class="hanoi-place">💧 Hoan Kiem Lake</span>
-    <span class="hanoi-place">⛪ St. Joseph Cathedral</span>
-    <span class="hanoi-place">🎭 Hanoi Opera House</span>
-    <span class="hanoi-place">🛒 Dong Xuan Market</span>
-    <span class="hanoi-place">☕ Egg Coffee</span>
-    <span class="hanoi-place">🥖 Banh Mi</span>
-    <span class="hanoi-place">🍦 Trang Tien Ice Cream</span>
-  </div>
-  <div class="hanoi-weather">
-    <div class="hanoi-badge">🌤 Warm & humid</div>
-    <div class="hanoi-badge">☂ Bring umbrella</div>
-    <div class="hanoi-badge">💧 Stay hydrated</div>
-  </div>
-</div>
-
 <footer>
-  Safe travels ✈ · <strong>Hanoi + Sapa, Vietnam</strong> · May 30 – June 5, 2026<br>
-  <span style="font-size:11px;opacity:.7;margin-top:4px;display:block">🌅 Sunrise 5:19 AM · 🌇 Sunset 6:48 PM · 🚨 Police 113 · 🚑 Ambulance 115</span>
+  Safe travels ✈ · <strong>Hanoi + Sapa, Vietnam</strong> · May 30 – June 5, 2026
 </footer>
 
 </div><!-- /screen-itinerary -->
@@ -1170,6 +1987,64 @@ footer strong{color:var(--sage)}
       <div class="p-tl-row"><div class="p-tl-time">7:30 PM</div><div class="p-tl-desc">Return to hotel — prepare for overnight bus</div></div>
       <div class="p-tl-row"><div class="p-tl-time">11:30 PM ⚠</div><div class="p-tl-desc">Overnight bus departs — Sapa → Hanoi</div></div>
       <div class="p-foods"><strong>Sunset:</strong> O Quy Ho Pass (after 5 PM) &nbsp;|&nbsp; <strong>Souvenirs:</strong> Coffee beans, Local tea, Handmade bags</div>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 4 — June 2, 2026 · Hanoi Arrival</div>
+        <div class="p-day-theme">Old Quarter & Hanoi Classics</div>
+      </div>
+      <div class="p-day-weather">🌡 Warm and humid · Bring water and umbrella &nbsp;|&nbsp; 👥 Old Quarter busy · Night Market crowded</div>
+      <div class="p-tl-row"><div class="p-tl-time">Arrival</div><div class="p-tl-desc">Check-in at La Renta Hotel & Spa</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Morning</div><div class="p-tl-desc">Cafe Giang · St. Joseph Cathedral</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Lunch</div><div class="p-tl-desc">Pho 10</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Afternoon</div><div class="p-tl-desc">Hoan Kiem Lake · Cong Caphe</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Evening</div><div class="p-tl-desc">Train Street · Night Market</div></div>
+      <div class="p-foods"><strong>Foods:</strong> Pho, Egg Coffee, Banh Mi &nbsp;|&nbsp; <strong>Photo spots:</strong> Cathedral, Turtle Tower, Train Street</div>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 5 — June 3, 2026 · Hanoi Landmarks Day</div>
+        <div class="p-day-theme">History, Pagodas & Shopping</div>
+      </div>
+      <div class="p-day-weather">🌡 Warm city day with mixed shade &nbsp;|&nbsp; 👥 Mausoleum busiest in the morning</div>
+      <div class="p-tl-row"><div class="p-tl-time">8:00 AM</div><div class="p-tl-desc">Ho Chi Minh Mausoleum</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">9:00 AM</div><div class="p-tl-desc">Presidential Palace</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">10:30 AM</div><div class="p-tl-desc">Imperial Citadel</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">1:00 PM</div><div class="p-tl-desc">Tran Quoc Pagoda</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">3:30 PM</div><div class="p-tl-desc">Puppet Theater</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">6:00 PM</div><div class="p-tl-desc">Mega Grand World</div></div>
+      <div class="p-foods"><strong>Foods:</strong> Bun Cha, Trang Tien Ice Cream &nbsp;|&nbsp; <strong>Photo spots:</strong> Tran Quoc Pagoda, Hanoi Opera House</div>
+    </div>
+
+    <!-- DAY 6 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 6 — June 4, 2026 · Free Day</div>
+        <div class="p-day-theme">Slow Hanoi City Day</div>
+      </div>
+      <div class="p-day-weather">🌡 Warm and flexible pace &nbsp;|&nbsp; Slow coffee, spa, shopping, and city breaks</div>
+      <div class="p-tl-row"><div class="p-tl-time">Morning</div><div class="p-tl-desc">Cafe hopping in the Old Quarter</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Midday</div><div class="p-tl-desc">Spa / hotel rest / easy lunch</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Afternoon</div><div class="p-tl-desc">Uniqlo · Dong Xuan Market</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Evening</div><div class="p-tl-desc">Lotte Mall and final city views</div></div>
+      <div class="p-foods"><strong>Lifestyle:</strong> Coffee, Spa, Shopping, Lotte, Old Quarter</div>
+    </div>
+
+    <!-- DAY 7 -->
+    <div class="p-day">
+      <div class="p-day-header">
+        <div class="p-day-title">DAY 7 — June 5, 2026 · Departure Day</div>
+        <div class="p-day-theme">Goodbye Vietnam</div>
+      </div>
+      <div class="p-day-weather">🌅 Dawn departure &nbsp;|&nbsp; Keep water and snacks ready</div>
+      <div class="p-tl-row"><div class="p-tl-time">Early AM</div><div class="p-tl-desc">Checkout from La Renta Hotel & Spa</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Before sunrise</div><div class="p-tl-desc">Transfer to Noi Bai Airport</div></div>
+      <div class="p-tl-row"><div class="p-tl-time">Departure</div><div class="p-tl-desc">Flight to Manila / NAIA Terminal 3</div></div>
+      <div class="p-foods"><strong>Travel notes:</strong> Passport, tickets, cash, chargers, power bank</div>
     </div>
 
     <!-- Budget -->
