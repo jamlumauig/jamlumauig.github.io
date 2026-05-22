@@ -28,6 +28,7 @@
   --shadow-card: 0 4px 24px rgba(90,70,50,0.10);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 
 body{
   font-family:'DM Sans',sans-serif;
@@ -194,6 +195,165 @@ body > *{position:relative;z-index:1}
 .legend-sep{
   display:none; 
 }
+
+/* ── QUICK NAV + COLLAPSIBLES ── */
+.quick-nav{
+  position:fixed;
+  top:18px;
+  right:18px;
+  z-index:40;
+}
+.quick-nav-toggle{
+  width:46px;height:46px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(180deg,var(--sage),#5f7e5d);
+  color:var(--cream);
+  box-shadow:0 10px 24px rgba(45,42,38,.18);
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+}
+.hamburger-lines{
+  width:18px;height:12px;position:relative;display:inline-block;
+}
+.hamburger-lines::before,
+.hamburger-lines::after,
+.hamburger-lines{
+  background:currentColor;
+}
+.hamburger-lines,
+.hamburger-lines::before,
+.hamburger-lines::after{
+  border-radius:999px;
+}
+.hamburger-lines::before,
+.hamburger-lines::after{
+  content:'';
+  position:absolute;
+  left:0;right:0;
+  height:2px;
+  background:currentColor;
+}
+.hamburger-lines{background:currentColor;height:2px}
+.hamburger-lines::before{top:-5px}
+.hamburger-lines::after{top:5px}
+.sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);
+  white-space:nowrap;border:0;
+}
+.quick-nav-backdrop{
+  display:none;
+}
+.quick-nav-panel{
+  position:absolute;
+  top:54px;right:0;
+  width:280px;
+  max-height:70vh;
+  overflow-y:auto;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(224,216,204,.95);
+  background:rgba(255,253,249,.98);
+  box-shadow:0 14px 36px rgba(90,70,50,.16);
+  display:block;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-8px);
+  transition:opacity .2s ease, transform .2s ease;
+}
+.quick-nav-panel.is-open{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.quick-nav-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:8px;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-dark);
+  font-size:12px;
+}
+.quick-nav-close{
+  width:30px;height:30px;border-radius:999px;
+  border:1px solid rgba(224,216,204,.95);
+  background:#fff;
+  color:var(--text-mid);
+  cursor:pointer;
+}
+.quick-nav-panel a{
+  display:block;
+  text-decoration:none;
+  color:var(--text-mid);
+  font-size:12px;
+  padding:8px 10px;
+  border-radius:12px;
+}
+.quick-nav-panel a:hover{background:var(--sage-pale);color:var(--sage)}
+
+.collapsible-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.collapsible-head .section-label,
+.before-fly-head .section-label{
+  display:block;
+  margin-bottom:0;
+}
+.collapsible-head .section-label::before,
+.collapsible-head .section-label::after,
+.before-fly-head .section-label::before,
+.before-fly-head .section-label::after{
+  display:none;
+}
+.collapse-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid rgba(197,169,106,.32);
+  background:linear-gradient(180deg,#fffdf8,#f6efe4);
+  color:var(--sage);
+  border-radius:999px;
+  padding:6px 11px;
+  font-size:11px;
+  line-height:1;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.collapse-arrow{
+  display:inline-block;
+  transition:transform .22s ease;
+}
+.collapse-toggle[aria-expanded="true"] .collapse-arrow{transform:rotate(180deg)}
+.collapsible-content{
+  overflow:hidden;
+  max-height:4000px;
+  opacity:1;
+  transform:translateY(0);
+  transition:max-height .28s ease, opacity .2s ease, transform .28s ease;
+}
+.collapsible-content[hidden],
+.collapsible-content.is-collapsed{
+  display:block;
+  max-height:0;
+  opacity:0;
+  transform:translateY(-4px);
+  pointer-events:none;
+}
+.day-toggle{margin:12px 0 14px}
+.day-details{margin-top:2px}
+.day-details .photo-spots{margin-bottom:0}
+section[id], .legend-wrap[id], .day-wrap[id], footer[id]{scroll-margin-top:88px}
+span[id]{display:block;height:0;line-height:0;font-size:0;scroll-margin-top:88px}
 
 /* ════════════════════════════════════════
    QUICK INFO
@@ -637,12 +797,19 @@ body > *{position:relative;z-index:1}
 }
 .before-fly-head{
   margin-bottom:14px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
 }
 .before-fly-sub{
   font-size:12px;
   color:var(--text-soft);
   margin-top:4px;
+  flex:1 1 auto;
 }
+.before-fly-head .collapse-toggle{margin-left:auto}
 .before-fly-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -745,6 +912,27 @@ footer strong{color:var(--sage)}
 ════════════════════════════════════════ */
 @media(max-width:600px){
   body{font-size:16px}
+  .quick-nav{top:auto;bottom:16px;right:16px}
+  .quick-nav-toggle{width:48px;height:48px}
+  .quick-nav-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(25,22,18,.35);
+    backdrop-filter:blur(1px);
+    z-index:39;
+    display:none;
+  }
+  .quick-nav-backdrop.is-open{display:block}
+  .quick-nav-panel{
+    position:fixed;
+    left:12px;right:12px;bottom:12px;top:auto;
+    width:auto;
+    max-height:75vh;
+    padding:14px;
+    border-radius:20px;
+    transform:translateY(110%);
+  }
+  .quick-nav-panel.is-open{transform:translateY(0)}
   .hero{padding:44px 18px 38px}
   .legend-wrap{width:calc(100% - 16px);margin:-14px auto 8px;padding:10px 12px;border-radius:16px}
   .section{padding:30px 16px}
@@ -808,8 +996,12 @@ footer strong{color:var(--sage)}
     font-size:10.5pt;line-height:1.5;margin:0;padding:0;
   }
   .screen-itinerary,.print-btn{display:none!important}
+  .quick-nav,.quick-nav-backdrop,.collapse-toggle{display:none!important}
   body::before,body::after{display:none!important}
   .print-itinerary{display:block!important}
+  .collapsible-content,
+  .collapsible-content.is-collapsed,
+  .collapsible-content[hidden]{max-height:none!important;opacity:1!important;transform:none!important;pointer-events:auto!important}
 
   .p-page{max-width:100%;padding:14mm 15mm}
   .p-header{border-bottom:2pt solid black;padding-bottom:9pt;margin-bottom:14pt}
@@ -864,13 +1056,45 @@ footer strong{color:var(--sage)}
 </head>
 <body>
 
+<nav class="quick-nav no-print" aria-label="Quick itinerary navigation">
+  <button class="quick-nav-toggle" type="button" aria-expanded="false" aria-controls="quickNavPanel">
+    <span class="hamburger-lines" aria-hidden="true"></span>
+    <span class="sr-only">Open itinerary menu</span>
+  </button>
+
+  <div class="quick-nav-backdrop" data-menu-close aria-hidden="true"></div>
+
+  <div id="quickNavPanel" class="quick-nav-panel" aria-hidden="true">
+    <div class="quick-nav-head">
+      <strong>Jump to section</strong>
+      <button class="quick-nav-close" type="button" data-menu-close aria-label="Close menu">×</button>
+    </div>
+
+    <a href="#top">Go to Top</a>
+    <a href="#before-you-fly">Before You Fly</a>
+    <a href="#quick-info">Quick Info</a>
+    <a href="#sapa-adventure">Sapa Adventure</a>
+    <a href="#day-1">Day 1</a>
+    <a href="#day-2">Day 2</a>
+    <a href="#day-3">Day 3</a>
+    <a href="#hanoi-city">Hanoi City Experience</a>
+    <a href="#day-4">Day 4</a>
+    <a href="#day-5">Day 5</a>
+    <a href="#day-6">Day 6</a>
+    <a href="#day-7">Day 7</a>
+    <a href="#budget">Budget</a>
+    <a href="#travel-tips">Travel Tips</a>
+    <a href="#emergency">Emergency</a>
+  </div>
+</nav>
+
 <!-- ═══════════════════════════════════════
      SCREEN VERSION
 ═══════════════════════════════════════ -->
 <div class="screen-itinerary">
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero" id="top">
   <div class="hero-noise"></div>
   <div class="hero-tag">🏮 Vietnam Travel Itinerary · 2026</div>
   <h1 class="hero-title"><em>Hanoi</em> + Sapa,<br>Vietnam Trip</h1>
@@ -894,8 +1118,15 @@ footer strong{color:var(--sage)}
 </header>
 
 <!-- LEGEND -->
-<div class="legend-wrap">
-  <div class="legend-inner">
+<div class="legend-wrap" id="legend">
+  <div class="collapsible-head">
+    <p class="section-label">Legend</p>
+    <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="legend-content">
+      <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+    </button>
+  </div>
+  <div class="collapsible-content" id="legend-content">
+    <div class="legend-inner">
     <div class="legend-item"><span class="legend-icon">🏨</span> Hotel</div>
     <div class="legend-sep"></div>
     <div class="legend-item"><span class="legend-icon">🍜</span> Food</div>
@@ -927,12 +1158,19 @@ footer strong{color:var(--sage)}
     <div class="legend-item"><span class="legend-icon">🚻</span> Restroom</div>
     <div class="legend-sep"></div>
     <div class="legend-item"><span class="legend-icon">💱</span> ATM/Exchange</div>
+    </div>
   </div>
 </div>
 
 <!-- QUICK INFO -->
-<div class="section">
-  <p class="section-label">Quick Reference</p>
+<div class="section" id="quick-info">
+  <div class="collapsible-head">
+    <p class="section-label">Quick Reference</p>
+    <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="quick-info-content">
+      <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+    </button>
+  </div>
+  <div class="collapsible-content" id="quick-info-content">
   <div class="info-grid">
     <div class="info-card"><div class="info-icon">🏨</div><div class="info-label">Hotel</div><div class="info-val">Sapa Valley Hotel</div></div>
     <div class="info-card"><div class="info-icon">🚌</div><div class="info-label">Transport</div><div class="info-val">Bus + Walk/Grab</div></div>
@@ -942,14 +1180,19 @@ footer strong{color:var(--sage)}
     <div class="info-card"><div class="info-icon">🌇</div><div class="info-label">Sunset</div><div class="info-val">6:48 PM</div></div>
     <div class="info-card"><div class="info-icon">📶</div><div class="info-label">SIM / WiFi</div><div class="info-val">Airport setup</div></div>
   </div>
+  </div>
 </div>
 
 <!-- BEFORE YOU FLY -->
-<div class="section before-fly">
+<div class="section before-fly" id="before-you-fly">
   <div class="before-fly-head">
     <p class="section-label">Before You Fly</p>
     <div class="before-fly-sub">Airport reminders, travel prep & IO checklist</div>
+    <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="before-you-fly-content">
+      <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+    </button>
   </div>
+  <div class="collapsible-content" id="before-you-fly-content">
   <div class="before-fly-grid">
     <div class="bf-panel">
       <div class="bf-title">What to Bring</div>
@@ -1002,10 +1245,11 @@ footer strong{color:var(--sage)}
       </ul>
     </div>
   </div>
+  </div>
 </div>
 
 <!-- ══════ DAY 1 ══════ -->
-<div class="day-wrap">
+<div class="day-wrap" id="day-1">
   <div class="day-top-bar"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1150,7 +1394,8 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 2 ══════ -->
-<div class="day-wrap">
+<span id="sapa-adventure"></span>
+<div class="day-wrap" id="day-2">
   <div class="day-top-bar d2"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1282,7 +1527,7 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 3 ══════ -->
-<div class="day-wrap">
+<div class="day-wrap" id="day-3">
   <div class="day-top-bar d3"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1397,7 +1642,8 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 4 ══════ -->
-<div class="day-wrap">
+<span id="hanoi-city"></span>
+<div class="day-wrap" id="day-4">
   <div class="day-top-bar" style="background:linear-gradient(90deg,var(--sage),var(--gold),var(--terracotta))"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1546,7 +1792,7 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 5 ══════ -->
-<div class="day-wrap">
+<div class="day-wrap" id="day-5">
   <div class="day-top-bar" style="background:linear-gradient(90deg,var(--gold),var(--sage),var(--terracotta))"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1670,7 +1916,7 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 6 ══════ -->
-<div class="day-wrap">
+<div class="day-wrap" id="day-6">
   <div class="day-top-bar" style="background:linear-gradient(90deg,var(--sage),var(--cream),var(--gold))"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1757,7 +2003,7 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ DAY 7 ══════ -->
-<div class="day-wrap">
+<div class="day-wrap" id="day-7">
   <div class="day-top-bar" style="background:linear-gradient(90deg,var(--terracotta),var(--gold),var(--cream))"></div>
   <div class="day-inner">
     <div class="day-header">
@@ -1851,9 +2097,15 @@ footer strong{color:var(--sage)}
 </div>
 
 <!-- ══════ BUDGET ══════ -->
-<div class="budget-section" style="margin-top:16px">
+<div class="budget-section" style="margin-top:16px" id="budget">
   <div class="section">
-    <p class="section-label">Estimated Budget</p>
+    <div class="collapsible-head">
+      <p class="section-label">Estimated Budget</p>
+      <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="budget-content">
+        <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+      </button>
+    </div>
+    <div class="collapsible-content" id="budget-content">
     <div class="budget-grid">
       <div class="budget-card"><div class="budget-icon">🚌</div><div class="budget-cat">Transport</div><div class="budget-vnd">₫650,000–₫1,800,000</div><div class="budget-php">₱1,450 – ₱4,000</div></div>
       <div class="budget-card"><div class="budget-icon">🍜</div><div class="budget-cat">Food</div><div class="budget-vnd">₫700,000–₫1,200,000</div><div class="budget-php">₱1,550 – ₱2,700</div></div>
@@ -1862,12 +2114,19 @@ footer strong{color:var(--sage)}
       <div class="budget-card total"><div class="budget-icon">💼</div><div class="budget-cat">Total Estimated</div><div class="budget-vnd">₫2,450,000–₫5,800,000</div><div class="budget-php">₱5,450 – ₱12,950</div></div>
     </div>
     <div class="budget-note">⚠️ Mountain vendors and local markets may be cash-only.</div>
+    </div>
   </div>
 </div>
 
 <!-- ══════ TIPS ══════ -->
-<div class="section">
-  <p class="section-label">Travel Tips</p>
+<div class="section" id="travel-tips">
+  <div class="collapsible-head">
+    <p class="section-label">Travel Tips</p>
+    <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="travel-tips-content">
+      <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+    </button>
+  </div>
+  <div class="collapsible-content" id="travel-tips-content">
   <div class="tips-chips">
     <div class="tip-chip">📱 Download offline maps</div>
     <div class="tip-chip">🔋 Bring power bank</div>
@@ -1877,7 +2136,13 @@ footer strong{color:var(--sage)}
     <div class="tip-chip">🚌 Confirm bus pickup early</div>
   </div>
 
-  <p class="section-label" style="margin-top:24px">Emergency Reminders</p>
+  <div class="collapsible-head" style="margin-top:24px">
+    <p class="section-label" id="emergency">Emergency Reminders</p>
+    <button class="collapse-toggle" type="button" aria-expanded="true" aria-controls="emergency-content">
+      <span class="collapse-label">Hide</span><span class="collapse-arrow" aria-hidden="true">▼</span>
+    </button>
+  </div>
+  <div class="collapsible-content" id="emergency-content">
   <div class="emergency-bar">
     <div class="emergency-item"><div class="emergency-label">🚨 Police</div><div class="emergency-val">113</div></div>
     <div class="emergency-item"><div class="emergency-label">🚑 Ambulance</div><div class="emergency-val">115</div></div>
@@ -1885,6 +2150,7 @@ footer strong{color:var(--sage)}
     <div class="emergency-item"><div class="emergency-label">💱 Cash Exchange</div><div class="emergency-val">Airport/bank</div></div>
     <div class="emergency-item"><div class="emergency-label">📶 WiFi</div><div class="emergency-val">Portable WiFi</div></div>
     <div class="emergency-item"><div class="emergency-label">🌐 Translation</div><div class="emergency-val">Offline app</div></div>
+  </div>
   </div>
 </div>
 
@@ -1895,7 +2161,7 @@ footer strong{color:var(--sage)}
   </svg>
 </div>
 
-<footer>
+<footer id="footer">
   Safe travels ✈ · <strong>Hanoi + Sapa, Vietnam</strong> · May 30 – June 5, 2026
 </footer>
 
@@ -2075,6 +2341,153 @@ footer strong{color:var(--sage)}
 
   </div>
 </div><!-- /print-itinerary -->
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.querySelector('.quick-nav');
+  const toggle = document.querySelector('.quick-nav-toggle');
+  const panel = document.querySelector('#quickNavPanel');
+  const backdrop = document.querySelector('.quick-nav-backdrop');
+  const closeButtons = document.querySelectorAll('[data-menu-close]');
+  const mq = window.matchMedia('(max-width: 768px)');
+
+  const getLabel = (button) => {
+    let label = button.querySelector('.collapse-label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'collapse-label';
+      button.insertBefore(label, button.firstChild);
+    }
+    return label;
+  };
+
+  function setCollapseState(button, open) {
+    const target = document.getElementById(button.getAttribute('aria-controls'));
+    if (!target) return;
+
+    const isDay = button.classList.contains('day-toggle');
+    button.setAttribute('aria-expanded', String(open));
+    target.hidden = !open;
+    target.classList.toggle('is-collapsed', !open);
+
+    const label = getLabel(button);
+    label.textContent = open ? (isDay ? 'Hide Details' : 'Hide') : (isDay ? 'Show Details' : 'Show');
+  }
+
+  function syncCollapses() {
+    const openByDefault = !mq.matches;
+    document.querySelectorAll('.collapse-toggle').forEach((button) => {
+      setCollapseState(button, openByDefault);
+    });
+  }
+
+  document.querySelectorAll('.day-wrap').forEach((day, index) => {
+    if (day.querySelector('.day-toggle')) return;
+
+    const inner = day.querySelector('.day-inner');
+    const timeline = day.querySelector('.timeline');
+    if (!inner || !timeline) return;
+
+    const detailId = day.id ? `${day.id}-details` : `day-details-${index + 1}`;
+    const details = document.createElement('div');
+    details.id = detailId;
+    details.className = 'collapsible-content day-details';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.type = 'button';
+    toggleBtn.className = 'collapse-toggle day-toggle';
+    toggleBtn.setAttribute('aria-controls', detailId);
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.innerHTML = '<span class="collapse-label">Show Details</span><span class="collapse-arrow" aria-hidden="true">▼</span>';
+
+    let node = timeline.nextSibling;
+    const nodesToMove = [];
+    while (node) {
+      const next = node.nextSibling;
+      nodesToMove.push(node);
+      node = next;
+    }
+    nodesToMove.forEach((nodeToMove) => details.appendChild(nodeToMove));
+
+    timeline.insertAdjacentElement('afterend', toggleBtn);
+    toggleBtn.insertAdjacentElement('afterend', details);
+
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
+      setCollapseState(toggleBtn, !isOpen);
+    });
+  });
+
+  document.querySelectorAll('.collapse-toggle:not(.day-toggle)').forEach((button) => {
+    button.addEventListener('click', () => {
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      setCollapseState(button, !isOpen);
+    });
+  });
+
+  function openMenu() {
+    if (!toggle || !panel) return;
+    toggle.setAttribute('aria-expanded', 'true');
+    panel.classList.add('is-open');
+    panel.setAttribute('aria-hidden', 'false');
+    if (backdrop) {
+      backdrop.classList.add('is-open');
+      backdrop.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeMenu() {
+    if (!toggle || !panel) return;
+    toggle.setAttribute('aria-expanded', 'false');
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden', 'true');
+    if (backdrop) {
+      backdrop.classList.remove('is-open');
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  if (toggle && panel) {
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      isOpen ? closeMenu() : openMenu();
+    });
+  }
+
+  closeButtons.forEach((btn) => {
+    btn.addEventListener('click', closeMenu);
+  });
+
+  document.querySelectorAll('.quick-nav-panel a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      closeMenu();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!nav || !panel || !panel.classList.contains('is-open')) return;
+    if (!nav.contains(event.target)) {
+      closeMenu();
+    }
+  });
+
+  if (mq.addEventListener) mq.addEventListener('change', syncCollapses);
+  else if (mq.addListener) mq.addListener(syncCollapses);
+  syncCollapses();
+});
+</script>
 
 </body>
 </html>
