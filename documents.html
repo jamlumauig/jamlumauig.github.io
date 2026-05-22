@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traveller Documents · Hanoi + Sapa</title>
+<meta name="description" content="Upload, sync, and download shared Vietnam travel documents for group and solo travellers.">
+<meta name="theme-color" content="#6f876d">
+<link rel="canonical" href="https://jamlumauig.github.io/documents.html">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+:root{
+  --sage:#6e8c6b;--sage-light:#b5c9b3;--sage-pale:#eaf0e8;
+  --cream:#faf7f2;--beige:#f5efe6;--gold:#c5a96a;--gold-pale:#f8f2e2;
+  --terracotta:#c47a5a;--terra-light:#f0c5ac;--text-dark:#2d2a26;--text-mid:#5c5448;
+  --text-soft:#9a9088;--border:#e0d8cc;--shadow:0 2px 14px rgba(90,70,50,.07);--shadow-card:0 4px 24px rgba(90,70,50,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;color:var(--text-dark);
+  background:
+    radial-gradient(circle at 12% 8%, rgba(197,169,106,.11), transparent 24%),
+    radial-gradient(circle at 86% 6%, rgba(196,122,90,.10), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(110,140,107,.10), transparent 30%),
+    linear-gradient(180deg,#fbf8f3 0%,#f7f1e8 100%);
+  overflow-x:hidden;
+}
+body::before,body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+}
+body::before{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(110,140,107,.10), transparent 16%),
+    radial-gradient(circle at 78% 12%, rgba(196,122,90,.08), transparent 14%),
+    radial-gradient(circle at 50% 52%, rgba(255,255,255,.55), transparent 35%);
+}
+body::after{
+  background-image:linear-gradient(rgba(120,92,68,.035) 1px, transparent 1px),linear-gradient(90deg, rgba(120,92,68,.03) 1px, transparent 1px);
+  background-size:44px 44px;opacity:.35;mix-blend-mode:multiply;
+}
+body > *{position:relative;z-index:1}
+a{color:inherit}
+.page{max-width:1180px;margin:0 auto;padding:18px 18px 40px}
+.hero{
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.18), transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(255,227,199,.12), transparent 16%),
+    linear-gradient(155deg,#324335 0%,#46604a 34%,#6f8e6d 70%,#93ac88 100%);
+  color:#fff;border-radius:28px;padding:34px 22px 28px;box-shadow:0 18px 38px rgba(58,46,32,.18);position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;left:-8%;right:-8%;bottom:-2px;height:72px;pointer-events:none;
+  background:linear-gradient(180deg, rgba(250,247,242,.06), rgba(250,247,242,.18) 70%, #faf7f2 71%);
+  clip-path:polygon(0 100%,0 64%,8% 50%,15% 68%,24% 36%,34% 62%,45% 22%,56% 56%,67% 32%,78% 64%,88% 42%,100% 60%,100% 100%);
+}
+.hero-kicker{
+  display:inline-flex;gap:8px;align-items:center;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);padding:5px 14px;border-radius:999px;margin-bottom:14px;color:rgba(255,255,255,.85)
+}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,7vw,64px);font-weight:300;line-height:1.05;margin-bottom:8px}
+.hero p{max-width:760px;color:rgba(255,255,255,.78)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:999px;padding:10px 14px;border:1px solid transparent;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase
+}
+.btn.primary{background:#fff;color:var(--sage)}
+.btn.secondary{background:rgba(255,255,255,.13);color:#fff;border-color:rgba(255,255,255,.26)}
+.notice{
+  margin:14px 0 0;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.68);border:1px solid rgba(224,216,204,.9);color:var(--text-mid);font-size:12px
+}
+.section{margin-top:22px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px}
+.section-label{
+  font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px;display:flex;align-items:center;gap:10px
+}
+.section-label::before,.section-label::after{content:'';height:1px;flex:1;background:linear-gradient(90deg, rgba(110,140,107,.18), rgba(110,140,107,.75))}
+.section-label::after{background:linear-gradient(90deg, rgba(110,140,107,.75), rgba(110,140,107,.18))}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:500;color:var(--text-dark)}
+.section-sub{color:var(--text-soft);font-size:12px;max-width:720px}
+.group-wrap,.solo-wrap{
+  background:rgba(255,253,249,.92);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-card);padding:18px
+}
+.category{margin-top:16px}
+.category:first-child{margin-top:0}
+.category-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)
+}
+.category-name{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:500}
+.category-title{font-family:'Cormorant Garamond',serif;font-size:24px;line-height:1.1}
+.doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.doc-card{
+  background:linear-gradient(180deg,#fff,#fbf7f1);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px;min-height:210px
+}
+.doc-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.doc-meta{display:flex;flex-direction:column;gap:4px}
+.doc-tag{
+  display:inline-flex;align-self:flex-start;padding:4px 8px;border-radius:999px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;background:var(--sage-pale);color:var(--sage)
+}
+.doc-tag.optional{background:#fff4ee;color:var(--terracotta)}
+.doc-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--text-dark);line-height:1.05}
+.doc-note{font-size:12px;color:var(--text-mid)}
+.doc-status{
+  display:inline-flex;align-items:center;gap:6px;align-self:flex-start;border-radius:999px;padding:5px 9px;font-size:11px;background:var(--gold-pale);color:var(--gold);border:1px solid rgba(197,169,106,.22)
+}
+.doc-status.is-uploading{background:#fff4ee;color:var(--terracotta)}
+.doc-status.is-uploaded{background:#eef5ea;color:var(--sage)}
+.doc-status.is-error{background:#fff0ef;color:#b04a3d}
+.doc-filename{font-size:12px;color:var(--text-mid);word-break:break-word;min-height:34px}
+.doc-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.doc-upload-btn,.doc-download-btn{
+  border:none;border-radius:12px;padding:9px 11px;font-size:12px;cursor:pointer;text-decoration:none
+}
+.doc-upload-btn{background:var(--sage);color:var(--cream)}
+.doc-download-btn{background:#fff;color:var(--sage);border:1px solid rgba(110,140,107,.24)}
+.doc-download-btn[aria-disabled="true"]{opacity:.5;pointer-events:none}
+.doc-progress{width:100%;height:8px;background:#efe7dc;border-radius:999px;overflow:hidden}
+.doc-progress-bar{width:0%;height:100%;background:linear-gradient(90deg,var(--sage),var(--terracotta));border-radius:inherit;transition:width .2s ease}
+.doc-progress-text{font-size:11px;color:var(--text-soft)}
+.doc-files{display:grid;gap:6px}
+.doc-files-title{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-soft)}
+.doc-file-link{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid rgba(224,216,204,.9);text-decoration:none;color:var(--text-mid);font-size:12px
+}
+.doc-file-link:hover{border-color:rgba(110,140,107,.28);color:var(--sage)}
+.doc-empty{font-size:12px;color:var(--text-soft);padding:2px 0}
+.docs-tabs{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-bottom:14px;scrollbar-width:thin
+}
+.docs-tab{
+  border:1px solid rgba(197,169,106,.28);background:#fff;color:var(--text-mid);padding:9px 13px;border-radius:999px;cursor:pointer;font-size:12px;box-shadow:var(--shadow);white-space:nowrap;flex:0 0 auto
+}
+.docs-tab.is-active{background:var(--sage);color:var(--cream);border-color:transparent}
+.docs-panel{display:none}
+.docs-panel.is-active{display:block}
+.docs-panel[hidden]{display:none!important}
+.docs-error{
+  margin-top:14px;padding:10px 12px;border-radius:14px;background:#fff4ee;border:1px solid #f0d0c0;color:var(--terracotta);font-size:12px
+}
+.security-note{
+  margin-top:16px;padding:10px 12px;border-radius:14px;background:#fdf8f0;border:1px solid var(--border);font-size:12px;color:var(--text-mid)
+}
+.back-link{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;text-decoration:none;color:var(--sage);font-weight:500
+}
+.back-link:hover{text-decoration:underline}
+@media(max-width:800px){
+  .doc-grid{grid-template-columns:1fr}
+  .section-head{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:600px){
+  .page{padding:14px 14px 28px}
+  .hero{padding:28px 16px 22px}
+  .group-wrap,.solo-wrap{padding:14px}
+  .category-title{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <div class="hero-kicker">Vietnam Travel Files · Firebase Sync</div>
+    <h1>Traveller Documents</h1>
+    <p>Group trip files and solo immigration documents, synced across users and devices through Firebase Storage.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+      <a class="btn secondary" href="#solo-docs">Jump to Solo Docs</a>
+    </div>
+  </header>
+
+  <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
+
+  <section class="section" id="group-docs">
+    <div class="section-head">
+      <div>
+        <div class="section-label">Group Trip Documents</div>
+        <div class="section-title">Shared travel files</div>
+      </div>
+      <div class="section-sub">Shared itinerary, transport, hotels, budget, and travel info for the whole trip.</div>
+    </div>
+    <div class="group-wrap" id="groupDocRoot"></div>
+  </section>
+
+  <section class="section" id="solo-docs">
+    <div class="section-head">
+      <div>
+        <div class="section-label">Solo Traveller Documents</div>
+        <div class="section-title">Personal IO / immigration files</div>
+      </div>
+      <div class="section-sub">Switch between travellers, then upload personal support documents for each person.</div>
+    </div>
+    <div class="solo-wrap">
+      <div class="docs-tabs" role="tablist" aria-label="Traveller tabs">
+        <button class="docs-tab is-active" type="button" data-traveller-tab="traveller-1" aria-selected="true">Traveller 1</button>
+        <button class="docs-tab" type="button" data-traveller-tab="traveller-2" aria-selected="false">Traveller 2</button>
+        <button class="docs-tab" type="button" data-traveller-tab="traveller-3" aria-selected="false">Traveller 3</button>
+        <button class="docs-tab" type="button" data-traveller-tab="traveller-4" aria-selected="false">Traveller 4</button>
+      </div>
+      <div id="travellerPanelRoot"></div>
+      <div class="security-note">Firebase Storage rules must be configured properly before sharing publicly. Prefer authenticated access and avoid public write rules in production.</div>
+      <div class="docs-error" data-doc-error hidden></div>
+    </div>
+  </section>
+
+  <a class="back-link" href="vietnam-sapa-itinerary.html">← Back to Itinerary</a>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+
+// Firebase Storage rules must be configured properly before sharing publicly.
+// Prefer authenticated access. Avoid public write rules in production.
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_EXT = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+const ALLOWED_MIME = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]);
+
+const groupDocs = [
+  {
+    category: 'Transportation',
+    path: 'transportation',
+    docs: [
+      { key: 'manila-hanoi-flight-ticket', name: 'Manila → Hanoi flight ticket', note: 'Upload the e-ticket or booking confirmation.' },
+      { key: 'hanoi-sapa-bus-booking', name: 'Hanoi → Sapa bus booking', note: 'Keep the bus reference handy for boarding.' },
+      { key: 'sapa-hanoi-overnight-bus-booking', name: 'Sapa → Hanoi overnight bus booking', note: 'For the return leg back to Hanoi.' },
+      { key: 'hanoi-airport-transfer', name: 'Hanoi airport transfer details', note: 'Grab, taxi, or arranged pickup details.' },
+      { key: 'return-flight-ticket', name: 'Return flight ticket', note: 'Flight back to Manila or onward destination.' },
+      { key: 'grab-taxi-notes', name: 'Grab / taxi notes', note: 'Screenshots or contact notes if needed.' }
+    ]
+  },
+  {
+    category: 'Hotels',
+    path: 'hotels',
+    docs: [
+      { key: 'sapa-valley-hotel', name: 'Sapa Valley Hotel booking', note: 'Shared hotel confirmation for Sapa.' },
+      { key: 'la-renta-hotel-spa', name: 'La Renta Hotel & Spa booking', note: 'Hanoi hotel confirmation for the city stay.' },
+      { key: 'hotel-address-screenshots', name: 'Hotel address screenshots', note: 'Useful for rides, check-ins, and offline access.' },
+      { key: 'checkin-checkout-details', name: 'Check-in / check-out details', note: 'Times, policies, and reservation notes.' }
+    ]
+  },
+  {
+    category: 'Itinerary',
+    path: 'itinerary',
+    docs: [
+      { key: 'full-vietnam-itinerary', name: 'Full Vietnam itinerary', note: 'Complete day-by-day plan in one file.' },
+      { key: 'daily-schedule-copy', name: 'Daily schedule copy', note: 'A quick version for everyone in the group.' },
+      { key: 'activity-confirmations', name: 'Activity confirmations', note: 'Tickets and confirmations for booked activities.' },
+      { key: 'fansipan-ticket', name: 'Fansipan ticket / confirmation', note: 'If already booked for the cable car or summit.' },
+      { key: 'puppet-theater-ticket', name: 'Puppet Theater ticket', note: 'Use if you have a purchased show ticket.' },
+      { key: 'mega-grand-world-details', name: 'Mega Grand World details', note: 'Directions or reservations if needed.' }
+    ]
+  },
+  {
+    category: 'Budget / Money',
+    path: 'budget-money',
+    docs: [
+      { key: 'shared-budget-summary', name: 'Shared budget summary', note: 'Who paid what and planned spending.' },
+      { key: 'emergency-cash-plan', name: 'Emergency cash plan', note: 'Cash reserve and fallback plan.' },
+      { key: 'currency-exchange-notes', name: 'Currency exchange notes', note: 'Rates, counters, and exchange reminders.' },
+      { key: 'payment-screenshots', name: 'Payment screenshots', note: 'Helpful proof if anyone needs to verify payment.' }
+    ]
+  },
+  {
+    category: 'Emergency / Travel Info',
+    path: 'emergency-travel-info',
+    docs: [
+      { key: 'emergency-contacts', name: 'Emergency contacts', note: 'All trip contacts in one place.' },
+      { key: 'travel-insurance-copy', name: 'Travel insurance group copy', note: 'If the group has a shared policy.' },
+      { key: 'embassy-contact-notes', name: 'Embassy / contact notes', note: 'Support contacts and address notes.' },
+      { key: 'sim-wifi-details', name: 'SIM / WiFi details', note: 'Shared data plan or portable WiFi information.' }
+    ]
+  }
+];
+
+const travellerDocs = {
+  'traveller-1': [
+    {
+      category: 'Identity',
+      path: 'identity',
+      docs: [
+        { key: 'passport', name: 'Passport', note: 'Primary travel document.', tag: 'Required' },
+        { key: 'government-id', name: 'Valid government ID', note: 'Bring a backup ID.', tag: 'Recommended' },
+        { key: 'boarding-pass', name: 'Boarding pass', note: 'Print or save a screenshot.', tag: 'Required' }
+      ]
+    },
+    {
+      category: 'Employment / Source of Funds',
+      path: 'employment-source-of-funds',
+      docs: [
+        { key: 'company-id', name: 'Company ID', note: 'Helpful for immigration checks.', tag: 'Recommended' },
+        { key: 'coe', name: 'Certificate of Employment', note: 'If available from your employer.', tag: 'Recommended' },
+        { key: 'approved-leave-form', name: 'Approved leave form', note: 'Optional but useful proof.', tag: 'Optional' },
+        { key: 'payslip', name: 'Payslip', note: 'Bring recent copies if available.', tag: 'Optional' },
+        { key: 'business-permit', name: 'Business permit', note: 'If self-employed.', tag: 'Optional' },
+        { key: 'school-id', name: 'School ID / enrollment proof', note: 'If student.', tag: 'Optional' }
+      ]
+    },
+    {
+      category: 'Financial Proof',
+      path: 'financial-proof',
+      docs: [
+        { key: 'bank-certificate', name: 'Bank certificate', note: 'Shows account standing.', tag: 'Recommended' },
+        { key: 'bank-statement', name: 'Bank statement', note: 'Recent statement if available.', tag: 'Recommended' },
+        { key: 'card-copy', name: 'Credit / debit card copy', note: 'Hide sensitive numbers if preferred.', tag: 'Optional' },
+        { key: 'proof-of-funds', name: 'Proof of funds', note: 'Any extra proof that helps.', tag: 'Recommended' }
+      ]
+    },
+    {
+      category: 'Trip Proof',
+      path: 'trip-proof',
+      docs: [
+        { key: 'personal-itinerary', name: 'Personal travel itinerary', note: 'Personal copy of the trip plan.', tag: 'Required' },
+        { key: 'hotel-booking-copy', name: 'Hotel booking copy', note: 'Your personal booking reference.', tag: 'Required' },
+        { key: 'return-ticket-copy', name: 'Return ticket copy', note: 'Return flight confirmation.', tag: 'Required' },
+        { key: 'travel-insurance-copy', name: 'Travel insurance copy', note: 'Recommended for immigration and safety.', tag: 'Recommended' }
+      ]
+    },
+    {
+      category: 'Other Supporting Documents',
+      path: 'other-supporting-documents',
+      docs: [
+        { key: 'emergency-contact-card', name: 'Emergency contact card', note: 'Emergency names and phone numbers.', tag: 'Recommended' },
+        { key: 'authorization-letter', name: 'Authorization letter', note: 'If someone else is helping with travel documents.', tag: 'Optional' },
+        { key: 'other-documents', name: 'Other supporting documents', note: 'Any extra papers that may help.', tag: 'Optional' }
+      ]
+    }
+  ],
+  'traveller-2': [],
+  'traveller-3': [],
+  'traveller-4': []
+};
+
+const travellerOrder = ['traveller-1', 'traveller-2', 'traveller-3', 'traveller-4'];
+travellerOrder.slice(1).forEach((traveller) => {
+  travellerDocs[traveller] = JSON.parse(JSON.stringify(travellerDocs['traveller-1']));
+});
+
+let app = null;
+let auth = null;
+let storage = null;
+
+function sanitizeFileName(filename) {
+  return (filename || 'file')
+    .normalize('NFKD')
+    .replace(/[^\w.-]+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^[_ .-]+|[_ .-]+$/g, '') || 'file';
+}
+
+function showError(message) {
+  const box = document.querySelector('[data-doc-error]');
+  if (!box) return;
+  box.hidden = false;
+  box.textContent = message;
+}
+
+function clearError() {
+  const box = document.querySelector('[data-doc-error]');
+  if (!box) return;
+  box.hidden = true;
+  box.textContent = '';
+}
+
+function htmlEscape(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function cardMarkup({ owner, path, key, name, note, tag, tagClass = '' }) {
+  return `
+    <article class="doc-card" data-doc-owner="${htmlEscape(owner)}" data-doc-path="${htmlEscape(path)}" data-doc-key="${htmlEscape(key)}">
+      <div class="doc-card-head">
+        <div class="doc-meta">
+          <span class="doc-tag ${tagClass}">${htmlEscape(tag)}</span>
+          <div class="doc-name">${htmlEscape(name)}</div>
+        </div>
+        <span class="doc-status">Empty</span>
+      </div>
+      <div class="doc-note">${htmlEscape(note)}</div>
+      <div class="doc-filename">No file uploaded yet.</div>
+      <div class="doc-actions">
+        <button class="doc-upload-btn" type="button">Upload</button>
+        <a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+        <input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      </div>
+      <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div>
+      <div class="doc-progress-text">0%</div>
+      <div class="doc-files">
+        <div class="doc-files-title">Uploaded files</div>
+        <div data-doc-files></div>
+      </div>
+    </article>`;
+}
+
+function renderGroupDocs() {
+  const root = document.querySelector('#groupDocRoot');
+  if (!root) return;
+  root.innerHTML = groupDocs.map((group) => `
+    <div class="category">
+      <div class="category-head">
+        <div>
+          <div class="category-name">${htmlEscape(group.category)}</div>
+          <div class="category-title">${htmlEscape(group.category)}</div>
+        </div>
+      </div>
+      <div class="doc-grid">
+        ${group.docs.map((doc) => cardMarkup({
+          owner: 'group',
+          path: `${group.path}/${doc.key}`,
+          key: doc.key,
+          label: group.category,
+          name: doc.name,
+          note: doc.note,
+          tag: 'Shared',
+          tagClass: ''
+        })).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTravellerDocs() {
+  const root = document.querySelector('#travellerPanelRoot');
+  if (!root) return;
+  root.innerHTML = travellerOrder.map((traveller) => `
+    <div class="docs-panel ${traveller === 'traveller-1' ? 'is-active' : ''}" data-traveller-panel="${traveller}" ${traveller === 'traveller-1' ? '' : 'hidden'}>
+      ${travellerDocs[traveller].map((category) => `
+        <div class="category">
+          <div class="category-head">
+            <div>
+              <div class="category-name">${htmlEscape(category.category)}</div>
+              <div class="category-title">${htmlEscape(category.category)}</div>
+            </div>
+          </div>
+          <div class="doc-grid">
+            ${category.docs.map((doc) => cardMarkup({
+              owner: `travellers/${traveller}`,
+              path: `${category.path}/${doc.key}`,
+              key: doc.key,
+              label: category.category,
+              name: doc.name,
+              note: doc.note,
+              tag: doc.tag || 'Required',
+              tagClass: (doc.tag || '').toLowerCase() === 'optional' ? 'optional' : ''
+            })).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function getCardEls(card) {
+  return {
+    status: card.querySelector('.doc-status'),
+    filename: card.querySelector('.doc-filename'),
+    downloadBtn: card.querySelector('.doc-download-btn'),
+    input: card.querySelector('.doc-input'),
+    bar: card.querySelector('.doc-progress-bar'),
+    progressText: card.querySelector('.doc-progress-text'),
+    files: card.querySelector('[data-doc-files]')
+  };
+}
+
+function setStatus(card, text, state) {
+  const { status } = getCardEls(card);
+  if (!status) return;
+  status.classList.remove('is-uploading', 'is-uploaded', 'is-error');
+  if (state) status.classList.add(state);
+  status.textContent = text;
+}
+
+function updateCardUploadedState(card, filename, url) {
+  const { filename: nameEl, downloadBtn, bar, progressText } = getCardEls(card);
+  setStatus(card, 'Uploaded', 'is-uploaded');
+  if (nameEl) nameEl.textContent = filename;
+  if (downloadBtn) {
+    downloadBtn.href = url;
+    downloadBtn.setAttribute('aria-disabled', 'false');
+  }
+  if (bar) bar.style.width = '100%';
+  if (progressText) progressText.textContent = '100%';
+}
+
+function updateCardEmptyState(card) {
+  const { filename: nameEl, downloadBtn, bar, progressText, files } = getCardEls(card);
+  const list = files?.querySelector('[data-doc-files]');
+  setStatus(card, 'Empty');
+  if (nameEl) nameEl.textContent = 'No file uploaded yet.';
+  if (downloadBtn) {
+    downloadBtn.href = '#';
+    downloadBtn.setAttribute('aria-disabled', 'true');
+  }
+  if (bar) bar.style.width = '0%';
+  if (progressText) progressText.textContent = '0%';
+  if (list) list.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
+}
+
+function renderFiles(card, items) {
+  const { files } = getCardEls(card);
+  const list = files?.querySelector('[data-doc-files]');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
+    return;
+  }
+  list.innerHTML = items.map((item) => `
+    <a class="doc-file-link" href="${item.url}" target="_blank" rel="noopener">
+      <span>${htmlEscape(item.name)}</span><span>Download</span>
+    </a>
+  `).join('');
+}
+
+async function initFirebase() {
+  const values = Object.values(firebaseConfig);
+  if (values.some((value) => typeof value !== 'string' || value.includes('PASTE_'))) {
+    showError('Add your Firebase config values before using document uploads.');
+    return null;
+  }
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  storage = getStorage(app);
+  return app;
+}
+
+async function signInGuest() {
+  if (!auth) return null;
+  try {
+    return await signInAnonymously(auth);
+  } catch (error) {
+    showError('Firebase anonymous sign-in failed. Check Auth and Storage rules.');
+    throw error;
+  }
+}
+
+async function uploadTravellerDocument(card, file) {
+  const owner = card.dataset.docOwner;
+  const docPath = card.dataset.docPath;
+  const { bar, progressText, input } = getCardEls(card);
+  if (!storage) {
+    showError('Firebase is not configured yet.');
+    return;
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    setStatus(card, 'Upload failed', 'is-error');
+    showError('File too large. Maximum size is 10MB.');
+    return;
+  }
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!ALLOWED_EXT.includes(ext) || (!ALLOWED_MIME.has(file.type) && file.type !== '')) {
+    setStatus(card, 'Upload failed', 'is-error');
+    showError('Unsupported file type. Use PDF, JPG, PNG, DOC, or DOCX.');
+    return;
+  }
+
+  clearError();
+  setStatus(card, 'Uploading…', 'is-uploading');
+  if (bar) bar.style.width = '0%';
+  if (progressText) progressText.textContent = '0%';
+
+  const safeName = sanitizeFileName(file.name);
+  const fileRef = ref(storage, `travel-documents/${owner}/${docPath}/${safeName}`);
+  const task = uploadBytesResumable(fileRef, file);
+
+  return new Promise((resolve) => {
+    task.on('state_changed',
+      (snapshot) => {
+        const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        if (bar) bar.style.width = `${pct}%`;
+        if (progressText) progressText.textContent = `${pct}%`;
+      },
+      (error) => {
+        setStatus(card, 'Upload failed', 'is-error');
+        if (error?.code === 'storage/unauthorized' || error?.code === 'storage/unauthenticated') {
+          showError('Upload blocked by Firebase rules. Confirm Auth and Storage permissions.');
+        } else {
+          showError('Upload failed. Please try again.');
+        }
+        if (input) input.value = '';
+        resolve(null);
+      },
+      async () => {
+        try {
+          const url = await getDownloadURL(task.snapshot.ref);
+          updateCardUploadedState(card, safeName, url);
+          await loadDocumentForCard(card);
+          resolve(url);
+        } catch {
+          setStatus(card, 'Upload failed', 'is-error');
+          showError('Upload completed, but the download link could not be created.');
+          resolve(null);
+        } finally {
+          if (input) input.value = '';
+        }
+      }
+    );
+  });
+}
+
+async function loadDocumentForCard(card) {
+  if (!storage) {
+    updateCardEmptyState(card);
+    return;
+  }
+  const owner = card.dataset.docOwner;
+  const docPath = card.dataset.docPath;
+  try {
+    const folderRef = ref(storage, `travel-documents/${owner}/${docPath}`);
+    const result = await listAll(folderRef);
+    if (!result.items.length) {
+      updateCardEmptyState(card);
+      return;
+    }
+    const items = await Promise.all(result.items.map(async (itemRef) => {
+      const [meta, url] = await Promise.all([getMetadata(itemRef), getDownloadURL(itemRef)]);
+      return { name: itemRef.name, timeCreated: meta.timeCreated || '', url };
+    }));
+    items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
+    updateCardUploadedState(card, items[0].name, items[0].url);
+    renderFiles(card, items);
+  } catch (error) {
+    updateCardEmptyState(card);
+    if (error?.code === 'storage/unauthorized' || error?.code === 'storage/unauthenticated') {
+      showError('Firebase Storage permissions are blocking file listing.');
+    } else {
+      showError('Could not load saved documents from Firebase Storage.');
+    }
+  }
+}
+
+async function loadAllTravellerDocuments() {
+  const cards = document.querySelectorAll('.doc-card[data-doc-owner][data-doc-path]');
+  await Promise.all([...cards].map((card) => loadDocumentForCard(card)));
+}
+
+function bindUploads() {
+  document.querySelectorAll('.doc-card').forEach((card) => {
+    const { uploadBtn, input } = getCardEls(card);
+    if (!uploadBtn || !input) return;
+    uploadBtn.addEventListener('click', () => input.click());
+    input.addEventListener('change', async () => {
+      const [file] = input.files || [];
+      if (!file) return;
+      await uploadTravellerDocument(card, file);
+    });
+  });
+}
+
+function bindTabs() {
+  const tabs = document.querySelectorAll('[data-traveller-tab]');
+  const panels = document.querySelectorAll('[data-traveller-panel]');
+  if (!tabs.length || !panels.length) return;
+
+  const activate = (name) => {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.travellerTab === name;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.travellerPanel === name;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+    loadVisiblePanel(name);
+  };
+
+  tabs.forEach((tab) => tab.addEventListener('click', () => activate(tab.dataset.travellerTab)));
+  activate('traveller-1');
+}
+
+async function loadVisiblePanel(name) {
+  const panel = document.querySelector(`[data-traveller-panel="${name}"]`);
+  if (!panel) return;
+  await Promise.all([...panel.querySelectorAll('.doc-card')].map((card) => loadDocumentForCard(card)));
+}
+
+async function boot() {
+  renderGroupDocs();
+  renderTravellerDocs();
+  bindTabs();
+  bindUploads();
+  const appReady = await initFirebase();
+  if (!appReady) return;
+  await signInGuest();
+  await loadAllTravellerDocuments();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>
