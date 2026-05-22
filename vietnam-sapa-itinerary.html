@@ -914,6 +914,189 @@ span[id]{display:block;height:0;line-height:0;font-size:0;scroll-margin-top:88px
 .bf-step-text{font-size:12.5px;color:var(--text-mid);line-height:1.35}
 
 /* ════════════════════════════════════════
+   TRAVELLER DOCUMENTS
+════════════════════════════════════════ */
+.documents-section{
+  max-width:920px;
+  margin:0 auto 24px;
+  padding:0 24px;
+}
+.documents-shell{
+  background:linear-gradient(180deg,#fffdf9 0%,#f7f1e8 100%);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:var(--shadow-card);
+  padding:18px;
+}
+.documents-head{margin-bottom:14px}
+.documents-sub{font-size:12px;color:var(--text-soft);margin-top:4px}
+.docs-tabs{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:14px;
+}
+.docs-tab{
+  border:1px solid rgba(197,169,106,.28);
+  background:#fff;
+  color:var(--text-mid);
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:12px;
+  box-shadow:var(--shadow);
+}
+.docs-tab.is-active{
+  background:var(--sage);
+  color:var(--cream);
+  border-color:transparent;
+}
+.docs-panel{display:none}
+.docs-panel.is-active{display:block}
+.docs-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.doc-card{
+  background:linear-gradient(180deg,#fff,#fbf7f1);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:220px;
+}
+.doc-card-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.doc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;
+  color:var(--text-dark);
+  line-height:1.05;
+}
+.doc-owner{
+  font-size:10px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--sage);
+}
+.doc-status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  align-self:flex-start;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  background:var(--gold-pale);
+  color:var(--gold);
+  border:1px solid rgba(197,169,106,.22);
+}
+.doc-status.is-uploading{background:#fff4ee;color:var(--terracotta)}
+.doc-status.is-uploaded{background:#eef5ea;color:var(--sage)}
+.doc-status.is-error{background:#fff0ef;color:#b04a3d}
+.doc-filename{
+  font-size:12px;
+  color:var(--text-mid);
+  word-break:break-word;
+  min-height:36px;
+}
+.doc-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.doc-upload-btn,.doc-download-btn{
+  border:none;
+  border-radius:12px;
+  padding:9px 11px;
+  font-size:12px;
+  cursor:pointer;
+}
+.doc-upload-btn{
+  background:var(--sage);
+  color:var(--cream);
+}
+.doc-download-btn{
+  background:#fff;
+  color:var(--sage);
+  border:1px solid rgba(110,140,107,.24);
+  text-decoration:none;
+}
+.doc-download-btn[aria-disabled="true"]{
+  opacity:.5;
+  pointer-events:none;
+}
+.doc-progress{
+  width:100%;
+  height:8px;
+  background:#efe7dc;
+  border-radius:999px;
+  overflow:hidden;
+}
+.doc-progress-bar{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,var(--sage),var(--terracotta));
+  border-radius:inherit;
+  transition:width .2s ease;
+}
+.doc-progress-text{
+  font-size:11px;
+  color:var(--text-soft);
+}
+.doc-files{
+  display:grid;
+  gap:6px;
+}
+.doc-files-title{
+  font-size:10px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+  color:var(--text-soft);
+}
+.doc-file-link{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  padding:8px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.7);
+  border:1px solid rgba(224,216,204,.9);
+  text-decoration:none;
+  color:var(--text-mid);
+  font-size:12px;
+}
+.doc-file-link:hover{border-color:rgba(110,140,107,.28);color:var(--sage)}
+.docs-error{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--terracotta);
+}
+.firebase-note{
+  margin-top:10px;
+  font-size:11.5px;
+  color:var(--text-soft);
+}
+.firebase-note strong{color:var(--terracotta)}
+
+@media(max-width:900px){
+  .docs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+  .documents-section{padding:0 16px}
+  .documents-shell{padding:14px}
+  .docs-grid{grid-template-columns:1fr}
+}
+
+/* ════════════════════════════════════════
    FOOTER
 ════════════════════════════════════════ */
 footer{
@@ -999,6 +1182,7 @@ footer strong{color:var(--sage)}
   .before-fly-grid{grid-template-columns:1fr}
   .bf-list,.bf-chip-grid{grid-template-columns:1fr}
   .bf-panel.span-2{grid-column:auto}
+  .docs-grid{grid-template-columns:1fr}
 }
 
 /* ════════════════════════════════════════
@@ -1012,6 +1196,7 @@ footer strong{color:var(--sage)}
     font-size:10.5pt;line-height:1.5;margin:0;padding:0;
   }
   .screen-itinerary,.print-btn{display:none!important}
+  .documents-section{display:none!important}
   .quick-nav,.quick-nav-backdrop,.collapse-toggle{display:none!important}
   body::before,body::after{display:none!important}
   .print-itinerary{display:block!important}
@@ -2177,6 +2362,137 @@ footer strong{color:var(--sage)}
   </svg>
 </div>
 
+<!-- TRAVELLER DOCUMENTS -->
+<section id="traveller-documents" class="documents-section no-print">
+  <div class="documents-shell">
+    <div class="documents-head">
+      <p class="section-label">Traveller Documents</p>
+      <div class="documents-sub">Firebase Storage sync for uploads, downloads, and shared access across devices.</div>
+    </div>
+
+    <div class="docs-tabs" role="tablist" aria-label="Traveller document tabs">
+      <button class="docs-tab is-active" type="button" data-doc-tab="group" aria-selected="true">Group</button>
+      <button class="docs-tab" type="button" data-doc-tab="traveller-1" aria-selected="false">Traveller 1</button>
+      <button class="docs-tab" type="button" data-doc-tab="traveller-2" aria-selected="false">Traveller 2</button>
+      <button class="docs-tab" type="button" data-doc-tab="traveller-3" aria-selected="false">Traveller 3</button>
+      <button class="docs-tab" type="button" data-doc-tab="traveller-4" aria-selected="false">Traveller 4</button>
+    </div>
+
+    <div class="docs-panels">
+      <div class="docs-panel is-active" data-doc-panel="group">
+        <div class="docs-grid">
+          <article class="doc-card" data-doc-owner="group" data-doc-key="roundtrip-ticket">
+            <div class="doc-card-head">
+              <div>
+                <div class="doc-owner">Group</div>
+                <div class="doc-title">Roundtrip Ticket</div>
+              </div>
+              <span class="doc-status">Empty</span>
+            </div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions">
+              <button class="doc-upload-btn" type="button">Upload</button>
+              <a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+              <input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            </div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div>
+            <div class="doc-progress-text">0%</div>
+            <div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+
+          <article class="doc-card" data-doc-owner="group" data-doc-key="hotel-bookings">
+            <div class="doc-card-head">
+              <div>
+                <div class="doc-owner">Group</div>
+                <div class="doc-title">Hotel Bookings</div>
+              </div>
+              <span class="doc-status">Empty</span>
+            </div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions">
+              <button class="doc-upload-btn" type="button">Upload</button>
+              <a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+              <input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            </div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div>
+            <div class="doc-progress-text">0%</div>
+            <div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+
+          <article class="doc-card" data-doc-owner="group" data-doc-key="group-itinerary">
+            <div class="doc-card-head">
+              <div>
+                <div class="doc-owner">Group</div>
+                <div class="doc-title">Group Itinerary</div>
+              </div>
+              <span class="doc-status">Empty</span>
+            </div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions">
+              <button class="doc-upload-btn" type="button">Upload</button>
+              <a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+              <input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            </div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div>
+            <div class="doc-progress-text">0%</div>
+            <div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="docs-panel" data-doc-panel="traveller-1">
+        <div class="docs-grid">
+          <article class="doc-card" data-doc-owner="traveller-1" data-doc-key="passport">
+            <div class="doc-card-head"><div><div class="doc-owner">Traveller 1</div><div class="doc-title">Passport</div></div><span class="doc-status">Empty</span></div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+          <article class="doc-card" data-doc-owner="traveller-1" data-doc-key="boarding-pass">
+            <div class="doc-card-head"><div><div class="doc-owner">Traveller 1</div><div class="doc-title">Boarding Pass</div></div><span class="doc-status">Empty</span></div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+          <article class="doc-card" data-doc-owner="traveller-1" data-doc-key="travel-insurance">
+            <div class="doc-card-head"><div><div class="doc-owner">Traveller 1</div><div class="doc-title">Travel Insurance</div></div><span class="doc-status">Empty</span></div>
+            <div class="doc-filename">No file uploaded yet.</div>
+            <div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
+            <div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="docs-panel" data-doc-panel="traveller-2">
+        <div class="docs-grid">
+          <article class="doc-card" data-doc-owner="traveller-2" data-doc-key="passport"><div class="doc-card-head"><div><div class="doc-owner">Traveller 2</div><div class="doc-title">Passport</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-2" data-doc-key="boarding-pass"><div class="doc-card-head"><div><div class="doc-owner">Traveller 2</div><div class="doc-title">Boarding Pass</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-2" data-doc-key="travel-insurance"><div class="doc-card-head"><div><div class="doc-owner">Traveller 2</div><div class="doc-title">Travel Insurance</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+        </div>
+      </div>
+
+      <div class="docs-panel" data-doc-panel="traveller-3">
+        <div class="docs-grid">
+          <article class="doc-card" data-doc-owner="traveller-3" data-doc-key="passport"><div class="doc-card-head"><div><div class="doc-owner">Traveller 3</div><div class="doc-title">Passport</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-3" data-doc-key="boarding-pass"><div class="doc-card-head"><div><div class="doc-owner">Traveller 3</div><div class="doc-title">Boarding Pass</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-3" data-doc-key="travel-insurance"><div class="doc-card-head"><div><div class="doc-owner">Traveller 3</div><div class="doc-title">Travel Insurance</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+        </div>
+      </div>
+
+      <div class="docs-panel" data-doc-panel="traveller-4">
+        <div class="docs-grid">
+          <article class="doc-card" data-doc-owner="traveller-4" data-doc-key="passport"><div class="doc-card-head"><div><div class="doc-owner">Traveller 4</div><div class="doc-title">Passport</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-4" data-doc-key="boarding-pass"><div class="doc-card-head"><div><div class="doc-owner">Traveller 4</div><div class="doc-title">Boarding Pass</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+          <article class="doc-card" data-doc-owner="traveller-4" data-doc-key="travel-insurance"><div class="doc-card-head"><div><div class="doc-owner">Traveller 4</div><div class="doc-title">Travel Insurance</div></div><span class="doc-status">Empty</span></div><div class="doc-filename">No file uploaded yet.</div><div class="doc-actions"><button class="doc-upload-btn" type="button">Upload</button><a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a><input class="doc-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div><div class="doc-progress" aria-hidden="true"><div class="doc-progress-bar"></div></div><div class="doc-progress-text">0%</div><div class="doc-files"><div class="doc-files-title">Uploaded files</div><div data-doc-files></div></div></article>
+        </div>
+      </div>
+    </div>
+
+    <div class="firebase-note"><strong>Firebase Storage rules must be configured properly before sharing publicly.</strong> For travel-group use, prefer authenticated users only, path-restricted rules, or temporary public write rules only during testing.</div>
+    <div class="docs-error" data-doc-error hidden></div>
+  </div>
+</section>
+
 <footer id="footer">
   Safe travels ✈ · <strong>Hanoi + Sapa, Vietnam</strong> · May 30 – June 5, 2026
 </footer>
@@ -2503,6 +2819,315 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (mq.addListener) mq.addListener(syncCollapses);
   syncCollapses();
 });
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+// Firebase Storage rules must be configured properly before sharing publicly.
+// Prefer authenticated users only, path-restricted rules, or temporary testing-only access.
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_EXT = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+const ALLOWED_MIME = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]);
+
+let app = null;
+let storage = null;
+let auth = null;
+
+function sanitizeFileName(filename) {
+  return (filename || 'file')
+    .normalize('NFKD')
+    .replace(/[^\w.-]+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^[_ .-]+|[_ .-]+$/g, '') || 'file';
+}
+
+function showDocError(message) {
+  const box = document.querySelector('[data-doc-error]');
+  if (!box) return;
+  box.hidden = false;
+  box.textContent = message;
+}
+
+function clearDocError() {
+  const box = document.querySelector('[data-doc-error]');
+  if (!box) return;
+  box.hidden = true;
+  box.textContent = '';
+}
+
+function getCardEls(card) {
+  return {
+    status: card.querySelector('.doc-status'),
+    filename: card.querySelector('.doc-filename'),
+    uploadBtn: card.querySelector('.doc-upload-btn'),
+    downloadBtn: card.querySelector('.doc-download-btn'),
+    input: card.querySelector('.doc-input'),
+    bar: card.querySelector('.doc-progress-bar'),
+    progressText: card.querySelector('.doc-progress-text'),
+    files: card.querySelector('[data-doc-files]')
+  };
+}
+
+function setStatus(card, text, state) {
+  const { status } = getCardEls(card);
+  if (!status) return;
+  status.classList.remove('is-uploading', 'is-uploaded', 'is-error');
+  if (state) status.classList.add(state);
+  status.textContent = text;
+}
+
+function updateCardUploadedState(card, filename, url) {
+  const { filename: nameEl, downloadBtn, bar, progressText } = getCardEls(card);
+  setStatus(card, 'Uploaded', 'is-uploaded');
+  if (nameEl) nameEl.textContent = filename;
+  if (downloadBtn) {
+    downloadBtn.href = url;
+    downloadBtn.setAttribute('aria-disabled', 'false');
+    downloadBtn.textContent = 'Download';
+  }
+  if (bar) bar.style.width = '100%';
+  if (progressText) progressText.textContent = '100%';
+}
+
+function updateCardEmptyState(card) {
+  const { filename: nameEl, downloadBtn, bar, progressText, files } = getCardEls(card);
+  const list = files?.querySelector('[data-doc-files]');
+  setStatus(card, 'Empty');
+  if (nameEl) nameEl.textContent = 'No file uploaded yet.';
+  if (downloadBtn) {
+    downloadBtn.href = '#';
+    downloadBtn.setAttribute('aria-disabled', 'true');
+  }
+  if (bar) bar.style.width = '0%';
+  if (progressText) progressText.textContent = '0%';
+  if (list) list.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
+}
+
+function renderFiles(card, files) {
+  const { files: filesEl } = getCardEls(card);
+  if (!filesEl) return;
+  const list = filesEl.querySelector('[data-doc-files]') || filesEl;
+  list.innerHTML = '';
+  if (!files.length) {
+    list.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  files.forEach((item) => {
+    const link = document.createElement('a');
+    link.className = 'doc-file-link';
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.innerHTML = `<span>${item.name}</span><span>Download</span>`;
+    frag.appendChild(link);
+  });
+  list.appendChild(frag);
+}
+
+async function initFirebase() {
+  const values = Object.values(firebaseConfig);
+  if (values.some((value) => typeof value !== 'string' || value.includes('PASTE_'))) {
+    showDocError('Add your Firebase config values before using document uploads.');
+    return null;
+  }
+
+  app = initializeApp(firebaseConfig);
+  storage = getStorage(app);
+  auth = getAuth(app);
+  return app;
+}
+
+async function signInGuest() {
+  if (!auth) return null;
+  try {
+    return await signInAnonymously(auth);
+  } catch (error) {
+    showDocError('Firebase anonymous sign-in failed. Check Auth and Storage rules.');
+    throw error;
+  }
+}
+
+async function uploadTravellerDocument(card, file) {
+  const owner = card.dataset.docOwner;
+  const docKey = card.dataset.docKey;
+  const { bar, progressText, input } = getCardEls(card);
+  if (!storage) {
+    showDocError('Firebase is not configured yet.');
+    return;
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    setStatus(card, 'Upload failed', 'is-error');
+    showDocError('File too large. Maximum size is 10MB.');
+    return;
+  }
+
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!ALLOWED_EXT.includes(ext) || (!ALLOWED_MIME.has(file.type) && file.type !== '')) {
+    setStatus(card, 'Upload failed', 'is-error');
+    showDocError('Unsupported file type. Use PDF, JPG, PNG, DOC, or DOCX.');
+    return;
+  }
+
+  clearDocError();
+  setStatus(card, 'Uploading…', 'is-uploading');
+  if (bar) bar.style.width = '0%';
+  if (progressText) progressText.textContent = '0%';
+
+  const safeName = sanitizeFileName(file.name);
+  const fileRef = ref(storage, `travel-documents/${owner}/${docKey}/${safeName}`);
+  const task = uploadBytesResumable(fileRef, file);
+
+  return new Promise((resolve) => {
+    task.on('state_changed',
+      (snapshot) => {
+        const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        if (bar) bar.style.width = `${pct}%`;
+        if (progressText) progressText.textContent = `${pct}%`;
+      },
+      (error) => {
+        setStatus(card, 'Upload failed', 'is-error');
+        if (error?.code === 'storage/unauthorized' || error?.code === 'storage/unauthenticated') {
+          showDocError('Upload blocked by Firebase rules. Confirm Auth and Storage permissions.');
+        } else {
+          showDocError('Upload failed. Please try again.');
+        }
+        if (input) input.value = '';
+        resolve(null);
+      },
+      async () => {
+        try {
+          const url = await getDownloadURL(task.snapshot.ref);
+          updateCardUploadedState(card, safeName, url);
+          await loadDocumentForCard(card);
+          resolve(url);
+        } catch (error) {
+          setStatus(card, 'Upload failed', 'is-error');
+          showDocError('Upload completed, but the download link could not be created.');
+          resolve(null);
+        } finally {
+          if (input) input.value = '';
+        }
+      }
+    );
+  });
+}
+
+async function loadDocumentForCard(card) {
+  const owner = card.dataset.docOwner;
+  const docKey = card.dataset.docKey;
+
+  if (!storage) {
+    updateCardEmptyState(card);
+    return;
+  }
+
+  try {
+    const folderRef = ref(storage, `travel-documents/${owner}/${docKey}`);
+    const result = await listAll(folderRef);
+    if (!result.items.length) {
+      updateCardEmptyState(card);
+      return;
+    }
+
+    const items = await Promise.all(result.items.map(async (itemRef) => {
+      const [meta, url] = await Promise.all([getMetadata(itemRef), getDownloadURL(itemRef)]);
+      return { name: itemRef.name, timeCreated: meta.timeCreated || '', url };
+    }));
+
+    items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
+    const latest = items[0];
+    updateCardUploadedState(card, latest.name, latest.url);
+    renderFiles(card, items);
+  } catch (error) {
+    updateCardEmptyState(card);
+    if (error?.code === 'storage/unauthorized' || error?.code === 'storage/unauthenticated') {
+      showDocError('Firebase Storage permissions are blocking file listing.');
+    } else {
+      showDocError('Could not load saved documents from Firebase Storage.');
+    }
+  }
+}
+
+async function loadAllTravellerDocuments() {
+  const cards = document.querySelectorAll('.doc-card[data-doc-owner][data-doc-key]');
+  await Promise.all([...cards].map((card) => loadDocumentForCard(card)));
+}
+
+function initDocTabs() {
+  const tabs = document.querySelectorAll('[data-doc-tab]');
+  const panels = document.querySelectorAll('[data-doc-panel]');
+  if (!tabs.length || !panels.length) return;
+
+  const activate = (name) => {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.docTab === name;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.docPanel === name;
+      panel.classList.toggle('is-active', active);
+      panel.hidden = !active;
+    });
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => activate(tab.dataset.docTab));
+  });
+  activate('group');
+}
+
+function initDocUploads() {
+  document.querySelectorAll('.doc-card').forEach((card) => {
+    const { uploadBtn, input, downloadBtn } = getCardEls(card);
+    if (!uploadBtn || !input || !downloadBtn) return;
+
+    uploadBtn.addEventListener('click', () => input.click());
+    input.addEventListener('change', async () => {
+      const [file] = input.files || [];
+      if (!file) return;
+      await uploadTravellerDocument(card, file);
+    });
+  });
+}
+
+async function bootTravellerDocs() {
+  initDocTabs();
+  initDocUploads();
+
+  const appReady = await initFirebase();
+  if (!appReady) return;
+
+  await signInGuest();
+  await loadAllTravellerDocuments();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootTravellerDocs);
+} else {
+  bootTravellerDocs();
+}
 </script>
 
 </body>
