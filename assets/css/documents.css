@@ -681,9 +681,10 @@ a{color:inherit}
 .group-card-head,
 .booking-card-head{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:space-between;
   gap:12px;
+  flex-wrap:wrap;
 }
 
 .group-card-title,
@@ -715,6 +716,7 @@ a{color:inherit}
 .booking-actions{
   display:flex;
   flex-wrap:wrap;
+  align-items:center;
   gap:8px;
   justify-content:flex-end;
 }
@@ -820,6 +822,22 @@ a{color:inherit}
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
+}
+
+.doc-child-grid.doc-booking-grid,
+.doc-child-grid.doc-parent-grid,
+.doc-child-grid.doc-category-grid{
+  display:grid !important;
+  gap:18px !important;
+  align-items:start !important;
+}
+
+.doc-child-grid.doc-booking-grid.is-standard{
+  grid-template-columns:repeat(auto-fit, minmax(min(100%,360px), 1fr)) !important;
+}
+
+.doc-child-grid.doc-booking-grid.is-wide{
+  grid-template-columns:repeat(auto-fit, minmax(min(100%,420px), 1fr)) !important;
 }
 
 .doc-card{
@@ -1064,9 +1082,13 @@ a{color:inherit}
   align-items:flex-start;
   justify-content:space-between;
   gap:12px;
-  margin-bottom:10px;
-  padding-bottom:10px;
+  margin-bottom:8px;
+  padding-bottom:8px;
   border-bottom:1px solid rgba(224,216,204,.75);
+}
+
+.doc-category-head{
+  flex-wrap:wrap;
 }
 
 .doc-section-title{
@@ -1111,7 +1133,12 @@ a{color:inherit}
   align-items:stretch;
   justify-content:space-between;
   gap:10px;
-  padding:0 0 8px;
+  padding:0 0 6px;
+}
+
+.doc-booking-head{
+  align-items:flex-start;
+  flex-wrap:wrap;
 }
 
 .doc-accordion-toggle{
@@ -1121,57 +1148,97 @@ a{color:inherit}
   justify-content:space-between;
   gap:12px;
   padding:0;
+  min-width:0;
 }
 
 .doc-accordion-toggle strong,
 .doc-accordion-toggle .doc-section-title{
-  font-size:21px;
+  font-size:19px;
 }
 
 .doc-accordion-body{
   padding:0;
 }
 
-.doc-row.doc-card{
+.doc-group-category-body,
+.doc-booking-grid{
   display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:14px;
+  gap:18px;
   align-items:start;
+}
+
+.doc-booking-grid.is-standard{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));
+}
+
+.doc-booking-grid.is-wide{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));
+}
+
+.doc-booking-card{
+  width:100%;
+  min-width:0;
+  overflow:hidden;
+}
+
+.doc-group-card{
+  min-width:0;
+}
+
+.doc-row.doc-card{
+  display:block;
   background:rgba(255,255,255,.82);
   border:1px solid rgba(224,216,204,.82);
   border-left:4px solid rgba(110,140,107,.28);
   border-radius:16px;
   box-shadow:none;
-  padding:12px;
+  padding:14px;
   min-height:0;
+}
+
+.doc-row-content{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  width:100%;
 }
 
 .doc-row-main{
   min-width:0;
   display:grid;
-  gap:6px;
+  gap:7px;
 }
 
 .doc-row-title-line{
   display:flex;
   flex-wrap:wrap;
-  align-items:center;
+  align-items:flex-start;
   gap:8px;
+  min-width:0;
 }
 
 .doc-row-title-line h4{
   margin:0;
   font-family:'Cormorant Garamond',serif;
-  font-size:20px;
+  font-size:19px;
   line-height:1.05;
   color:var(--text-dark);
+}
+
+.doc-row-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-left:auto;
+  justify-content:flex-end;
 }
 
 .doc-row-desc{
   margin:0;
   color:var(--text-mid);
   font-size:13px;
-  max-width:62ch;
+  max-width:68ch;
 }
 
 .doc-required-pill{
@@ -1193,15 +1260,19 @@ a{color:inherit}
 
 .doc-row-actions{
   display:flex;
+  gap:10px;
+  align-items:stretch;
   flex-wrap:wrap;
-  justify-content:flex-end;
-  gap:8px;
-  align-self:center;
+  width:100%;
+  align-self:stretch;
+  margin-top:2px;
 }
 
 .doc-row-actions .doc-upload-btn,
 .doc-row-actions .doc-download-btn{
-  min-width:96px;
+  min-width:0;
+  flex:1 1 120px;
+  width:auto;
 }
 
 .doc-status.missing{
@@ -1239,6 +1310,7 @@ a{color:inherit}
   min-height:0;
   font-size:12px;
   line-height:1.45;
+  overflow-wrap:anywhere;
 }
 
 .doc-row .doc-file-name{
@@ -1247,10 +1319,11 @@ a{color:inherit}
 
 .doc-remarks-wrap{
   display:grid;
-  gap:6px;
+  gap:5px;
   width:100%;
-  margin-top:2px;
-  padding:9px 10px;
+  max-width:100%;
+  margin-top:4px;
+  padding:7px 8px;
   border:1px solid rgba(198,165,107,.16);
   border-radius:12px;
   background:rgba(255,252,246,.92);
@@ -1266,11 +1339,11 @@ a{color:inherit}
 
 .doc-remarks-input{
   width:100%;
-  min-height:64px;
+  min-height:52px;
   border-radius:12px;
   border:1px solid rgba(198,165,107,.24);
   background:rgba(255,252,246,.96);
-  padding:10px 12px;
+  padding:8px 10px;
   font:inherit;
   color:var(--text-dark);
   line-height:1.45;
@@ -1413,20 +1486,46 @@ body.docs-menu-open{
   .accordion-toggle strong{font-size:19px}
   .accordion-body{padding:0 12px 12px}
   .doc-accordion-toggle{padding:0}
-  .doc-row.doc-card{grid-template-columns:1fr;padding:12px}
-  .doc-row-actions{width:100%;flex-direction:column;align-items:stretch}
+  .doc-group-category-body,
+  .doc-booking-grid.is-wide,
+  .doc-booking-grid.is-standard{grid-template-columns:1fr;gap:12px}
+  .doc-child-grid.doc-booking-grid.is-wide,
+  .doc-child-grid.doc-booking-grid.is-standard{grid-template-columns:1fr !important;gap:12px !important}
+  .doc-booking-card{width:100%}
+  .doc-row.doc-card{padding:12px}
+  .doc-row-content{grid-template-columns:1fr;gap:12px}
+  .doc-row-actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .doc-row-actions .doc-upload-btn,
-  .doc-row-actions .doc-download-btn{width:100%}
+  .doc-row-actions .doc-download-btn{width:100%;flex:none}
+  .doc-row-badges{width:100%;justify-content:flex-start;margin-left:0}
   .doc-row-title-line h4{font-size:20px}
   .doc-row-desc,
   .doc-file-name,
   .section-subtitle,
   .section-sub{font-size:13px;line-height:1.45}
+  .doc-remarks-wrap{padding:7px 8px}
+  .doc-remarks-input{min-height:54px}
   .doc-progress{height:7px}
   .doc-accordion .subgroup-head{padding:8px 0 6px}
   .doc-accordion .subgroup-name{font-size:18px}
   .quick-links{gap:10px}
   .quick-link{padding:10px 12px;font-size:13px}
+}
+
+@media (max-width: 420px){
+  .doc-row-actions{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (min-width: 1200px){
+  .doc-row-content{
+    grid-template-columns:minmax(0,1fr) 150px;
+    gap:16px;
+  }
+  .doc-row-actions{
+    width:150px;
+  }
 }
 
 @media print{
@@ -1479,5 +1578,235 @@ body.docs-menu-open{
     min-height:0 !important;
     height:auto !important;
     resize:none !important;
+  }
+}
+
+/* Document card layout override */
+.doc-card,
+.doc-row,
+.doc-document-row,
+.doc-booking-card,
+.doc-parent-card,
+.doc-accordion{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+
+.doc-group-category-body,
+.doc-booking-grid,
+.doc-parent-grid,
+.doc-category-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 460px), 1fr)) !important;
+  gap:18px !important;
+  align-items:start !important;
+}
+
+.doc-booking-grid.is-wide{
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 460px), 1fr)) !important;
+}
+
+.doc-booking-grid.is-standard{
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 400px), 1fr)) !important;
+}
+
+.doc-booking-card,
+.doc-parent-card,
+.doc-accordion{
+  overflow:hidden !important;
+}
+
+.doc-booking-head,
+.doc-parent-head,
+.doc-accordion-head,
+.doc-category-head{
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  flex-wrap:wrap !important;
+}
+
+.doc-booking-actions,
+.doc-parent-actions,
+.doc-accordion-actions,
+.group-actions,
+.booking-actions{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+
+.doc-row-content,
+.doc-document-content{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+
+.doc-row-main,
+.doc-document-main{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+.doc-row-title-line,
+.doc-document-title-row,
+.doc-card-head{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+  width:100% !important;
+}
+
+.doc-row-title-line h4,
+.doc-document-title-row h4,
+.doc-card-head h4{
+  margin:0 !important;
+  flex:1 1 auto !important;
+  min-width:180px !important;
+  line-height:1.2 !important;
+}
+
+.doc-row-desc,
+.doc-document-desc,
+.doc-description{
+  width:100% !important;
+  max-width:100% !important;
+  margin:4px 0 0 !important;
+  line-height:1.45 !important;
+  overflow-wrap:break-word !important;
+  word-break:normal !important;
+}
+
+.doc-file-name{
+  width:100% !important;
+  max-width:100% !important;
+  margin-top:4px !important;
+  overflow-wrap:anywhere !important;
+  word-break:normal !important;
+  line-height:1.4 !important;
+}
+
+.doc-row-actions,
+.doc-document-actions,
+.doc-actions{
+  display:flex !important;
+  flex-direction:row !important;
+  gap:10px !important;
+  width:100% !important;
+  max-width:100% !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  margin-top:8px !important;
+  flex-wrap:wrap !important;
+}
+
+.doc-row-actions > *,
+.doc-document-actions > *,
+.doc-actions > *{
+  flex:1 1 120px !important;
+}
+
+.doc-upload-btn,
+.doc-download-btn,
+.doc-row-actions button,
+.doc-row-actions a,
+.doc-document-actions button,
+.doc-document-actions a,
+.doc-actions button,
+.doc-actions a{
+  height:44px !important;
+  min-height:44px !important;
+  max-height:44px !important;
+  width:auto !important;
+  min-width:120px !important;
+  max-width:180px !important;
+  flex:0 0 auto !important;
+  padding:0 18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:14px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+.doc-remarks-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  margin-top:8px !important;
+  box-sizing:border-box !important;
+}
+
+.doc-remarks-input{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:64px !important;
+  max-height:140px !important;
+  resize:vertical !important;
+  box-sizing:border-box !important;
+  line-height:1.45 !important;
+  overflow-wrap:break-word !important;
+}
+
+.doc-progress-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  height:8px !important;
+  margin-top:8px !important;
+}
+
+.doc-progress{
+  height:100% !important;
+}
+
+@media (max-width: 768px){
+  .doc-booking-grid,
+  .doc-parent-grid,
+  .doc-category-grid,
+  .doc-group-category-body{
+    grid-template-columns:1fr !important;
+  }
+
+  .doc-card,
+  .doc-row,
+  .doc-document-row{
+    padding:16px !important;
+  }
+
+  .doc-row-actions,
+  .doc-document-actions,
+  .doc-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:10px !important;
+  }
+
+  .doc-upload-btn,
+  .doc-download-btn,
+  .doc-row-actions button,
+  .doc-row-actions a,
+  .doc-document-actions button,
+  .doc-document-actions a,
+  .doc-actions button,
+  .doc-actions a{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+  }
+}
+
+@media (max-width: 420px){
+  .doc-row-actions,
+  .doc-document-actions,
+  .doc-actions{
+    grid-template-columns:1fr !important;
   }
 }

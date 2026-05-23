@@ -28,7 +28,10 @@ const REMOVED_DOC_KEYS = new Set([
   'hotel-address-screenshot',
   'checkin-details',
   'daily-schedule-copy',
-  'emergency-cash-plan'
+  'emergency-cash-plan',
+  'booking-receipt',
+  'seat-assignment',
+  'payment-receipt'
 ]);
 
 const REMARKS_LOCAL_PREFIX = 'documents-remarks-v1';
@@ -47,13 +50,12 @@ const groupStateDefaults = [
     groups: [
       {
         groupKey: 'manila-hanoi-flight',
-        groupTitle: 'Manila → Hanoi Flight',
-        summary: 'Flight tickets and booking references',
-        addLabel: 'Add Flight Booking',
+        groupTitle: 'Tickets',
+        summary: 'Back-to-back flight tickets',
+        addLabel: 'Add Ticket Set',
         subgroupPrefix: 'Booking',
         templateDocs: [
-          doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.'),
-          doc('booking-receipt', 'Booking Receipt', 'Airline or OTA receipt for the booking.')
+          doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.')
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] },
@@ -62,13 +64,12 @@ const groupStateDefaults = [
       },
       {
         groupKey: 'hanoi-sapa-bus',
-        groupTitle: 'Hanoi → Sapa Bus',
+        groupTitle: 'Bus Tickets',
         summary: 'Bus tickets and boarding references',
         addLabel: 'Add Bus Reservation',
         subgroupPrefix: 'Booking',
         templateDocs: [
-          doc('traveller-tickets', 'Traveller Tickets', 'Tickets or QR codes for boarding.'),
-          doc('booking-receipt', 'Booking Receipt', 'Reservation confirmation and receipt.')
+          doc('traveller-tickets', 'Traveller Tickets', 'Tickets or QR codes for boarding.')
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] }
@@ -76,13 +77,12 @@ const groupStateDefaults = [
       },
       {
         groupKey: 'sapa-hanoi-overnight-bus',
-        groupTitle: 'Sapa → Hanoi Overnight Bus',
+        groupTitle: 'Overnight Bus',
         summary: 'Return trip and sleeper notes',
         addLabel: 'Add Return Booking',
         subgroupPrefix: 'Booking',
         templateDocs: [
-          doc('return-ticket', 'Return Ticket', 'Return boarding pass or QR code.'),
-          doc('booking-receipt', 'Booking Receipt', 'Return-leg booking confirmation.')
+          doc('return-ticket', 'Return Ticket', 'Return boarding pass or QR code.')
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] }
@@ -95,27 +95,12 @@ const groupStateDefaults = [
         addLabel: 'Add Transfer Booking',
         subgroupPrefix: 'Transfer',
         templateDocs: [
-          doc('transfer-details', 'Transfer Details', 'Driver, pickup, and contact information.'),
-          doc('payment-receipt', 'Payment Receipt', 'Receipt or screenshot for the ride.')
+          doc('transfer-details', 'Transfer Details', 'Driver, pickup, and contact information.')
         ],
         subgroups: [
           { subgroupKey: 'transfer-a', subgroupLabel: 'Transfer A', docs: [] }
         ]
       },
-      {
-        groupKey: 'return-flight-ticket',
-        groupTitle: 'Return Flight Ticket',
-        summary: 'Return flight and seat assignment',
-        addLabel: 'Add Flight Booking',
-        subgroupPrefix: 'Booking',
-        templateDocs: [
-          doc('return-ticket', 'Return Flight Ticket', 'Return flight confirmation and e-ticket.'),
-          doc('seat-assignment', 'Seat Assignment', 'Seat or check-in reference if available.')
-        ],
-        subgroups: [
-          { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] }
-        ]
-      }
     ]
   },
   {
@@ -129,8 +114,7 @@ const groupStateDefaults = [
         addLabel: 'Add Room',
         subgroupPrefix: 'Room',
         templateDocs: [
-          doc('booking-confirmation', 'Room / Booking Confirmation', 'Upload booking confirmation or room reservation details.'),
-          doc('payment-receipt', 'Payment Receipt', 'Deposit or full payment proof.')
+          doc('booking-confirmation', 'Room / Booking Confirmation', 'Upload booking confirmation or room reservation details.')
         ],
         subgroups: [
           { subgroupKey: 'room-a', subgroupLabel: 'Room A', docs: [] },
@@ -144,8 +128,7 @@ const groupStateDefaults = [
         addLabel: 'Add Room',
         subgroupPrefix: 'Room',
         templateDocs: [
-          doc('booking-confirmation', 'Room / Booking Confirmation', 'Upload booking confirmation or room reservation details.'),
-          doc('payment-receipt', 'Payment Receipt', 'Deposit or full payment proof.')
+          doc('booking-confirmation', 'Room / Booking Confirmation', 'Upload booking confirmation or room reservation details.')
         ],
         subgroups: [
           { subgroupKey: 'room-a', subgroupLabel: 'Room A', docs: [] }
@@ -808,34 +791,38 @@ function renderDocCard({ owner, category, key, title, note, tag = 'Required', ta
       ${subgroup ? `data-doc-subgroup="${escapeHtml(subgroup)}"` : ''}
       ${travellerId ? `data-doc-traveller="${escapeHtml(travellerId)}"` : ''}>
       <input class="doc-file-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-      <div class="doc-row-main">
-        <div class="doc-row-title-line">
-          <h4>${escapeHtml(title)}</h4>
-          <span class="doc-required-pill ${tagClass}">${escapeHtml(tag)}</span>
-          <span class="doc-status missing">Missing</span>
+      <div class="doc-row-content">
+        <div class="doc-row-main">
+          <div class="doc-row-title-line">
+            <h4>${escapeHtml(title)}</h4>
+            <div class="doc-row-badges">
+              <span class="doc-required-pill ${tagClass}">${escapeHtml(tag)}</span>
+              <span class="doc-status missing">Missing</span>
+            </div>
+          </div>
+          <p class="doc-row-desc">${escapeHtml(note)}</p>
+          <div class="doc-file-name">No file uploaded yet.</div>
+          <div class="doc-remarks-wrap" data-remarks-wrap data-has-remarks="false">
+            <label class="doc-remarks-label" for="${escapeHtml(remarksId)}">Remarks / Notes</label>
+            <textarea
+              class="doc-remarks-input"
+              id="${escapeHtml(remarksId)}"
+              rows="2"
+              maxlength="500"
+              placeholder="Add remarks or reminders..."
+              data-remarks-input></textarea>
+            <div class="doc-remarks-copy" aria-hidden="true"></div>
+            <div class="doc-remarks-status" hidden aria-live="polite"></div>
+          </div>
+          <div class="doc-progress-wrap" hidden>
+            <div class="doc-progress"><div class="doc-progress-bar"></div></div>
+          </div>
+          <div class="doc-error" hidden></div>
         </div>
-        <p class="doc-row-desc">${escapeHtml(note)}</p>
-        <div class="doc-file-name">No file uploaded yet.</div>
-        <div class="doc-remarks-wrap" data-remarks-wrap data-has-remarks="false">
-          <label class="doc-remarks-label" for="${escapeHtml(remarksId)}">Remarks / Notes</label>
-          <textarea
-            class="doc-remarks-input"
-            id="${escapeHtml(remarksId)}"
-            rows="2"
-            maxlength="500"
-            placeholder="Add remarks or reminders..."
-            data-remarks-input></textarea>
-          <div class="doc-remarks-copy" aria-hidden="true"></div>
-          <div class="doc-remarks-status" hidden aria-live="polite"></div>
-        </div>
-        <div class="doc-progress-wrap" hidden>
-          <div class="doc-progress"><div class="doc-progress-bar"></div></div>
-        </div>
-        <div class="doc-error" hidden></div>
-      </div>
-      <div class="doc-row-actions">
-        <button class="doc-upload-btn" type="button">Upload</button>
-        <a class="doc-download-btn disabled" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+        <aside class="doc-row-actions">
+          <button class="doc-upload-btn" type="button">Upload</button>
+          <a class="doc-download-btn disabled" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
+        </aside>
       </div>
     </article>
   `;
@@ -909,9 +896,10 @@ function renderGroupCategory(category) {
     const docs = subgroup.docs.length ? subgroup.docs : group.templateDocs || [];
     return subCount + docs.length;
   }, 0), 0);
+  const bookingGridClass = ['transportation', 'hotels'].includes(category.categoryKey) ? 'doc-booking-grid is-wide' : 'doc-booking-grid is-standard';
   return `
     <section class="section accordion is-open doc-section-clean doc-category" id="group-${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}" data-doc-total="${totalDocs}">
-      <div class="doc-section-head doc-accordion-head">
+      <div class="doc-section-head doc-accordion-head doc-category-head">
         <button class="accordion-toggle doc-accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
           <span>
             <strong class="doc-section-title">${escapeHtml(category.categoryTitle)}</strong>
@@ -921,7 +909,7 @@ function renderGroupCategory(category) {
           <span class="arrow" aria-hidden="true">▼</span>
         </button>
       </div>
-      <div class="accordion-body doc-accordion-body" id="${escapeHtml(category.categoryKey)}-body">
+      <div class="accordion-body doc-accordion-body doc-group-category-body ${bookingGridClass}" id="${escapeHtml(category.categoryKey)}-body">
         ${category.groups.map((group) => renderGroupCard(category, group)).join('')}
       </div>
     </section>
@@ -935,8 +923,8 @@ function renderGroupCard(category, group) {
     return count + docs.length;
   }, 0);
   return `
-    <article class="doc-accordion doc-parent-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-total="${totalDocs}">
-      <div class="doc-accordion-head">
+    <article class="doc-accordion doc-parent-card doc-group-card doc-booking-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-total="${totalDocs}">
+      <div class="doc-accordion-head doc-booking-head">
         <button class="accordion-toggle doc-accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(group.groupKey)}-body" data-accordion-toggle>
           <span>
             <strong class="doc-section-title">${escapeHtml(group.groupTitle)}</strong>
@@ -960,9 +948,10 @@ function renderGroupSubgroup(category, group, subgroup, index) {
   const openDefault = subgroup.fixed || index === 0;
   const docs = subgroup.docs.length ? subgroup.docs : clone(group.templateDocs || []);
   const totalDocs = docs.length;
+  const childGridClass = ['transportation', 'hotels'].includes(category.categoryKey) ? 'doc-booking-grid is-wide' : 'doc-booking-grid is-standard';
   return `
     <section class="subgroup doc-accordion doc-parent-card ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-doc-total="${totalDocs}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
-      <div class="doc-accordion-head">
+        <div class="doc-accordion-head doc-booking-head">
         <button class="toggle-btn doc-accordion-toggle" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" data-subgroup-toggle>
           <span>
             <strong class="doc-section-title">${escapeHtml(subgroup.subgroupLabel)}</strong>
@@ -976,7 +965,7 @@ function renderGroupSubgroup(category, group, subgroup, index) {
         </div>
       </div>
       <div class="subgroup-body doc-accordion-body" id="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" ${openDefault ? '' : 'hidden'}>
-        <div class="doc-grid doc-child-grid">
+        <div class="doc-grid doc-child-grid ${childGridClass}">
           ${docs.map((item) => renderDocCard({
             owner: 'group',
             category: category.categoryKey,
