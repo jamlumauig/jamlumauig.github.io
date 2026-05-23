@@ -95,6 +95,18 @@ export function getDocFolderPath(card) {
   return `travel-documents/travellers/${travellerId}/${category}/${key}`;
 }
 
+export function getDocFolderPaths(card) {
+  const paths = [getDocFolderPath(card)];
+  if (card?.dataset?.docOwner === 'group' && card.dataset.docGroupAlias) {
+    const category = card.dataset.docCategory || 'group';
+    const group = card.dataset.docGroupAlias || 'booking';
+    const subgroup = card.dataset.docSubgroup || 'main';
+    const key = card.dataset.docKey || 'document';
+    paths.push(`travel-documents/group/${category}/${group}/${subgroup}/${key}`);
+  }
+  return [...new Set(paths)];
+}
+
 export function buildStoragePath(card, filename) {
   const safeName = sanitizeFileName(filename);
   return `${getDocFolderPath(card)}/${safeName}`;
@@ -131,19 +143,30 @@ export async function uploadDocumentForCard(card, file, onProgress = () => {}) {
 export async function loadDocumentFiles(card) {
   await initFirebase();
   if (!storage) return [];
-  const folderRef = ref(storage, getDocFolderPath(card));
-  const result = await listAll(folderRef);
-  const items = await Promise.all(result.items.map(async (itemRef) => {
-    const [meta, url] = await Promise.all([
-      getMetadata(itemRef).catch(() => ({})),
-      getDownloadURL(itemRef)
-    ]);
-    return {
-      name: itemRef.name,
-      url,
-      timeCreated: meta.timeCreated || ''
-    };
-  }));
+  const seen = new Set();
+  const items = [];
+  for (const path of getDocFolderPaths(card)) {
+    const folderRef = ref(storage, path);
+    let result;
+    try {
+      result = await listAll(folderRef);
+    } catch {
+      continue;
+    }
+    for (const itemRef of result.items) {
+      if (seen.has(itemRef.name)) continue;
+      seen.add(itemRef.name);
+      const [meta, url] = await Promise.all([
+        getMetadata(itemRef).catch(() => ({})),
+        getDownloadURL(itemRef)
+      ]);
+      items.push({
+        name: itemRef.name,
+        url,
+        timeCreated: meta.timeCreated || ''
+      });
+    }
+  }
   return items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
 }
 

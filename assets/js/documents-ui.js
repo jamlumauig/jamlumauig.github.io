@@ -11,7 +11,11 @@ import {
 // Frontend password protection is only a light access gate. Use Firebase Auth and security rules for real privacy.
 const DOCUMENT_ACCESS_PASSWORD = 'lakbay2026';
 const DOCUMENT_ACCESS_KEY = 'vietnamDocsUnlocked';
-const GROUP_STATE_KEY = 'documents-group-layout-v1';
+const GROUP_STATE_KEY = 'documents-group-layout-v3';
+const GROUP_STATE_LEGACY_KEYS = [
+  'documents-group-layout-v2',
+  'documents-group-layout-v1'
+];
 
 const doc = (key, title, note, tag = 'Required') => ({
   key,
@@ -22,14 +26,12 @@ const doc = (key, title, note, tag = 'Required') => ({
 });
 
 const REMOVED_DOC_KEYS = new Set([
-  'baggage-details',
   'pickup-details',
   'occupants-list',
   'hotel-address-screenshot',
   'checkin-details',
   'daily-schedule-copy',
   'emergency-cash-plan',
-  'booking-receipt',
   'seat-assignment',
   'payment-receipt'
 ]);
@@ -49,13 +51,15 @@ const groupStateDefaults = [
     categoryTitle: 'Transportation',
     groups: [
       {
-        groupKey: 'manila-hanoi-flight',
+        groupKey: 'tickets',
         groupTitle: 'Tickets',
-        summary: 'Back-to-back flight tickets',
+        summary: 'Roundtrip flight tickets and booking references.',
         addLabel: 'Add Ticket Set',
         subgroupPrefix: 'Booking',
         templateDocs: [
-          doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.')
+          doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.'),
+          doc('booking-receipt', 'Booking Receipt', 'Airline or OTA receipt for the booking.'),
+          doc('baggage-details', 'Baggage Details', 'Checked baggage, carry-on, and airline baggage notes.')
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] },
@@ -302,14 +306,115 @@ function getTravellerId(pageType) {
 
 function loadGroupState() {
   try {
-    const raw = localStorage.getItem(GROUP_STATE_KEY);
+    const raw = localStorage.getItem(GROUP_STATE_KEY) || GROUP_STATE_LEGACY_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
     if (!raw) return clone(groupStateDefaults);
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return clone(groupStateDefaults);
-    return sanitizeGroupState(parsed);
+    const migrated = sanitizeGroupState(migrateGroupState(parsed));
+    saveGroupState(migrated);
+    cleanupLegacyGroupState();
+    return migrated;
   } catch {
     return clone(groupStateDefaults);
   }
+}
+
+function cleanupLegacyGroupState() {
+  try {
+    for (const key of GROUP_STATE_LEGACY_KEYS) {
+      localStorage.removeItem(key);
+    }
+  } catch {
+    // Ignore storage cleanup failures.
+  }
+}
+
+function normalizeTransportationGroup(group) {
+  const label = String(group.groupTitle || '').toLowerCase();
+  const key = String(group.groupKey || '').toLowerCase();
+  const isReturnFlight = key === 'hanoi-manila-return-flight' || key === 'return-flight-ticket' || /return flight/.test(label);
+  if (isReturnFlight) return null;
+
+  const isTickets = key === 'manila-hanoi-flight' || key === 'tickets' || /manila\s*→\s*hanoi flight/.test(label) || /^tickets?$/.test(label);
+  if (!isTickets) return {
+    ...group,
+    templateDocs: sanitizeDocs(group.templateDocs),
+    subgroups: (group.subgroups || []).map((subgroup) => ({
+      ...subgroup,
+      docs: sanitizeDocs(subgroup.docs)
+    }))
+  };
+
+  return {
+    ...group,
+    groupKey: 'tickets',
+    groupTitle: 'Tickets',
+    summary: 'Roundtrip flight tickets and booking references.',
+    addLabel: 'Add Ticket Set',
+    templateDocs: [
+      doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.'),
+      doc('booking-receipt', 'Booking Receipt', 'Airline or OTA receipt for the booking.'),
+      doc('baggage-details', 'Baggage Details', 'Checked baggage, carry-on, and airline baggage notes.')
+    ],
+    subgroups: (group.subgroups || []).map((subgroup) => ({
+      ...subgroup,
+      docs: sanitizeDocs(subgroup.docs)
+    }))
+  };
+}
+
+function migrateGroupState(state) {
+  const cloned = clone(state);
+  for (const category of cloned) {
+    if (category.categoryKey !== 'transportation') continue;
+    const nextGroups = [];
+    const ticketGroupIndex = new Map();
+    for (const group of category.groups || []) {
+      const normalized = normalizeTransportationGroup(group);
+      if (!normalized) {
+        continue;
+      }
+      if (normalized.groupKey === 'tickets') {
+        const existingIndex = ticketGroupIndex.get('tickets');
+        if (typeof existingIndex === 'number') {
+          const existing = nextGroups[existingIndex];
+          const mergedSubgroups = [...(existing.subgroups || [])];
+          for (const subgroup of normalized.subgroups || []) {
+            const subgroupIndex = mergedSubgroups.findIndex((item) => item.subgroupKey === subgroup.subgroupKey);
+            if (subgroupIndex === -1) {
+              mergedSubgroups.push(subgroup);
+            } else {
+              const current = mergedSubgroups[subgroupIndex];
+              mergedSubgroups[subgroupIndex] = {
+                ...current,
+                ...subgroup,
+                docs: current.fixed ? current.docs : (current.docs?.length ? current.docs : subgroup.docs)
+              };
+            }
+          }
+          nextGroups[existingIndex] = {
+            ...existing,
+            ...normalized,
+            subgroups: mergedSubgroups
+          };
+        } else {
+          ticketGroupIndex.set('tickets', nextGroups.length);
+          nextGroups.push(normalized);
+        }
+        continue;
+      }
+      nextGroups.push({
+        ...normalized,
+        templateDocs: sanitizeDocs(normalized.templateDocs),
+        subgroups: (normalized.subgroups || []).map((subgroup) => ({
+          ...subgroup,
+          docs: sanitizeDocs(subgroup.docs)
+        }))
+      });
+    }
+    category.groups = nextGroups;
+  }
+  return cloned;
 }
 
 function sanitizeDocs(docs) {
@@ -778,7 +883,7 @@ function renderBreadcrumbs(items) {
   `;
 }
 
-function renderDocCard({ owner, category, key, title, note, tag = 'Required', tagClass = '', group = '', subgroup = '', travellerId = '' }) {
+function renderDocCard({ owner, category, key, title, note, tag = 'Required', tagClass = '', group = '', subgroup = '', travellerId = '', groupAlias = '' }) {
   const remarksId = buildRemarksTextareaId({
     dataset: { docOwner: owner, docCategory: category, docKey: key, docGroup: group, docSubgroup: subgroup }
   });
@@ -788,6 +893,7 @@ function renderDocCard({ owner, category, key, title, note, tag = 'Required', ta
       data-doc-category="${escapeHtml(category)}"
       data-doc-key="${escapeHtml(key)}"
       ${group ? `data-doc-group="${escapeHtml(group)}"` : ''}
+      ${groupAlias ? `data-doc-group-alias="${escapeHtml(groupAlias)}"` : ''}
       ${subgroup ? `data-doc-subgroup="${escapeHtml(subgroup)}"` : ''}
       ${travellerId ? `data-doc-traveller="${escapeHtml(travellerId)}"` : ''}>
       <input class="doc-file-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
@@ -949,6 +1055,7 @@ function renderGroupSubgroup(category, group, subgroup, index) {
   const docs = subgroup.docs.length ? subgroup.docs : clone(group.templateDocs || []);
   const totalDocs = docs.length;
   const childGridClass = ['transportation', 'hotels'].includes(category.categoryKey) ? 'doc-booking-grid is-wide' : 'doc-booking-grid is-standard';
+  const groupAlias = group.groupKey === 'tickets' ? 'manila-hanoi-flight' : '';
   return `
     <section class="subgroup doc-accordion doc-parent-card ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-doc-total="${totalDocs}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
         <div class="doc-accordion-head doc-booking-head">
@@ -975,7 +1082,8 @@ function renderGroupSubgroup(category, group, subgroup, index) {
             tag: item.tag,
             tagClass: item.tagClass,
             group: group.groupKey,
-            subgroup: subgroup.subgroupKey
+            subgroup: subgroup.subgroupKey,
+            groupAlias
           })).join('')}
         </div>
       </div>
