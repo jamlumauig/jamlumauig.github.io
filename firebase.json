@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "site": "travelitinerary",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "firebase-debug.log"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/vietnam-sapa-itinerary.html"
+      }
+    ]
+  }
+}
