@@ -22,7 +22,12 @@
       </div>
       <div class="sync-badge" data-sync-status>Loading Firebase sync...</div>
     </header>
-    <div class="loading-card">Loading shared trip files…</div>
+    <section id="group-documents" class="doc-section">
+      <div id="groupDocumentsContainer">
+        <p class="doc-loading">Loading shared trip files...</p>
+      </div>
+    </section>
+    <div class="warning" data-firebase-warning hidden></div>
   </div>
 </main>
 <script type="module" src="assets/js/documents-ui.js"></script>

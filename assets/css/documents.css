@@ -330,6 +330,23 @@ a{color:inherit}
   gap:18px;
 }
 
+.doc-section{
+  display:grid;
+  gap:16px;
+}
+
+.doc-category{
+  display:block;
+}
+
+.doc-parent-card{
+  width:100%;
+}
+
+.doc-child-grid{
+  width:100%;
+}
+
 .docs-topbar{
   display:flex;
   flex-wrap:wrap;
@@ -727,6 +744,10 @@ a{color:inherit}
   color:var(--text-mid);
 }
 
+.doc-description{
+  margin:0;
+}
+
 .doc-status{
   display:inline-flex;
   align-items:center;
@@ -867,6 +888,18 @@ a{color:inherit}
   border-radius:12px;
   padding:8px 10px;
   line-height:1.45;
+}
+
+.doc-warning,
+.doc-error-box,
+.doc-loading{
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px dashed rgba(110,140,107,.25);
+  background:rgba(255,255,255,.60);
+  color:var(--text-soft);
+  font-size:13px;
+  line-height:1.5;
 }
 
 .warning{

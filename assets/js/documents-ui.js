@@ -469,7 +469,7 @@ function renderDocCard({ owner, category, key, title, note, tag = 'Required', ta
         </div>
         <span class="doc-status needed">Needed</span>
       </div>
-      <div class="doc-note">${escapeHtml(note)}</div>
+      <p class="doc-note doc-description">${escapeHtml(note)}</p>
       <div class="doc-file-name">No file uploaded yet.</div>
       <div class="doc-actions">
         <button class="doc-upload-btn" type="button">Upload</button>
@@ -547,9 +547,14 @@ function renderGroupPage() {
   return shell;
 }
 
+function renderGroupDocuments(container) {
+  if (!container) return;
+  container.innerHTML = groupState.map(renderGroupCategory).join('');
+}
+
 function renderGroupCategory(category) {
   return `
-    <section class="section accordion is-open" id="group-${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
+    <section class="section accordion is-open doc-category" id="group-${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
       <button class="accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
         <span>
           <strong>${escapeHtml(category.categoryTitle)}</strong>
@@ -567,7 +572,7 @@ function renderGroupCategory(category) {
 function renderGroupCard(category, group) {
   const subgroupCount = group.subgroups.filter((item) => !item.fixed).length;
   return `
-    <article class="group-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}">
+    <article class="group-card doc-parent-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}">
       <div class="group-card-head">
         <div>
           <h3 class="group-card-title">${escapeHtml(group.groupTitle)}</h3>
@@ -589,7 +594,7 @@ function renderGroupSubgroup(category, group, subgroup, index) {
   const openDefault = subgroup.fixed || index === 0;
   const docs = subgroup.docs.length ? subgroup.docs : clone(group.templateDocs || []);
   return `
-    <section class="subgroup ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
+    <section class="subgroup doc-parent-card ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
       <div class="subgroup-head">
         <div class="subgroup-meta">
           <div class="subgroup-label">${escapeHtml(subgroup.fixed ? 'Shared Docs' : group.subgroupPrefix || 'Booking')}</div>
@@ -606,7 +611,7 @@ function renderGroupSubgroup(category, group, subgroup, index) {
         </div>
       </div>
       <div class="subgroup-body" id="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" ${openDefault ? '' : 'hidden'}>
-        <div class="doc-grid">
+        <div class="doc-grid doc-child-grid">
           ${docs.map((item) => renderDocCard({
             owner: 'group',
             category: category.categoryKey,
@@ -668,10 +673,16 @@ function renderTravellerPage(travellerId) {
   `;
 }
 
+function renderTravellerDocuments(container, travellerId) {
+  if (!container) return;
+  const traveller = travellerData[travellerId] || travellerData['traveller-1'];
+  container.innerHTML = traveller.categories.map((category) => renderTravellerCategory(travellerId, category)).join('');
+}
+
 function renderTravellerCategory(travellerId, category) {
   const openDefault = true;
   return `
-    <section class="section accordion is-open" id="${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
+    <section class="section accordion is-open doc-category" id="${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
       <button class="accordion-toggle" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
         <span>
           <strong>${escapeHtml(category.categoryTitle)}</strong>
@@ -680,7 +691,7 @@ function renderTravellerCategory(travellerId, category) {
         <span class="arrow" aria-hidden="true">▼</span>
       </button>
       <div class="accordion-body" id="${escapeHtml(category.categoryKey)}-body" ${openDefault ? '' : 'hidden'}>
-        <div class="doc-grid">
+        <div class="doc-grid doc-child-grid">
           ${category.docs.map((item) => renderDocCard({
             owner: travellerId,
             travellerId,
@@ -715,6 +726,8 @@ function setUploadButtonsEnabled(enabled) {
     button.disabled = !enabled;
   });
 }
+
+let docHandlersBound = false;
 
 function setCardStatus(card, text, state) {
   const badge = card.querySelector('.doc-status');
@@ -819,7 +832,34 @@ async function setupFirebaseState() {
   }
 }
 
+async function syncAllDocumentCards() {
+  await hydrateCards();
+}
+
+function updateFirebaseStatus(message) {
+  setSyncText(message);
+}
+
+function showDocWarning(message) {
+  setWarning(message);
+}
+
+function disableUploadButtonsIfFirebaseUnavailable() {
+  setUploadButtonsEnabled(false);
+}
+
+function initDocumentUploadHandlers() {
+  bindAccordionToggles();
+}
+
+function initDocumentAccordions() {
+  initPageEnhancements();
+}
+
 function bindAccordionToggles() {
+  if (docHandlersBound) return;
+  docHandlersBound = true;
+
   document.addEventListener('click', (event) => {
     const toggle = event.target.closest('[data-accordion-toggle]');
     if (toggle) {
@@ -1095,7 +1135,7 @@ function renderGroupSubgroup(category, group, subgroup) {
         </div>
       </div>
       <div class="subgroup-body" id="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" ${openDefault ? '' : 'hidden'}>
-        <div class="doc-grid">
+        <div class="doc-grid doc-child-grid">
           ${docs.map((item) => renderDocCard({
             owner: 'group',
             category: category.categoryKey,
@@ -1114,9 +1154,13 @@ function renderGroupSubgroup(category, group, subgroup) {
 }
 
 function rerenderPage() {
-  const root = document.querySelector('#documents-root');
-  if (!root) return;
-  root.innerHTML = buildPageHTML();
+  const pageType = getPageType();
+  if (pageType === 'group') {
+    renderGroupDocuments(document.getElementById('groupDocumentsContainer'));
+  } else if (pageType.startsWith('traveller-')) {
+    const travellerId = document.body.dataset.travellerId || pageType;
+    renderTravellerDocuments(document.getElementById('travellerDocumentsContainer'), travellerId);
+  }
   initPageEnhancements();
   void bootstrapUploads();
 }
@@ -1155,16 +1199,22 @@ function initPageEnhancements() {
 async function bootstrapUploads() {
   await setupFirebaseState();
   if (!isFirebaseConfigured()) return;
-  await hydrateCards();
+  await syncAllDocumentCards();
 }
 
 function initDocumentsPage() {
   const root = document.querySelector('#documents-root');
   if (!root) return;
-  root.innerHTML = buildPageHTML();
-  initPageEnhancements();
-  bindAccordionToggles();
-  bootstrapUploads();
+  const pageType = getPageType();
+  if (pageType === 'group') {
+    renderGroupDocuments(document.getElementById('groupDocumentsContainer'));
+  } else if (pageType.startsWith('traveller-')) {
+    const travellerId = document.body.dataset.travellerId || pageType;
+    renderTravellerDocuments(document.getElementById('travellerDocumentsContainer'), travellerId);
+  }
+  initDocumentAccordions();
+  initDocumentUploadHandlers();
+  void bootstrapUploads();
 }
 
 document.addEventListener('DOMContentLoaded', initDocumentsPage);

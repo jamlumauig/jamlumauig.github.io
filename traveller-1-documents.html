@@ -9,7 +9,7 @@
 <link rel="canonical" href="https://jamlumauig.github.io/traveller-1-documents.html">
 <link rel="stylesheet" href="assets/css/documents.css">
 </head>
-<body data-doc-page="traveller-1">
+<body data-doc-page="traveller-1" data-traveller-id="traveller-1">
 <main id="documents-root">
   <div class="page">
     <header class="hero compact">
@@ -22,7 +22,12 @@
       </div>
       <div class="sync-badge" data-sync-status>Loading Firebase sync...</div>
     </header>
-    <div class="loading-card">Loading traveller documents…</div>
+    <section id="traveller-documents" class="doc-section">
+      <div id="travellerDocumentsContainer">
+        <p class="doc-loading">Loading traveller documents...</p>
+      </div>
+    </section>
+    <div class="warning" data-firebase-warning hidden></div>
   </div>
 </main>
 <script type="module" src="assets/js/documents-ui.js"></script>
