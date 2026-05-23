@@ -52,7 +52,7 @@ const groupStateDefaults = [
     groups: [
       {
         groupKey: 'tickets',
-        groupTitle: 'Tickets',
+        groupTitle: 'Roundtrip Flight Tickets',
         summary: 'Roundtrip flight tickets and booking references.',
         addLabel: 'Add Ticket Set',
         subgroupPrefix: 'Booking',
