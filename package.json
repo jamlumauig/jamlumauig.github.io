@@ -1,0 +1,29 @@
+{
+  "name": "jamlumauig.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:documents": "node build-documents.mjs",
+    "build": "npm run build:documents",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamlumauig/jamlumauig.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jamlumauig/jamlumauig.github.io/issues"
+  },
+  "homepage": "https://github.com/jamlumauig/jamlumauig.github.io#readme",
+  "dependencies": {
+    "firebase": "^12.13.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

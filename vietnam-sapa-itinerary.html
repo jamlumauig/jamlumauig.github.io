@@ -619,6 +619,7 @@ span[id]{display:block;height:0;line-height:0;font-size:0;scroll-margin-top:88px
   position:relative;
   overflow:hidden;
 }
+.map-card,.infographic-map,.illustrated-map,.route-map{max-width:100%}
 .hanoi-map::before{
   content:'';
   position:absolute;
@@ -678,6 +679,8 @@ span[id]{display:block;height:0;line-height:0;font-size:0;scroll-margin-top:88px
   color:var(--text-dark);
   line-height:1.2;
 }
+.map-label.primary-label{font-size:10.5px}
+.map-label.secondary-label{opacity:.95}
 .map-legend{
   display:flex;
   flex-wrap:wrap;
@@ -1020,6 +1023,96 @@ footer strong{color:var(--sage)}
   .bf-panel.span-2{grid-column:auto}
   .documents-link-row{justify-content:flex-start}
 }
+@media(max-width:767px){
+  .poster-day-grid,
+  .day-content-grid,
+  .map-layout{grid-template-columns:1fr !important}
+  .map-card,
+  .infographic-map,
+  .illustrated-map,
+  .route-map,
+  .hanoi-map{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+    border-radius:16px;
+  }
+  .hanoi-map{
+    min-height:320px;
+    padding:12px 12px 10px;
+  }
+  .hanoi-map-head{
+    align-items:flex-start;
+    margin-bottom:8px;
+  }
+  .hanoi-map-title{font-size:18px}
+  .hanoi-map-note{font-size:9px;line-height:1.25;text-align:left}
+  .hanoi-map-body{
+    min-height:260px;
+  }
+  .hanoi-map svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .map-node{
+    min-width:0;
+    max-width:84px;
+    gap:2px;
+  }
+  .map-pin{transform:scale(.9)}
+  .map-label{
+    font-size:10px;
+    line-height:1.15;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+  .map-label.secondary-label{display:none}
+  .map-label.primary-label{display:block;font-size:11px}
+  .map-legend{display:none}
+  .route-flow.route-map{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    display:flex;
+    flex-direction:row;
+    align-items:flex-start;
+    flex-wrap:nowrap;
+    gap:8px;
+    padding:10px 10px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .route-flow.route-map::-webkit-scrollbar{display:none}
+  .route-flow.route-map .route-stop{
+    min-width:92px;
+    flex:0 0 auto;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:4px;
+    text-align:center;
+  }
+  .route-flow.route-map .route-stop-name{font-size:10px;line-height:1.2}
+  .route-flow.route-map .route-arrow{flex:0 0 auto;padding:0 2px}
+  .route-flow.route-map .route-duration{font-size:9px}
+  .route-flow.route-map .route-arrow-line{display:flex}
+  .route-flow.route-map .route-arrow{flex-direction:column;align-items:center}
+  .route-flow.route-map .route-arrow-line{margin-bottom:2px}
+  .map-node{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    text-align:center;
+  }
+  .day-cards,
+  .lifestyle-grid,
+  .info-grid,
+  .budget-grid{grid-template-columns:1fr !important}
+}
 
 /* ════════════════════════════════════════
    PRINT STYLES
@@ -1033,6 +1126,12 @@ footer strong{color:var(--sage)}
   }
   .screen-itinerary,.print-btn{display:none!important}
   .quick-nav,.quick-nav-backdrop,.collapse-toggle{display:none!important}
+  .map-card,
+  .infographic-map,
+  .illustrated-map,
+  .route-map,
+  .mobile-map,
+  .desktop-map{display:none!important}
   body::before,body::after{display:none!important}
   .print-itinerary{display:block!important}
   .collapsible-content,
@@ -1318,7 +1417,7 @@ footer strong{color:var(--sage)}
     </div>
 
     <!-- Mini Route -->
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop">
         <div class="route-dot" style="background:var(--terracotta);box-shadow:0 0 0 1.5px var(--terra-light)"></div>
         <div class="route-stop-name">✈ NAIA<br>T3</div>
@@ -1464,7 +1563,7 @@ footer strong{color:var(--sage)}
     </div>
 
     <!-- Mini Route D2 -->
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop">
         <div class="route-dot" style="background:var(--sage);box-shadow:0 0 0 1.5px var(--sage-light)"></div>
         <div class="route-stop-name">Hotel</div>
@@ -1607,7 +1706,7 @@ footer strong{color:var(--sage)}
     </div>
 
     <!-- Mini Route D3 -->
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop">
         <div class="route-dot"></div>
         <div class="route-stop-name">Hotel</div>
@@ -1710,7 +1809,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="hanoi-map">
+    <div class="hanoi-map map-card infographic-map illustrated-map">
       <div class="hanoi-map-head">
         <div class="hanoi-map-title">Illustrated Old Quarter Walk</div>
         <div class="hanoi-map-note">Lantern route · lake loop · evening street crawl</div>
@@ -1732,28 +1831,28 @@ footer strong{color:var(--sage)}
           <circle cx="208" cy="122" r="7" fill="#6e8c6b" opacity=".22" filter="url(#softDay4)"/>
         </svg>
         <div class="map-node terra" style="left:12%;top:34%">
-          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel & Spa</div>
+          <div class="map-pin"></div><div class="map-label primary-label">La Renta<br>Hotel & Spa</div>
         </div>
         <div class="map-node gold" style="left:28%;top:28%">
-          <div class="map-pin"></div><div class="map-label">Cafe Giang</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">Cafe Giang</div>
         </div>
         <div class="map-node sage" style="left:41%;top:38%">
-          <div class="map-pin"></div><div class="map-label">St. Joseph<br>Cathedral</div>
+          <div class="map-pin"></div><div class="map-label primary-label">St. Joseph<br>Cathedral</div>
         </div>
         <div class="map-node terra" style="left:52%;top:55%">
-          <div class="map-pin"></div><div class="map-label">Pho 10</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">Pho 10</div>
         </div>
         <div class="map-node gold" style="left:66%;top:48%">
-          <div class="map-pin"></div><div class="map-label">Hoan Kiem<br>Lake</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Hoan Kiem<br>Lake</div>
         </div>
         <div class="map-node sage" style="left:78%;top:28%">
-          <div class="map-pin"></div><div class="map-label">Cong Caphe</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">Cong Caphe</div>
         </div>
         <div class="map-node terra" style="left:87%;top:60%">
-          <div class="map-pin"></div><div class="map-label">Train Street</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Train Street</div>
         </div>
         <div class="map-node gold" style="left:92%;top:34%">
-          <div class="map-pin"></div><div class="map-label">Night<br>Market</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Night<br>Market</div>
         </div>
       </div>
       <div class="map-legend">
@@ -1763,7 +1862,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop">
         <div class="route-dot" style="background:var(--terracotta);box-shadow:0 0 0 1.5px var(--terra-light)"></div>
         <div class="route-stop-name">La Renta<br>Hotel & Spa</div>
@@ -1859,7 +1958,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="hanoi-map">
+    <div class="hanoi-map map-card infographic-map illustrated-map">
       <div class="hanoi-map-head">
         <div class="hanoi-map-title">Heritage Route</div>
         <div class="hanoi-map-note">Pagodas · government quarter · opera district</div>
@@ -1876,25 +1975,25 @@ footer strong{color:var(--sage)}
           <circle cx="556" cy="96" r="5" fill="#c5a96a" opacity=".35"/>
         </svg>
         <div class="map-node terra" style="left:12%;top:70%">
-          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel & Spa</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">La Renta<br>Hotel & Spa</div>
         </div>
         <div class="map-node gold" style="left:28%;top:54%">
-          <div class="map-pin"></div><div class="map-label">Ho Chi Minh<br>Mausoleum</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Ho Chi Minh<br>Mausoleum</div>
         </div>
         <div class="map-node sage" style="left:39%;top:48%">
-          <div class="map-pin"></div><div class="map-label">Presidential<br>Palace</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">Presidential<br>Palace</div>
         </div>
         <div class="map-node terra" style="left:54%;top:62%">
-          <div class="map-pin"></div><div class="map-label">Imperial<br>Citadel</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Imperial<br>Citadel</div>
         </div>
         <div class="map-node gold" style="left:68%;top:40%">
-          <div class="map-pin"></div><div class="map-label">Tran Quoc<br>Pagoda</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Tran Quoc<br>Pagoda</div>
         </div>
         <div class="map-node sage" style="left:82%;top:50%">
-          <div class="map-pin"></div><div class="map-label">Puppet<br>Theater</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Puppet<br>Theater</div>
         </div>
         <div class="map-node terra" style="left:92%;top:42%">
-          <div class="map-pin"></div><div class="map-label">Mega Grand<br>World</div>
+          <div class="map-pin"></div><div class="map-label secondary-label">Mega Grand<br>World</div>
         </div>
       </div>
       <div class="map-legend">
@@ -1904,7 +2003,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">La Renta<br>Hotel & Spa</div></div>
       <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~15 min</div></div>
       <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Ho Chi Minh<br>Mausoleum</div></div>
@@ -2065,7 +2164,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="hanoi-map">
+    <div class="hanoi-map map-card infographic-map illustrated-map">
       <div class="hanoi-map-head">
         <div class="hanoi-map-title">Airport Route</div>
         <div class="hanoi-map-note">Plane path · dawn tones · final transfer</div>
@@ -2080,13 +2179,13 @@ footer strong{color:var(--sage)}
           <circle cx="540" cy="60" r="6" fill="#c5a96a" opacity=".22"/>
         </svg>
         <div class="map-node terra" style="left:12%;top:64%">
-          <div class="map-pin"></div><div class="map-label">La Renta<br>Hotel</div>
+          <div class="map-pin"></div><div class="map-label primary-label">La Renta<br>Hotel</div>
         </div>
         <div class="map-node gold" style="left:55%;top:48%">
-          <div class="map-pin"></div><div class="map-label">Noi Bai<br>Airport</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Noi Bai<br>Airport</div>
         </div>
         <div class="map-node sage" style="left:90%;top:28%">
-          <div class="map-pin"></div><div class="map-label">Manila /<br>NAIA T3</div>
+          <div class="map-pin"></div><div class="map-label primary-label">Manila /<br>NAIA T3</div>
         </div>
       </div>
       <div class="map-legend">
@@ -2096,7 +2195,7 @@ footer strong{color:var(--sage)}
       </div>
     </div>
 
-    <div class="route-flow">
+    <div class="route-flow route-map">
       <div class="route-stop"><div class="route-dot" style="background:var(--terracotta)"></div><div class="route-stop-name">La Renta<br>Hotel</div></div>
       <div class="route-arrow"><div class="route-arrow-line"><svg width="28" height="8" viewBox="0 0 28 8"><line x1="0" y1="4" x2="22" y2="4" stroke="#c0b8b0" stroke-width="1" stroke-dasharray="3,2"/><polygon points="22,1 28,4 22,7" fill="#c0b8b0"/></svg></div><div class="route-duration">🚗 ~45 min</div></div>
       <div class="route-stop"><div class="route-dot" style="background:var(--gold)"></div><div class="route-stop-name">Noi Bai<br>Airport</div></div>
