@@ -1257,12 +1257,12 @@ var require_documents_ui = __commonJS({
       try {
         await initFirebase();
         await signInGuest();
-        setSyncText("Firebase Storage ready");
-        setWarning("");
+        //setSyncText("Firebase Storage ready");
+        //setWarning("");
         setUploadButtonsEnabled(true);
       } catch (error) {
-        setSyncText("Firebase sync unavailable");
-        setWarning("Firebase sync unavailable. Check Auth and Storage rules.");
+        //setSyncText("Firebase sync unavailable");
+        //setWarning("Firebase sync unavailable. Check Auth and Storage rules.");
         setUploadButtonsEnabled(false);
       }
     }

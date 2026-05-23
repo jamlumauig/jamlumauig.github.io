@@ -317,6 +317,12 @@ a{color:inherit}
   box-shadow:var(--shadow-card);
   overflow:hidden;
 }
+.qa-card:not(.is-open) .qa-body{
+  display:none !important;
+}
+.qa-card.is-open .qa-body{
+  display:block !important;
+}
 .qa-head{
   padding:12px 12px 0;
 }
@@ -1234,19 +1240,25 @@ a{color:inherit}
 
   function setAccordion(button, open) {
     const target = document.getElementById(button.getAttribute('aria-controls'));
+    const card = button.closest('.qa-card');
     if (!target) return;
     button.setAttribute('aria-expanded', String(open));
     target.hidden = !open;
-    target.style.display = open ? '' : 'none';
+    target.style.display = open ? 'block' : 'none';
+    if (card) card.classList.toggle('is-open', open);
   }
 
   document.querySelectorAll('[data-io-toggle]').forEach((button, index) => {
     const open = mq.matches ? index === 0 : true;
     setAccordion(button, open);
-    button.addEventListener('click', () => {
-      const isOpen = button.getAttribute('aria-expanded') === 'true';
-      setAccordion(button, !isOpen);
-    });
+  });
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-io-toggle]');
+    if (!button) return;
+    event.preventDefault();
+    const isOpen = button.getAttribute('aria-expanded') === 'true';
+    setAccordion(button, !isOpen);
   });
 
   window.addEventListener('beforeprint', () => {
