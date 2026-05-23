@@ -156,6 +156,15 @@ var require_documents_ui = __commonJS({
       tag,
       tagClass: tag.toLowerCase() === "optional" ? "optional" : ""
     });
+    var REMOVED_DOC_KEYS = /* @__PURE__ */ new Set([
+      "baggage-details",
+      "pickup-details",
+      "occupants-list",
+      "hotel-address-screenshot",
+      "checkin-details",
+      "daily-schedule-copy",
+      "emergency-cash-plan"
+    ]);
     var groupStateDefaults = [
       {
         categoryKey: "transportation",
@@ -164,13 +173,12 @@ var require_documents_ui = __commonJS({
           {
             groupKey: "manila-hanoi-flight",
             groupTitle: "Manila \u2192 Hanoi Flight",
-            summary: "Flight tickets and baggage details",
+            summary: "Flight tickets and booking references",
             addLabel: "Add Flight Booking",
             subgroupPrefix: "Booking",
             templateDocs: [
               doc("traveller-tickets", "Traveller Tickets", "Passenger tickets and boarding references."),
-              doc("booking-receipt", "Booking Receipt", "Airline or OTA receipt for the booking."),
-              doc("baggage-details", "Baggage Details", "Allowance, weight, and baggage notes.")
+              doc("booking-receipt", "Booking Receipt", "Airline or OTA receipt for the booking.")
             ],
             subgroups: [
               { subgroupKey: "booking-a", subgroupLabel: "Booking A", docs: [] },
@@ -180,13 +188,12 @@ var require_documents_ui = __commonJS({
           {
             groupKey: "hanoi-sapa-bus",
             groupTitle: "Hanoi \u2192 Sapa Bus",
-            summary: "Bus tickets and pickup details",
+            summary: "Bus tickets and boarding references",
             addLabel: "Add Bus Reservation",
             subgroupPrefix: "Booking",
             templateDocs: [
               doc("traveller-tickets", "Traveller Tickets", "Tickets or QR codes for boarding."),
-              doc("booking-receipt", "Booking Receipt", "Reservation confirmation and receipt."),
-              doc("pickup-details", "Pickup Details", "Meeting point and boarding notes.")
+              doc("booking-receipt", "Booking Receipt", "Reservation confirmation and receipt.")
             ],
             subgroups: [
               { subgroupKey: "booking-a", subgroupLabel: "Booking A", docs: [] }
@@ -200,8 +207,7 @@ var require_documents_ui = __commonJS({
             subgroupPrefix: "Booking",
             templateDocs: [
               doc("return-ticket", "Return Ticket", "Return boarding pass or QR code."),
-              doc("booking-receipt", "Booking Receipt", "Return-leg booking confirmation."),
-              doc("baggage-details", "Baggage Details", "Sleeper seat, baggage, and pickup notes.")
+              doc("booking-receipt", "Booking Receipt", "Return-leg booking confirmation.")
             ],
             subgroups: [
               { subgroupKey: "booking-a", subgroupLabel: "Booking A", docs: [] }
@@ -244,50 +250,30 @@ var require_documents_ui = __commonJS({
           {
             groupKey: "sapa-valley-hotel",
             groupTitle: "Sapa Valley Hotel",
-            summary: "Room bookings and shared check-in details",
+            summary: "Room bookings and confirmations",
             addLabel: "Add Room",
             subgroupPrefix: "Room",
             templateDocs: [
               doc("booking-confirmation", "Room / Booking Confirmation", "Upload booking confirmation or room reservation details."),
-              doc("payment-receipt", "Payment Receipt", "Deposit or full payment proof."),
-              doc("occupants-list", "Occupants List", "Names of guests assigned to the room.")
+              doc("payment-receipt", "Payment Receipt", "Deposit or full payment proof.")
             ],
             subgroups: [
               { subgroupKey: "room-a", subgroupLabel: "Room A", docs: [] },
-              { subgroupKey: "room-b", subgroupLabel: "Room B", docs: [] },
-              {
-                subgroupKey: "additional-shared",
-                subgroupLabel: "Additional Shared Docs",
-                fixed: true,
-                docs: [
-                  doc("hotel-address-screenshot", "Hotel Address Screenshot", "Useful for rides and offline check-in."),
-                  doc("checkin-details", "Check-in Details", "Times, policies, and arrival notes.")
-                ]
-              }
+              { subgroupKey: "room-b", subgroupLabel: "Room B", docs: [] }
             ]
           },
           {
             groupKey: "la-renta-hotel-spa",
             groupTitle: "La Renta Hotel & Spa",
-            summary: "Room bookings and arrival notes",
+            summary: "Room bookings and confirmations",
             addLabel: "Add Room",
             subgroupPrefix: "Room",
             templateDocs: [
               doc("booking-confirmation", "Room / Booking Confirmation", "Upload booking confirmation or room reservation details."),
-              doc("payment-receipt", "Payment Receipt", "Deposit or full payment proof."),
-              doc("occupants-list", "Occupants List", "Names of guests assigned to the room.")
+              doc("payment-receipt", "Payment Receipt", "Deposit or full payment proof.")
             ],
             subgroups: [
-              { subgroupKey: "room-a", subgroupLabel: "Room A", docs: [] },
-              {
-                subgroupKey: "additional-shared",
-                subgroupLabel: "Additional Shared Docs",
-                fixed: true,
-                docs: [
-                  doc("hotel-address-screenshot", "Hotel Address Screenshot", "Useful for rides and offline check-in."),
-                  doc("checkin-details", "Check-in Details", "Times, policies, and arrival notes.")
-                ]
-              }
+              { subgroupKey: "room-a", subgroupLabel: "Room A", docs: [] }
             ]
           }
         ]
@@ -304,7 +290,6 @@ var require_documents_ui = __commonJS({
             subgroupPrefix: "Copy",
             templateDocs: [
               doc("full-itinerary", "Full Vietnam Itinerary", "Complete day-by-day plan in one file."),
-              doc("daily-schedule-copy", "Daily Schedule Copy", "A quick version for the whole group."),
               doc("activity-confirmations", "Activity Confirmations", "Tickets and confirmations for booked activities."),
               doc("fansipan-ticket", "Fansipan Ticket / Confirmation", "If booked for the cable car or summit."),
               doc("puppet-theater-ticket", "Puppet Theater Ticket", "Use if you have a purchased show ticket."),
@@ -329,7 +314,6 @@ var require_documents_ui = __commonJS({
             subgroupPrefix: "Set",
             templateDocs: [
               doc("shared-budget-summary", "Shared Budget Summary", "Who paid what and planned spending."),
-              doc("emergency-cash-plan", "Emergency Cash Plan", "Cash reserve and fallback plan."),
               doc("currency-exchange-notes", "Currency Exchange Notes", "Rates, counters, and exchange reminders."),
               doc("payment-screenshots", "Payment Screenshots", "Helpful proof if anyone needs to verify payment.")
             ],
@@ -450,10 +434,26 @@ var require_documents_ui = __commonJS({
         if (!raw) return clone(groupStateDefaults);
         const parsed = JSON.parse(raw);
         if (!Array.isArray(parsed)) return clone(groupStateDefaults);
-        return parsed;
+        return sanitizeGroupState(parsed);
       } catch {
         return clone(groupStateDefaults);
       }
+    }
+    function sanitizeDocs(docs) {
+      return (docs || []).filter((item) => item && !REMOVED_DOC_KEYS.has(item.key));
+    }
+    function sanitizeGroupState(state) {
+      const cloned = clone(state);
+      for (const category of cloned) {
+        for (const group of category.groups || []) {
+          group.templateDocs = sanitizeDocs(group.templateDocs);
+          group.subgroups = (group.subgroups || []).map((subgroup) => ({
+            ...subgroup,
+            docs: sanitizeDocs(subgroup.docs)
+          })).filter((subgroup) => !subgroup.fixed || subgroup.docs && subgroup.docs.length);
+        }
+      }
+      return cloned;
     }
     function saveGroupState(state) {
       try {
