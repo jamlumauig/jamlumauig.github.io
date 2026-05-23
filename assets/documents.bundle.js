@@ -219,7 +219,7 @@ var require_documents_ui = __commonJS({
         groups: [
           {
             groupKey: "tickets",
-            groupTitle: "Tickets",
+            groupTitle: "Roundtrip tickets",
             summary: "Roundtrip flight tickets and booking references.",
             addLabel: "Add Ticket Set",
             subgroupPrefix: "Booking",
