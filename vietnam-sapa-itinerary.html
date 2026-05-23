@@ -333,6 +333,11 @@ body.printing .print-summary{
   border-radius:12px;
 }
 .quick-nav-panel a:hover{background:var(--sage-pale);color:var(--sage)}
+.quick-nav-panel a.is-active{
+  background:linear-gradient(180deg, rgba(110,140,107,.14), rgba(110,140,107,.08));
+  color:var(--sage);
+  font-weight:600;
+}
 
 .collapsible-head{
   display:flex;
@@ -1587,6 +1592,7 @@ footer strong{color:var(--sage)}
     <a href="#top">Go to Top</a>
     <a href="#before-you-fly">Before You Fly</a>
     <a href="documents.html">Traveller Documents</a>
+    <a href="io-guide.html">IO Q&A Guide</a>
     <a href="#quick-info">Quick Info</a>
 
     <div class="menu-group-label">Sapa</div>
@@ -3369,12 +3375,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', closeMenu);
   });
 
-  document.querySelectorAll('.quick-nav-panel a[href^="#"]').forEach((link) => {
+  document.querySelectorAll('.quick-nav-panel a').forEach((link) => {
     link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const href = link.getAttribute('href') || '';
+      if (href.startsWith('#')) {
+        event.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
       closeMenu();
     });

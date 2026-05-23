@@ -58,8 +58,6 @@ const groupStateDefaults = [
         subgroupPrefix: 'Booking',
         templateDocs: [
           doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.'),
-          doc('booking-receipt', 'Booking Receipt', 'Airline or OTA receipt for the booking.'),
-          doc('baggage-details', 'Baggage Details', 'Checked baggage, carry-on, and airline baggage notes.')
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] },
@@ -90,19 +88,6 @@ const groupStateDefaults = [
         ],
         subgroups: [
           { subgroupKey: 'booking-a', subgroupLabel: 'Booking A', docs: [] }
-        ]
-      },
-      {
-        groupKey: 'hanoi-airport-transfer',
-        groupTitle: 'Hanoi Airport Transfer',
-        summary: 'Airport pickup and ride details',
-        addLabel: 'Add Transfer Booking',
-        subgroupPrefix: 'Transfer',
-        templateDocs: [
-          doc('transfer-details', 'Transfer Details', 'Driver, pickup, and contact information.')
-        ],
-        subgroups: [
-          { subgroupKey: 'transfer-a', subgroupLabel: 'Transfer A', docs: [] }
         ]
       },
     ]
@@ -353,8 +338,6 @@ function normalizeTransportationGroup(group) {
     addLabel: 'Add Ticket Set',
     templateDocs: [
       doc('traveller-tickets', 'Traveller Tickets', 'Passenger tickets and boarding references.'),
-      doc('booking-receipt', 'Booking Receipt', 'Airline or OTA receipt for the booking.'),
-      doc('baggage-details', 'Baggage Details', 'Checked baggage, carry-on, and airline baggage notes.')
     ],
     subgroups: (group.subgroups || []).map((subgroup) => ({
       ...subgroup,
@@ -640,6 +623,144 @@ function sectionQuickLinksForPage(pageType) {
   return [];
 }
 
+function docsQuickNavLinksForPage(pageType) {
+  if (pageType === 'hub') {
+    return [
+      ['#docs-top', 'Top'],
+      ['group-documents.html', 'Group Trip Documents'],
+      ['traveller-1-documents.html', 'Traveller 1 · Jam'],
+      ['traveller-2-documents.html', 'Traveller 2 · Maye'],
+      ['traveller-3-documents.html', 'Traveller 3 · Kyra'],
+      ['traveller-4-documents.html', 'Traveller 4 · Bon'],
+      ['io-guide.html', 'IO Q&A Guide'],
+      ['vietnam-sapa-itinerary.html', 'Back to Itinerary']
+    ];
+  }
+  if (pageType === 'group') {
+    return [
+      ['#docs-top', 'Top'],
+      ['documents.html', 'Documents Home'],
+      ['#group-transportation', 'Transportation'],
+      ['#group-hotels', 'Hotels'],
+      ['#group-itinerary', 'Itinerary / Activities'],
+      ['#group-budget', 'Budget'],
+      ['#group-emergency', 'Emergency'],
+      ['io-guide.html', 'IO Q&A Guide'],
+      ['vietnam-sapa-itinerary.html', 'Back to Itinerary']
+    ];
+  }
+  if (pageType.startsWith('traveller-')) {
+    return [
+      ['#docs-top', 'Top'],
+      ['documents.html', 'Documents Home'],
+      ['#identity', 'Identity'],
+      ['#employment-source-of-funds', 'Employment'],
+      ['#financial-proof', 'Financial'],
+      ['#trip-proof', 'Trip Proof'],
+      ['#other-supporting-documents', 'Other'],
+      ['io-guide.html', 'IO Q&A Guide'],
+      ['vietnam-sapa-itinerary.html', 'Back to Itinerary']
+    ];
+  }
+  return [];
+}
+
+function renderDocsQuickNav(pageType) {
+  const links = docsQuickNavLinksForPage(pageType)
+    .map(([href, label]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`)
+    .join('');
+  if (!links) return '';
+  return `
+    <nav class="docs-quick-nav no-print" aria-label="Documents quick navigation">
+      <button class="docs-nav-toggle" type="button" aria-expanded="false" aria-controls="docsQuickNavPanel">
+        <span class="docs-hamburger" aria-hidden="true"></span>
+        <span class="sr-only">Open documents menu</span>
+      </button>
+      <div class="docs-nav-backdrop" data-docs-menu-close aria-hidden="true"></div>
+      <div id="docsQuickNavPanel" class="docs-nav-panel" aria-hidden="true">
+        <div class="docs-nav-head">
+          <strong>Documents Menu</strong>
+          <button class="docs-nav-close" type="button" data-docs-menu-close aria-label="Close menu">×</button>
+        </div>
+        <div class="docs-nav-links">
+          ${links}
+        </div>
+      </div>
+    </nav>
+  `;
+}
+
+function ensureDocsQuickNav() {
+  const root = document.querySelector('#documents-root');
+  if (!root || root.querySelector('.docs-quick-nav')) return;
+  root.insertAdjacentHTML('afterbegin', renderDocsQuickNav(getPageType()));
+}
+
+function initDocsQuickNav() {
+  const nav = document.querySelector('.docs-quick-nav');
+  if (!nav) return;
+  const toggle = nav.querySelector('.docs-nav-toggle');
+  const panel = nav.querySelector('.docs-nav-panel');
+  const backdrop = nav.querySelector('.docs-nav-backdrop');
+  const closeTargets = nav.querySelectorAll('[data-docs-menu-close]');
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+  function openMenu() {
+    toggle?.setAttribute('aria-expanded', 'true');
+    panel?.classList.add('is-open');
+    panel?.setAttribute('aria-hidden', 'false');
+    backdrop?.classList.add('is-open');
+    backdrop?.setAttribute('aria-hidden', 'false');
+    if (isMobile) {
+      document.body.classList.add('docs-menu-open');
+    }
+  }
+
+  function closeMenu() {
+    toggle?.setAttribute('aria-expanded', 'false');
+    panel?.classList.remove('is-open');
+    panel?.setAttribute('aria-hidden', 'true');
+    backdrop?.classList.remove('is-open');
+    backdrop?.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('docs-menu-open');
+  }
+
+  toggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    if (open) closeMenu();
+    else openMenu();
+  });
+
+  closeTargets.forEach((button) => {
+    button.addEventListener('click', closeMenu);
+  });
+
+  nav.querySelectorAll('.docs-nav-panel a').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const href = link.getAttribute('href') || '';
+      if (href.startsWith('#')) {
+        event.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+      closeMenu();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!panel?.classList.contains('is-open')) return;
+    if (nav.contains(event.target)) return;
+    closeMenu();
+  });
+}
+
 function renderHub() {
   const counts = [
     {
@@ -648,6 +769,14 @@ function renderHub() {
       title: 'Group Trip Documents',
       desc: 'Shared trip files.',
       count: `${groupStateDefaults.length} sections`,
+      open: 'Open'
+    },
+    {
+      href: 'io-guide.html',
+      icon: '◆',
+      title: 'IO Q&A Guide',
+      desc: 'Immigration interview prep.',
+      count: '1 page',
       open: 'Open'
     },
     ...Object.keys(travellerData).map((travellerId) => ({
@@ -964,6 +1093,7 @@ function renderGroupPage() {
         actions: `
           <a class="btn primary" href="documents.html">Documents Home</a>
           <a class="btn secondary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+          <a class="btn secondary" href="io-guide.html">IO Q&A Guide</a>
         `,
         quickLinks: quickLinks ? `<div class="quick-links">${quickLinks}</div>` : ''
       })}
@@ -1109,6 +1239,7 @@ function renderTravellerPage(travellerId) {
         actions: `
           <a class="btn primary" href="documents.html">Documents Home</a>
           <a class="btn secondary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+          <a class="btn secondary" href="io-guide.html">IO Q&A Guide</a>
           ${prev ? `<a class="btn secondary" href="${prev}-documents.html">Previous</a>` : ''}
           ${next ? `<a class="btn secondary" href="${next}-documents.html">Next</a>` : ''}
         `,
@@ -1479,6 +1610,7 @@ function renderGroupPageIntro() {
         actions: `
           <a class="btn primary" href="documents.html">Documents Home</a>
           <a class="btn secondary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+          <a class="btn secondary" href="io-guide.html">IO Q&A Guide</a>
         `,
         quickLinks: quickLinks ? `<div class="quick-links">${quickLinks}</div>` : ''
       })}
@@ -1520,6 +1652,7 @@ function renderTravellerPageIntro(travellerId) {
         actions: `
           <a class="btn primary" href="documents.html">Documents Home</a>
           <a class="btn secondary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+          <a class="btn secondary" href="io-guide.html">IO Q&A Guide</a>
           ${prev ? `<a class="btn secondary" href="${prev}-documents.html">Previous</a>` : ''}
           ${next ? `<a class="btn secondary" href="${next}-documents.html">Next</a>` : ''}
         `,
@@ -1602,6 +1735,7 @@ async function bootstrapUploads() {
 function initDocumentsPage() {
   const root = document.querySelector('#documents-root');
   if (!root) return;
+  ensureDocsQuickNav();
   const pageType = getPageType();
   if (pageType === 'group') {
     renderGroupDocuments(document.getElementById('groupDocumentsContainer'));
@@ -1613,6 +1747,7 @@ function initDocumentsPage() {
   initDocumentUploadHandlers();
   initRemarksHandlers();
   startRemarksPolling();
+  initDocsQuickNav();
   void bootstrapUploads();
 }
 

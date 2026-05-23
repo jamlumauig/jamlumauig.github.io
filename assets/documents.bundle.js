@@ -219,14 +219,12 @@ var require_documents_ui = __commonJS({
         groups: [
           {
             groupKey: "tickets",
-            groupTitle: "Roundtrip Tickets",
+            groupTitle: "Tickets",
             summary: "Roundtrip flight tickets and booking references.",
             addLabel: "Add Ticket Set",
             subgroupPrefix: "Booking",
             templateDocs: [
               doc("traveller-tickets", "Traveller Tickets", "Passenger tickets and boarding references."),
-              doc("booking-receipt", "Booking Receipt", "Airline or OTA receipt for the booking."),
-              doc("baggage-details", "Baggage Details", "Checked baggage, carry-on, and airline baggage notes.")
             ],
             subgroups: [
               { subgroupKey: "booking-a", subgroupLabel: "Booking A", docs: [] },
@@ -257,19 +255,6 @@ var require_documents_ui = __commonJS({
             ],
             subgroups: [
               { subgroupKey: "booking-a", subgroupLabel: "Booking A", docs: [] }
-            ]
-          },
-          {
-            groupKey: "hanoi-airport-transfer",
-            groupTitle: "Hanoi Airport Transfer",
-            summary: "Airport pickup and ride details",
-            addLabel: "Add Transfer Booking",
-            subgroupPrefix: "Transfer",
-            templateDocs: [
-              doc("transfer-details", "Transfer Details", "Driver, pickup, and contact information.")
-            ],
-            subgroups: [
-              { subgroupKey: "transfer-a", subgroupLabel: "Transfer A", docs: [] }
             ]
           }
         ]
@@ -501,8 +486,6 @@ var require_documents_ui = __commonJS({
         addLabel: "Add Ticket Set",
         templateDocs: [
           doc("traveller-tickets", "Traveller Tickets", "Passenger tickets and boarding references."),
-          doc("booking-receipt", "Booking Receipt", "Airline or OTA receipt for the booking."),
-          doc("baggage-details", "Baggage Details", "Checked baggage, carry-on, and airline baggage notes.")
         ],
         subgroups: (group.subgroups || []).map((subgroup) => ({
           ...subgroup,
@@ -740,6 +723,131 @@ var require_documents_ui = __commonJS({
       };
       remarksRefreshTimer = window.setInterval(tick, 15e3);
       document.addEventListener("visibilitychange", tick);
+    }
+    function docsQuickNavLinksForPage(pageType) {
+      if (pageType === "hub") {
+        return [
+          ["#docs-top", "Top"],
+          ["group-documents.html", "Group Trip Documents"],
+          ["traveller-1-documents.html", "Traveller 1 \xB7 Jam"],
+          ["traveller-2-documents.html", "Traveller 2 \xB7 Maye"],
+          ["traveller-3-documents.html", "Traveller 3 \xB7 Kyra"],
+          ["traveller-4-documents.html", "Traveller 4 \xB7 Bon"],
+          ["io-guide.html", "IO Q&A Guide"],
+          ["vietnam-sapa-itinerary.html", "Back to Itinerary"]
+        ];
+      }
+      if (pageType === "group") {
+        return [
+          ["#docs-top", "Top"],
+          ["documents.html", "Documents Home"],
+          ["#group-transportation", "Transportation"],
+          ["#group-hotels", "Hotels"],
+          ["#group-itinerary", "Itinerary / Activities"],
+          ["#group-budget", "Budget"],
+          ["#group-emergency", "Emergency"],
+          ["io-guide.html", "IO Q&A Guide"],
+          ["vietnam-sapa-itinerary.html", "Back to Itinerary"]
+        ];
+      }
+      if (pageType.startsWith("traveller-")) {
+        return [
+          ["#docs-top", "Top"],
+          ["documents.html", "Documents Home"],
+          ["#identity", "Identity"],
+          ["#employment-source-of-funds", "Employment"],
+          ["#financial-proof", "Financial"],
+          ["#trip-proof", "Trip Proof"],
+          ["#other-supporting-documents", "Other"],
+          ["io-guide.html", "IO Q&A Guide"],
+          ["vietnam-sapa-itinerary.html", "Back to Itinerary"]
+        ];
+      }
+      return [];
+    }
+    function renderDocsQuickNav(pageType) {
+      const links = docsQuickNavLinksForPage(pageType).map(([href, label]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join("");
+      if (!links) return "";
+      return `
+    <nav class="docs-quick-nav no-print" aria-label="Documents quick navigation">
+      <button class="docs-nav-toggle" type="button" aria-expanded="false" aria-controls="docsQuickNavPanel">
+        <span class="docs-hamburger" aria-hidden="true"></span>
+        <span class="sr-only">Open documents menu</span>
+      </button>
+      <div class="docs-nav-backdrop" data-docs-menu-close aria-hidden="true"></div>
+      <div id="docsQuickNavPanel" class="docs-nav-panel" aria-hidden="true">
+        <div class="docs-nav-head">
+          <strong>Documents Menu</strong>
+          <button class="docs-nav-close" type="button" data-docs-menu-close aria-label="Close menu">\xD7</button>
+        </div>
+        <div class="docs-nav-links">
+          ${links}
+        </div>
+      </div>
+    </nav>
+  `;
+    }
+    function ensureDocsQuickNav() {
+      const root = document.querySelector("#documents-root");
+      if (!root || root.querySelector(".docs-quick-nav")) return;
+      root.insertAdjacentHTML("afterbegin", renderDocsQuickNav(getPageType()));
+    }
+    function initDocsQuickNav() {
+      const nav = document.querySelector(".docs-quick-nav");
+      if (!nav) return;
+      const toggle = nav.querySelector(".docs-nav-toggle");
+      const panel = nav.querySelector(".docs-nav-panel");
+      const backdrop = nav.querySelector(".docs-nav-backdrop");
+      const closeTargets = nav.querySelectorAll("[data-docs-menu-close]");
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      function openMenu() {
+        toggle == null ? void 0 : toggle.setAttribute("aria-expanded", "true");
+        panel == null ? void 0 : panel.classList.add("is-open");
+        panel == null ? void 0 : panel.setAttribute("aria-hidden", "false");
+        backdrop == null ? void 0 : backdrop.classList.add("is-open");
+        backdrop == null ? void 0 : backdrop.setAttribute("aria-hidden", "false");
+        if (isMobile) {
+          document.body.classList.add("docs-menu-open");
+        }
+      }
+      function closeMenu() {
+        toggle == null ? void 0 : toggle.setAttribute("aria-expanded", "false");
+        panel == null ? void 0 : panel.classList.remove("is-open");
+        panel == null ? void 0 : panel.setAttribute("aria-hidden", "true");
+        backdrop == null ? void 0 : backdrop.classList.remove("is-open");
+        backdrop == null ? void 0 : backdrop.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("docs-menu-open");
+      }
+      toggle == null ? void 0 : toggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const open = toggle.getAttribute("aria-expanded") === "true";
+        if (open) closeMenu();
+        else openMenu();
+      });
+      closeTargets.forEach((button) => {
+        button.addEventListener("click", closeMenu);
+      });
+      nav.querySelectorAll(".docs-nav-panel a").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const href = link.getAttribute("href") || "";
+          if (href.startsWith("#")) {
+            event.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }
+          closeMenu();
+        });
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+      });
+      document.addEventListener("click", (event) => {
+        if (!(panel == null ? void 0 : panel.classList.contains("is-open"))) return;
+        if (nav.contains(event.target)) return;
+        closeMenu();
+      });
     }
     function isDocumentsUnlocked() {
       try {
@@ -1356,6 +1464,7 @@ var require_documents_ui = __commonJS({
     function initDocumentsPage() {
       const root = document.querySelector("#documents-root");
       if (!root) return;
+      ensureDocsQuickNav();
       const pageType = getPageType();
       if (pageType === "group") {
         renderGroupDocuments(document.getElementById("groupDocumentsContainer"));
@@ -1367,6 +1476,7 @@ var require_documents_ui = __commonJS({
       initDocumentUploadHandlers();
       initRemarksHandlers();
       startRemarksPolling();
+      initDocsQuickNav();
       void bootstrapUploads();
     }
     document.addEventListener("DOMContentLoaded", initDocumentAccessGate);
