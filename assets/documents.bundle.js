@@ -24363,6 +24363,16 @@ function alphaLabel(index) {
   } while (n >= 0);
   return out;
 }
+function categoryAnchorId(categoryKey) {
+  const map = {
+    transportation: "group-transportation",
+    hotels: "group-hotels",
+    itinerary: "group-itinerary",
+    "budget-money": "group-budget",
+    "emergency-travel-info": "group-emergency"
+  };
+  return map[categoryKey] || `group-${slugify(categoryKey)}`;
+}
 function cardMarkup({ owner, path, key, name: name7, note, tag, tagClass = "", category = "", group = "", subgroup = "", travellerId = "" }) {
   const attrs = [
     `data-doc-owner="${htmlEscape(owner)}"`,
@@ -24402,7 +24412,7 @@ function renderGroupDocs() {
   const root = document.querySelector("#groupDocRoot");
   if (!root) return;
   root.innerHTML = groupState.map((category) => `
-    <section class="category doc-category group-category" data-doc-category="${htmlEscape(category.categoryKey)}">
+    <section class="category doc-category group-category" id="${htmlEscape(categoryAnchorId(category.categoryKey))}" data-doc-category="${htmlEscape(category.categoryKey)}">
       <div class="category-head">
         <div>
           <div class="category-name">${htmlEscape(category.category)}</div>
@@ -24486,7 +24496,7 @@ function renderTravellerDocs() {
   const root = document.querySelector("#travellerPanelRoot");
   if (!root) return;
   root.innerHTML = travellerOrder.map((traveller) => `
-    <div class="docs-panel traveller-panel ${traveller === "traveller-1" ? "is-active" : ""}" data-traveller-panel="${traveller}" ${traveller === "traveller-1" ? "" : "hidden"}>
+    <div id="${htmlEscape(traveller)}" class="docs-panel traveller-panel ${traveller === "traveller-1" ? "is-active" : ""}" data-traveller-panel="${traveller}" ${traveller === "traveller-1" ? "" : "hidden"}>
       ${travellerDocs[traveller].map((category) => `
         <div class="category doc-category">
           <div class="category-head">
@@ -24952,9 +24962,54 @@ function bindDocumentEvents() {
     resetGroupLayout();
   });
 }
+function initDocsQuickNav() {
+  const nav = document.querySelector(".docs-quick-nav");
+  const toggle = document.querySelector(".docs-nav-toggle");
+  const panel = document.querySelector("#docsQuickNavPanel");
+  const backdrop = document.querySelector(".docs-nav-backdrop");
+  if (!nav || !toggle || !panel || !backdrop) return;
+  const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
+  const setOpen = (open) => {
+    toggle.setAttribute("aria-expanded", String(open));
+    panel.classList.toggle("is-open", open);
+    backdrop.classList.toggle("is-open", open);
+    panel.setAttribute("aria-hidden", String(!open));
+    backdrop.setAttribute("aria-hidden", String(!open));
+    document.body.classList.toggle("docs-menu-open", open && isMobile());
+  };
+  const closeMenu = () => setOpen(false);
+  const openMenu = () => setOpen(true);
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const open = toggle.getAttribute("aria-expanded") === "true";
+    open ? closeMenu() : openMenu();
+  });
+  backdrop.addEventListener("click", closeMenu);
+  panel.querySelectorAll("[data-docs-menu-close]").forEach((btn) => btn.addEventListener("click", closeMenu));
+  panel.querySelectorAll("a[href]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const href = link.getAttribute("href") || "";
+      closeMenu();
+      if (href.startsWith("#")) {
+        event.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+  document.addEventListener("click", (event) => {
+    if (!panel.classList.contains("is-open")) return;
+    if (nav.contains(event.target)) return;
+    closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+}
 async function boot() {
   renderGroupDocs();
   renderTravellerDocs();
+  initDocsQuickNav();
   bindTabs();
   bindDocumentEvents();
   const appReady = await initFirebase();

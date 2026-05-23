@@ -327,7 +327,33 @@ a{color:inherit}
 </style>
 </head>
 <body>
-<main class="page documents-page">
+<nav class="docs-quick-nav no-print" aria-label="Documents quick navigation">
+  <button class="docs-nav-toggle" type="button" aria-expanded="false" aria-controls="docsQuickNavPanel">
+    <span class="docs-hamburger" aria-hidden="true"></span>
+    <span class="sr-only">Open documents menu</span>
+  </button>
+  <div class="docs-nav-backdrop" data-docs-menu-close aria-hidden="true"></div>
+  <div id="docsQuickNavPanel" class="docs-nav-panel" aria-hidden="true">
+    <div class="docs-nav-head">
+      <strong>Documents Menu</strong>
+      <button class="docs-nav-close" type="button" data-docs-menu-close aria-label="Close menu">×</button>
+    </div>
+    <a href="#docs-top">Top</a>
+    <a href="#group-documents">Group Documents</a>
+    <a href="#group-transportation">Transportation</a>
+    <a href="#group-hotels">Hotels</a>
+    <a href="#group-itinerary">Itinerary / Activities</a>
+    <a href="#group-budget">Budget / Money</a>
+    <a href="#group-emergency">Emergency / Travel Info</a>
+    <a href="#solo-documents">Solo Traveller Documents</a>
+    <a href="#traveller-1">Traveller 1</a>
+    <a href="#traveller-2">Traveller 2</a>
+    <a href="#traveller-3">Traveller 3</a>
+    <a href="#traveller-4">Traveller 4</a>
+    <a href="vietnam-sapa-itinerary.html">← Back to Itinerary</a>
+  </div>
+</nav>
+<main class="page documents-page" id="docs-top">
   <header class="hero documents-hero">
     <div class="hero-kicker">Vietnam Travel Files · Firebase Sync</div>
     <h1>Traveller Documents</h1>
@@ -344,7 +370,7 @@ a{color:inherit}
 
   <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
 
-  <section class="section doc-section" id="group-docs">
+  <section class="section doc-section" id="group-documents">
     <div class="section-head">
       <div>
         <div class="section-label">Group Trip Documents</div>
@@ -355,7 +381,7 @@ a{color:inherit}
     <div class="group-wrap doc-section" id="groupDocRoot"></div>
   </section>
 
-  <section class="section doc-section" id="solo-docs">
+  <section class="section doc-section" id="solo-documents">
     <div class="section-head">
       <div>
         <div class="section-label">Solo Traveller Documents</div>
