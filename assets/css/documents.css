@@ -192,6 +192,122 @@ a{color:inherit}
   font-size:12px;
 }
 
+.protected-docs[hidden]{display:none !important}
+
+.doc-access-gate{
+  position:fixed;
+  inset:0;
+  z-index:30;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(110,140,107,.10), transparent 18%),
+    radial-gradient(circle at 82% 12%, rgba(196,122,90,.10), transparent 16%),
+    linear-gradient(180deg, rgba(250,247,242,.98), rgba(246,240,231,.99));
+}
+
+.doc-access-card{
+  width:min(440px,100%);
+  background:linear-gradient(180deg,#fffdf9 0%,#f8f2ea 100%);
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:24px;
+  padding:24px 22px 20px;
+  box-shadow:var(--shadow-card);
+  text-align:center;
+}
+
+.doc-access-icon{
+  width:56px;
+  height:56px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 12px;
+  border-radius:50%;
+  background:var(--sage-pale);
+  color:var(--sage);
+  font-size:24px;
+}
+
+.doc-access-card h1{
+  margin:0 0 8px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,5vw,44px);
+  font-weight:500;
+  line-height:1.02;
+}
+
+.doc-access-card p{
+  margin:0 0 14px;
+  color:var(--text-mid);
+}
+
+#documentAccessForm{
+  display:grid;
+  gap:10px;
+  margin-top:10px;
+  text-align:left;
+}
+
+#documentAccessForm label,
+.doc-access-note{
+  font-size:12px;
+  color:var(--text-soft);
+}
+
+#documentAccessPassword{
+  width:100%;
+  border:1px solid rgba(224,216,204,.95);
+  border-radius:14px;
+  background:#fff;
+  color:var(--text-dark);
+  font:inherit;
+  padding:12px 14px;
+  box-shadow:inset 0 1px 2px rgba(90,70,50,.04);
+}
+
+#documentAccessForm button{
+  min-height:44px;
+  border:none;
+  border-radius:999px;
+  background:var(--sage);
+  color:#fff;
+  font:inherit;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.doc-access-error{
+  margin:0;
+  color:var(--terracotta);
+  font-size:12px;
+}
+
+.doc-access-note{
+  margin-top:14px;
+  line-height:1.45;
+}
+
+.lock-docs-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.30);
+  background:rgba(255,255,255,.16);
+  color:#fff;
+  font:inherit;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
 .section{
   margin-top:22px;
 }
@@ -1115,6 +1231,68 @@ a{color:inherit}
   color:var(--text-soft);
 }
 
+.doc-remarks-wrap{
+  display:grid;
+  gap:6px;
+  width:100%;
+  margin-top:2px;
+  padding:9px 10px;
+  border:1px solid rgba(198,165,107,.16);
+  border-radius:12px;
+  background:rgba(255,252,246,.92);
+}
+
+.doc-remarks-label{
+  font-size:10px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--text-soft);
+  font-weight:600;
+}
+
+.doc-remarks-input{
+  width:100%;
+  min-height:64px;
+  border-radius:12px;
+  border:1px solid rgba(198,165,107,.24);
+  background:rgba(255,252,246,.96);
+  padding:10px 12px;
+  font:inherit;
+  color:var(--text-dark);
+  line-height:1.45;
+  resize:vertical;
+  overflow:auto;
+}
+
+.doc-remarks-input::placeholder{
+  color:var(--text-soft);
+}
+
+.doc-remarks-input:focus{
+  outline:none;
+  border-color:rgba(110,140,107,.45);
+  box-shadow:0 0 0 3px rgba(110,140,107,.10);
+}
+
+.doc-remarks-status{
+  font-size:11px;
+  color:var(--sage);
+  line-height:1.2;
+}
+
+.doc-remarks-copy{
+  display:none;
+  white-space:pre-wrap;
+  word-break:break-word;
+  font-size:13px;
+  line-height:1.45;
+  color:var(--text-dark);
+}
+
+.doc-remarks-status.saving{color:var(--terracotta)}
+.doc-remarks-status.saved{color:var(--sage)}
+.doc-remarks-status.error{color:#b04a3d}
+
 .doc-row .doc-error{
   padding:7px 10px;
   border-radius:10px;
@@ -1238,6 +1416,10 @@ body.docs-menu-open{
 }
 
 @media print{
+  .doc-access-gate,
+  .lock-docs-btn{
+    display:none !important;
+  }
   .hero-actions,
   .page-actions,
   .notice,
@@ -1260,5 +1442,28 @@ body.docs-menu-open{
   .doc-card,
   .doc-accordion{
     box-shadow:none !important;
+  }
+  .doc-remarks-wrap{
+    padding:0 !important;
+    border:0 !important;
+    background:transparent !important;
+  }
+  .doc-remarks-label,
+  .doc-remarks-status{
+    display:none !important;
+  }
+  .doc-remarks-wrap:not([data-has-remarks="true"]){
+    display:none !important;
+  }
+  .doc-remarks-input{
+    display:none !important;
+  }
+  .doc-remarks-copy{
+    display:block !important;
+    white-space:pre-wrap !important;
+    word-break:break-word !important;
+    min-height:0 !important;
+    height:auto !important;
+    resize:none !important;
   }
 }

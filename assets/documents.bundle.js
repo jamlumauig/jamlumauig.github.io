@@ -8,7 +8,7 @@ var __commonJS = (cb, mod) => function __require() {
 
 // assets/js/documents-firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInAnonymously, onAuthStateChanged, getIdToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 function isFirebaseConfigured() {
   return Object.values(firebaseConfig).every((value) => typeof value === "string" && !value.includes("PASTE_"));
@@ -116,6 +116,36 @@ async function loadDocumentFiles(card) {
   }));
   return items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
 }
+async function loadRemarksRecord(docId) {
+  await signInGuest().catch(() => {
+  });
+  if (!(auth == null ? void 0 : auth.currentUser) || !firebaseConfig.databaseURL) return null;
+  const token = await getIdToken(auth.currentUser, false).catch(() => "");
+  if (!token) return null;
+  const base = firebaseConfig.databaseURL.replace(/\/+$/, "");
+  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
+  const res = await fetch(url, { method: "GET" });
+  if (!res.ok) throw new Error(`Remarks load failed (${res.status})`);
+  return await res.json();
+}
+async function saveRemarksRecord(docId, payload) {
+  await signInGuest().catch(() => {
+  });
+  if (!(auth == null ? void 0 : auth.currentUser) || !firebaseConfig.databaseURL) throw new Error("Firebase is not configured yet.");
+  const token = await getIdToken(auth.currentUser, false).catch(() => "");
+  if (!token) throw new Error("Firebase is not configured yet.");
+  const base = firebaseConfig.databaseURL.replace(/\/+$/, "");
+  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ...payload,
+      updatedAt: Date.now()
+    })
+  });
+  if (!res.ok) throw new Error(`Remarks save failed (${res.status})`);
+}
 var firebaseConfig, MAX_FILE_SIZE, ALLOWED_EXT, ALLOWED_MIME, app, auth, storage, initPromise;
 var init_documents_firebase = __esm({
   "assets/js/documents-firebase.js"() {
@@ -124,6 +154,7 @@ var init_documents_firebase = __esm({
       authDomain: "lakbayph-236bf.firebaseapp.com",
       projectId: "lakbayph-236bf",
       storageBucket: "lakbayph-236bf.firebasestorage.app",
+      databaseURL: "https://lakbayph-236bf-default-rtdb.firebaseio.com",
       messagingSenderId: "815265006781",
       appId: "1:815265006781:web:b5349e2287086edb1763d4",
       measurementId: "G-VKWM3VDD3F"
@@ -148,6 +179,8 @@ var init_documents_firebase = __esm({
 var require_documents_ui = __commonJS({
   "assets/js/documents-ui.js"() {
     init_documents_firebase();
+    var DOCUMENT_ACCESS_PASSWORD = "lakbay2026";
+    var DOCUMENT_ACCESS_KEY = "vietnamDocsUnlocked";
     var GROUP_STATE_KEY = "documents-group-layout-v1";
     var doc = (key, title, note, tag = "Required") => ({
       key,
@@ -165,6 +198,14 @@ var require_documents_ui = __commonJS({
       "daily-schedule-copy",
       "emergency-cash-plan"
     ]);
+    var REMARKS_LOCAL_PREFIX = "documents-remarks-v1";
+    var REMARKS_DEBOUNCE_MS = 600;
+    var REMARKS_STATUS_HIDE_MS = 2e3;
+    var remarksSaveTimers = /* @__PURE__ */ new WeakMap();
+    var remarksStatusTimers = /* @__PURE__ */ new WeakMap();
+    var remarksSyncWarningShown = false;
+    var remarksRefreshTimer = null;
+    var documentsBootstrapped = false;
     var groupStateDefaults = [
       {
         categoryKey: "transportation",
@@ -462,7 +503,273 @@ var require_documents_ui = __commonJS({
       }
     }
     var groupState = loadGroupState();
+    function buildRemarksKey(card) {
+      if (!card) return "";
+      const owner = card.dataset.docOwner || "traveller-1";
+      const category = card.dataset.docCategory || "identity";
+      const docKey = card.dataset.docKey || "document";
+      if (owner === "group") {
+        const group = card.dataset.docGroup || "group";
+        const subgroup = card.dataset.docSubgroup || "main";
+        return `group_${category}_${group}_${subgroup}_${docKey}`;
+      }
+      return `${owner}_${category}_${docKey}`;
+    }
+    function buildRemarksTextareaId(card) {
+      return `remarks-${buildRemarksKey(card).replace(/[^A-Za-z0-9_-]+/g, "-")}`;
+    }
+    function getRemarksLocalKey(card) {
+      return `${REMARKS_LOCAL_PREFIX}:${buildRemarksKey(card)}`;
+    }
+    function readLocalRemarks(card) {
+      try {
+        return localStorage.getItem(getRemarksLocalKey(card)) || "";
+      } catch {
+        return "";
+      }
+    }
+    function writeLocalRemarks(card, text) {
+      try {
+        localStorage.setItem(getRemarksLocalKey(card), text || "");
+      } catch {
+      }
+    }
+    function warnRemarksSync(message, error) {
+      if (remarksSyncWarningShown) return;
+      remarksSyncWarningShown = true;
+      if (error) {
+        console.warn(message, error);
+      } else {
+        console.warn(message);
+      }
+    }
+    function setRemarksStatus(card, message, kind = "saved") {
+      const status = card.querySelector(".doc-remarks-status");
+      if (!status) return;
+      clearTimeout(remarksStatusTimers.get(card));
+      if (!message) {
+        status.hidden = true;
+        status.textContent = "";
+        status.className = "doc-remarks-status";
+        status.removeAttribute("data-state");
+        return;
+      }
+      status.hidden = false;
+      status.textContent = message;
+      status.className = `doc-remarks-status ${kind}`;
+      status.dataset.state = kind;
+      if (kind === "saved") {
+        remarksStatusTimers.set(card, setTimeout(() => {
+          status.hidden = true;
+          status.textContent = "";
+          status.className = "doc-remarks-status";
+          status.removeAttribute("data-state");
+        }, REMARKS_STATUS_HIDE_MS));
+      }
+    }
+    function syncRemarksWrapperState(card) {
+      const wrap = card.querySelector(".doc-remarks-wrap");
+      const input = card.querySelector(".doc-remarks-input");
+      const copy = card.querySelector(".doc-remarks-copy");
+      if (!wrap || !input) return;
+      const value = input.value.trim();
+      wrap.dataset.hasRemarks = value ? "true" : "false";
+      if (copy) copy.textContent = value;
+    }
+    function applyRemarksValue(card, text, { persistLocal = true } = {}) {
+      const input = card.querySelector(".doc-remarks-input");
+      if (!input) return;
+      input.value = text || "";
+      syncRemarksWrapperState(card);
+      if (persistLocal) writeLocalRemarks(card, input.value);
+    }
+    async function loadRemarksForCard(card) {
+      const key = buildRemarksKey(card);
+      const localValue = readLocalRemarks(card);
+      if (localValue) {
+        applyRemarksValue(card, localValue, { persistLocal: false });
+      }
+      try {
+        const record = await loadRemarksRecord(key);
+        if (record && typeof record.remarks === "string") {
+          if (!record.remarks && localValue) {
+            return;
+          }
+          const input = card.querySelector(".doc-remarks-input");
+          if (document.activeElement === input && input.value && input.value !== record.remarks) {
+            return;
+          }
+          applyRemarksValue(card, record.remarks, { persistLocal: true });
+        }
+      } catch (error) {
+        if (!localValue) {
+          applyRemarksValue(card, "", { persistLocal: false });
+        }
+        warnRemarksSync("Remarks sync unavailable.", error);
+      }
+    }
+    async function saveRemarksForCard(card, text) {
+      const key = buildRemarksKey(card);
+      writeLocalRemarks(card, text);
+      try {
+        await saveRemarksRecord(key, {
+          remarks: text,
+          owner: card.dataset.docOwner || "",
+          category: card.dataset.docCategory || "",
+          group: card.dataset.docGroup || "",
+          subgroup: card.dataset.docSubgroup || "",
+          docKey: card.dataset.docKey || ""
+        });
+      } catch (error) {
+        warnRemarksSync("Remarks sync unavailable.", error);
+      }
+    }
+    function queueRemarksSave(card, text) {
+      clearTimeout(remarksSaveTimers.get(card));
+      setRemarksStatus(card, "Saving\u2026", "saving");
+      remarksSaveTimers.set(card, setTimeout(async () => {
+        await saveRemarksForCard(card, text);
+        setRemarksStatus(card, "Saved", "saved");
+      }, REMARKS_DEBOUNCE_MS));
+    }
+    function flushRemarksSave(card) {
+      const input = card.querySelector(".doc-remarks-input");
+      if (!input) return;
+      clearTimeout(remarksSaveTimers.get(card));
+      void (async () => {
+        setRemarksStatus(card, "Saving\u2026", "saving");
+        await saveRemarksForCard(card, input.value);
+        setRemarksStatus(card, "Saved", "saved");
+      })();
+    }
+    async function syncRemarksForCards(scope = document) {
+      const cards = [...scope.querySelectorAll(".doc-card")];
+      await Promise.all(cards.map(async (card) => {
+        await loadRemarksForCard(card);
+      }));
+    }
+    function startRemarksPolling() {
+      if (remarksRefreshTimer) return;
+      const tick = () => {
+        if (document.hidden) return;
+        void syncRemarksForCards();
+      };
+      remarksRefreshTimer = window.setInterval(tick, 15e3);
+      document.addEventListener("visibilitychange", tick);
+    }
+    function isDocumentsUnlocked() {
+      try {
+        return sessionStorage.getItem(DOCUMENT_ACCESS_KEY) === "true";
+      } catch {
+        return false;
+      }
+    }
+    function setDocumentsAccessState(unlocked) {
+      const gate = document.getElementById("documentAccessGate");
+      const protectedContent = document.getElementById("protectedDocumentsContent");
+      if (gate) gate.hidden = unlocked;
+      if (protectedContent) protectedContent.hidden = !unlocked;
+    }
+    function showDocumentAccessError(message) {
+      const error = document.getElementById("documentAccessError");
+      if (!error) return;
+      error.textContent = message || "Incorrect password. Please try again.";
+      error.hidden = false;
+    }
+    function hideDocumentAccessError() {
+      const error = document.getElementById("documentAccessError");
+      if (!error) return;
+      error.hidden = true;
+      error.textContent = "";
+    }
+    function bootstrapDocumentsAfterUnlock() {
+      if (documentsBootstrapped) return;
+      documentsBootstrapped = true;
+      initDocumentsPage();
+    }
+    function unlockDocuments() {
+      try {
+        sessionStorage.setItem(DOCUMENT_ACCESS_KEY, "true");
+      } catch {
+      }
+      setDocumentsAccessState(true);
+      hideDocumentAccessError();
+      bootstrapDocumentsAfterUnlock();
+    }
+    function lockDocuments() {
+      try {
+        sessionStorage.removeItem(DOCUMENT_ACCESS_KEY);
+      } catch {
+      }
+      documentsBootstrapped = false;
+      setDocumentsAccessState(false);
+      hideDocumentAccessError();
+      const passwordInput = document.getElementById("documentAccessPassword");
+      if (passwordInput) passwordInput.value = "";
+    }
+    function initDocumentAccessGate() {
+      const gate = document.getElementById("documentAccessGate");
+      const form = document.getElementById("documentAccessForm");
+      const lockBtn = document.getElementById("lockDocumentsBtn");
+      const passwordInput = document.getElementById("documentAccessPassword");
+      const unlockBtn = form == null ? void 0 : form.querySelector('button[type="submit"]');
+      if (!gate) {
+        bootstrapDocumentsAfterUnlock();
+        return;
+      }
+      if (isDocumentsUnlocked()) {
+        setDocumentsAccessState(true);
+        bootstrapDocumentsAfterUnlock();
+      } else {
+        setDocumentsAccessState(false);
+      }
+      const attemptUnlock = () => {
+        const value = ((passwordInput == null ? void 0 : passwordInput.value) || "").trim();
+        if (!value) {
+          showDocumentAccessError("Enter the shared password.");
+          passwordInput == null ? void 0 : passwordInput.focus();
+          return;
+        }
+        if (value === DOCUMENT_ACCESS_PASSWORD) {
+          unlockDocuments();
+        } else {
+          showDocumentAccessError("Incorrect password. Please try again.");
+          passwordInput == null ? void 0 : passwordInput.focus();
+        }
+      };
+      if (form && !form.dataset.bound) {
+        form.dataset.bound = "true";
+        form.noValidate = true;
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          attemptUnlock();
+        });
+      }
+      if (unlockBtn && !unlockBtn.dataset.bound) {
+        unlockBtn.dataset.bound = "true";
+        unlockBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          attemptUnlock();
+        });
+      }
+      if (passwordInput && !passwordInput.dataset.bound) {
+        passwordInput.dataset.bound = "true";
+        passwordInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            attemptUnlock();
+          }
+        });
+      }
+      if (lockBtn && !lockBtn.dataset.bound) {
+        lockBtn.dataset.bound = "true";
+        lockBtn.addEventListener("click", lockDocuments);
+      }
+    }
     function renderDocCard({ owner, category, key, title, note, tag = "Required", tagClass = "", group = "", subgroup = "", travellerId = "" }) {
+      const remarksId = buildRemarksTextareaId({
+        dataset: { docOwner: owner, docCategory: category, docKey: key, docGroup: group, docSubgroup: subgroup }
+      });
       return `
     <article class="doc-row doc-card"
       data-doc-owner="${escapeHtml(owner)}"
@@ -480,6 +787,18 @@ var require_documents_ui = __commonJS({
         </div>
         <p class="doc-row-desc">${escapeHtml(note)}</p>
         <div class="doc-file-name">No file uploaded yet.</div>
+        <div class="doc-remarks-wrap" data-remarks-wrap data-has-remarks="false">
+          <label class="doc-remarks-label" for="${escapeHtml(remarksId)}">Remarks / Notes</label>
+          <textarea
+            class="doc-remarks-input"
+            id="${escapeHtml(remarksId)}"
+            rows="2"
+            maxlength="500"
+            placeholder="Add remarks or reminders..."
+            data-remarks-input></textarea>
+          <div class="doc-remarks-copy" aria-hidden="true"></div>
+          <div class="doc-remarks-status" hidden aria-live="polite"></div>
+        </div>
         <div class="doc-progress-wrap" hidden>
           <div class="doc-progress"><div class="doc-progress-bar"></div></div>
         </div>
@@ -719,6 +1038,7 @@ var require_documents_ui = __commonJS({
     }
     async function syncAllDocumentCards() {
       await hydrateCards();
+      await syncRemarksForCards();
       updateDocumentSummaries();
     }
     function initDocumentUploadHandlers() {
@@ -726,6 +1046,41 @@ var require_documents_ui = __commonJS({
     }
     function initDocumentAccordions() {
       initPageEnhancements();
+    }
+    var remarksHandlersBound = false;
+    function initRemarksHandlers() {
+      document.querySelectorAll(".doc-card").forEach((card) => {
+        const input = card.querySelector(".doc-remarks-input");
+        if (!input) return;
+        if (input.value) {
+          syncRemarksWrapperState(card);
+          return;
+        }
+        const local = readLocalRemarks(card);
+        if (local) {
+          applyRemarksValue(card, local, { persistLocal: false });
+        } else {
+          syncRemarksWrapperState(card);
+        }
+      });
+      if (remarksHandlersBound) return;
+      remarksHandlersBound = true;
+      document.addEventListener("input", (event) => {
+        const input = event.target.closest(".doc-remarks-input");
+        if (!input) return;
+        const card = input.closest(".doc-card");
+        if (!card) return;
+        syncRemarksWrapperState(card);
+        queueRemarksSave(card, input.value);
+      });
+      document.addEventListener("blur", (event) => {
+        const input = event.target.closest(".doc-remarks-input");
+        if (!input) return;
+        const card = input.closest(".doc-card");
+        if (!card) return;
+        syncRemarksWrapperState(card);
+        flushRemarksSave(card);
+      }, true);
     }
     function updateDocumentSummaries() {
       document.querySelectorAll("[data-doc-summary]").forEach((summary) => {
@@ -844,6 +1199,7 @@ var require_documents_ui = __commonJS({
         renderTravellerDocuments(document.getElementById("travellerDocumentsContainer"), travellerId);
       }
       initPageEnhancements();
+      initRemarksHandlers();
       void bootstrapUploads();
     }
     function initPageEnhancements() {
@@ -887,9 +1243,11 @@ var require_documents_ui = __commonJS({
       }
       initDocumentAccordions();
       initDocumentUploadHandlers();
+      initRemarksHandlers();
+      startRemarksPolling();
       void bootstrapUploads();
     }
-    document.addEventListener("DOMContentLoaded", initDocumentsPage);
+    document.addEventListener("DOMContentLoaded", initDocumentAccessGate);
   }
 });
 export default require_documents_ui();

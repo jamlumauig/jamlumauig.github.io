@@ -10,6 +10,22 @@
 <link rel="stylesheet" href="assets/css/documents.css">
 </head>
 <body data-doc-page="group">
+<div id="documentAccessGate" class="doc-access-gate">
+  <div class="doc-access-card">
+    <div class="doc-access-icon">🔐</div>
+    <h1>Private Traveller Documents</h1>
+    <p>Enter the group password to view uploaded travel files.</p>
+    <form id="documentAccessForm" novalidate>
+      <label for="documentAccessPassword">Password</label>
+      <input id="documentAccessPassword" type="password" autocomplete="current-password" required>
+      <button type="submit" onclick="return false;">Unlock Documents</button>
+      <p id="documentAccessError" class="doc-access-error" hidden>Incorrect password. Please try again.</p>
+    </form>
+    <p class="doc-access-note">For trusted travellers only. Do not share this page publicly.</p>
+    <p class="doc-access-note">Temporary group password: <strong>lakbay2026</strong></p>
+  </div>
+</div>
+<div id="protectedDocumentsContent" class="protected-docs" hidden>
 <main id="documents-root">
   <div class="page docs-shell">
     <header class="hero compact docs-hero-compact">
@@ -19,6 +35,7 @@
       <div class="hero-actions">
         <a class="btn primary" href="documents.html">Documents Home</a>
         <a class="btn secondary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
+        <button type="button" id="lockDocumentsBtn" class="lock-docs-btn">Lock Documents</button>
       </div>
       <div class="sync-badge" data-sync-status>Loading Firebase sync...</div>
     </header>
@@ -30,6 +47,7 @@
     <div class="warning" data-firebase-warning hidden></div>
   </div>
 </main>
-<script type="module" src="assets/js/documents-ui.js"></script>
+</div>
+<script type="module" src="assets/documents.bundle.js?v=20260524-3"></script>
 </body>
 </html>

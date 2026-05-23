@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInAnonymously, onAuthStateChanged, getIdToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 export const firebaseConfig = {
@@ -7,6 +7,7 @@ export const firebaseConfig = {
   authDomain: "lakbayph-236bf.firebaseapp.com",
   projectId: "lakbayph-236bf",
   storageBucket: "lakbayph-236bf.firebasestorage.app",
+  databaseURL: "https://lakbayph-236bf-default-rtdb.firebaseio.com",
   messagingSenderId: "815265006781",
   appId: "1:815265006781:web:b5349e2287086edb1763d4",
   measurementId: "G-VKWM3VDD3F"
@@ -144,4 +145,34 @@ export async function loadDocumentFiles(card) {
     };
   }));
   return items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
+}
+
+export async function loadRemarksRecord(docId) {
+  await signInGuest().catch(() => {});
+  if (!auth?.currentUser || !firebaseConfig.databaseURL) return null;
+  const token = await getIdToken(auth.currentUser, false).catch(() => '');
+  if (!token) return null;
+  const base = firebaseConfig.databaseURL.replace(/\/+$/, '');
+  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
+  const res = await fetch(url, { method: 'GET' });
+  if (!res.ok) throw new Error(`Remarks load failed (${res.status})`);
+  return await res.json();
+}
+
+export async function saveRemarksRecord(docId, payload) {
+  await signInGuest().catch(() => {});
+  if (!auth?.currentUser || !firebaseConfig.databaseURL) throw new Error('Firebase is not configured yet.');
+  const token = await getIdToken(auth.currentUser, false).catch(() => '');
+  if (!token) throw new Error('Firebase is not configured yet.');
+  const base = firebaseConfig.databaseURL.replace(/\/+$/, '');
+  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...payload,
+      updatedAt: Date.now()
+    })
+  });
+  if (!res.ok) throw new Error(`Remarks save failed (${res.status})`);
 }

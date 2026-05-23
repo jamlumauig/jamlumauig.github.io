@@ -3,9 +3,14 @@ import {
   signInGuest,
   isFirebaseConfigured,
   uploadDocumentForCard,
-  loadDocumentFiles
+  loadDocumentFiles,
+  loadRemarksRecord,
+  saveRemarksRecord
 } from './documents-firebase.js';
 
+// Frontend password protection is only a light access gate. Use Firebase Auth and security rules for real privacy.
+const DOCUMENT_ACCESS_PASSWORD = 'lakbay2026';
+const DOCUMENT_ACCESS_KEY = 'vietnamDocsUnlocked';
 const GROUP_STATE_KEY = 'documents-group-layout-v1';
 
 const doc = (key, title, note, tag = 'Required') => ({
@@ -25,6 +30,15 @@ const REMOVED_DOC_KEYS = new Set([
   'daily-schedule-copy',
   'emergency-cash-plan'
 ]);
+
+const REMARKS_LOCAL_PREFIX = 'documents-remarks-v1';
+const REMARKS_DEBOUNCE_MS = 600;
+const REMARKS_STATUS_HIDE_MS = 2000;
+const remarksSaveTimers = new WeakMap();
+const remarksStatusTimers = new WeakMap();
+let remarksSyncWarningShown = false;
+let remarksRefreshTimer = null;
+let documentsBootstrapped = false;
 
 const groupStateDefaults = [
   {
@@ -345,6 +359,177 @@ function saveGroupState(state) {
 
 let groupState = loadGroupState();
 
+function buildRemarksKey(card) {
+  if (!card) return '';
+  const owner = card.dataset.docOwner || 'traveller-1';
+  const category = card.dataset.docCategory || 'identity';
+  const docKey = card.dataset.docKey || 'document';
+  if (owner === 'group') {
+    const group = card.dataset.docGroup || 'group';
+    const subgroup = card.dataset.docSubgroup || 'main';
+    return `group_${category}_${group}_${subgroup}_${docKey}`;
+  }
+  return `${owner}_${category}_${docKey}`;
+}
+
+function buildRemarksTextareaId(card) {
+  return `remarks-${buildRemarksKey(card).replace(/[^A-Za-z0-9_-]+/g, '-')}`;
+}
+
+function getRemarksLocalKey(card) {
+  return `${REMARKS_LOCAL_PREFIX}:${buildRemarksKey(card)}`;
+}
+
+function readLocalRemarks(card) {
+  try {
+    return localStorage.getItem(getRemarksLocalKey(card)) || '';
+  } catch {
+    return '';
+  }
+}
+
+function writeLocalRemarks(card, text) {
+  try {
+    localStorage.setItem(getRemarksLocalKey(card), text || '');
+  } catch {
+    // Ignore local persistence failures.
+  }
+}
+
+function warnRemarksSync(message, error) {
+  if (remarksSyncWarningShown) return;
+  remarksSyncWarningShown = true;
+  if (error) {
+    console.warn(message, error);
+  } else {
+    console.warn(message);
+  }
+}
+
+function setRemarksStatus(card, message, kind = 'saved') {
+  const status = card.querySelector('.doc-remarks-status');
+  if (!status) return;
+  clearTimeout(remarksStatusTimers.get(card));
+  if (!message) {
+    status.hidden = true;
+    status.textContent = '';
+    status.className = 'doc-remarks-status';
+    status.removeAttribute('data-state');
+    return;
+  }
+  status.hidden = false;
+  status.textContent = message;
+  status.className = `doc-remarks-status ${kind}`;
+  status.dataset.state = kind;
+  if (kind === 'saved') {
+    remarksStatusTimers.set(card, setTimeout(() => {
+      status.hidden = true;
+      status.textContent = '';
+      status.className = 'doc-remarks-status';
+      status.removeAttribute('data-state');
+    }, REMARKS_STATUS_HIDE_MS));
+  }
+}
+
+function syncRemarksWrapperState(card) {
+  const wrap = card.querySelector('.doc-remarks-wrap');
+  const input = card.querySelector('.doc-remarks-input');
+  const copy = card.querySelector('.doc-remarks-copy');
+  if (!wrap || !input) return;
+  const value = input.value.trim();
+  wrap.dataset.hasRemarks = value ? 'true' : 'false';
+  if (copy) copy.textContent = value;
+}
+
+function applyRemarksValue(card, text, { persistLocal = true } = {}) {
+  const input = card.querySelector('.doc-remarks-input');
+  if (!input) return;
+  input.value = text || '';
+  syncRemarksWrapperState(card);
+  if (persistLocal) writeLocalRemarks(card, input.value);
+}
+
+async function loadRemarksForCard(card) {
+  const key = buildRemarksKey(card);
+  const localValue = readLocalRemarks(card);
+  if (localValue) {
+    applyRemarksValue(card, localValue, { persistLocal: false });
+  }
+
+  try {
+    const record = await loadRemarksRecord(key);
+    if (record && typeof record.remarks === 'string') {
+      if (!record.remarks && localValue) {
+        return;
+      }
+      const input = card.querySelector('.doc-remarks-input');
+      if (document.activeElement === input && input.value && input.value !== record.remarks) {
+        return;
+      }
+      applyRemarksValue(card, record.remarks, { persistLocal: true });
+    }
+  } catch (error) {
+    if (!localValue) {
+      applyRemarksValue(card, '', { persistLocal: false });
+    }
+    warnRemarksSync('Remarks sync unavailable.', error);
+  }
+}
+
+async function saveRemarksForCard(card, text) {
+  const key = buildRemarksKey(card);
+  writeLocalRemarks(card, text);
+  try {
+    await saveRemarksRecord(key, {
+      remarks: text,
+      owner: card.dataset.docOwner || '',
+      category: card.dataset.docCategory || '',
+      group: card.dataset.docGroup || '',
+      subgroup: card.dataset.docSubgroup || '',
+      docKey: card.dataset.docKey || ''
+    });
+  } catch (error) {
+    warnRemarksSync('Remarks sync unavailable.', error);
+  }
+}
+
+function queueRemarksSave(card, text) {
+  clearTimeout(remarksSaveTimers.get(card));
+  setRemarksStatus(card, 'Saving…', 'saving');
+  remarksSaveTimers.set(card, setTimeout(async () => {
+    await saveRemarksForCard(card, text);
+    setRemarksStatus(card, 'Saved', 'saved');
+  }, REMARKS_DEBOUNCE_MS));
+}
+
+function flushRemarksSave(card) {
+  const input = card.querySelector('.doc-remarks-input');
+  if (!input) return;
+  clearTimeout(remarksSaveTimers.get(card));
+  void (async () => {
+    setRemarksStatus(card, 'Saving…', 'saving');
+    await saveRemarksForCard(card, input.value);
+    setRemarksStatus(card, 'Saved', 'saved');
+  })();
+}
+
+async function syncRemarksForCards(scope = document) {
+  const cards = [...scope.querySelectorAll('.doc-card')];
+  await Promise.all(cards.map(async (card) => {
+    await loadRemarksForCard(card);
+  }));
+}
+
+function startRemarksPolling() {
+  if (remarksRefreshTimer) return;
+  const tick = () => {
+    if (document.hidden) return;
+    void syncRemarksForCards();
+  };
+  remarksRefreshTimer = window.setInterval(tick, 15000);
+  document.addEventListener('visibilitychange', tick);
+}
+
 function sectionQuickLinksForPage(pageType) {
   if (pageType === 'group') {
     return [
@@ -430,6 +615,128 @@ function renderHub() {
   `;
 }
 
+function isDocumentsUnlocked() {
+  try {
+    return sessionStorage.getItem(DOCUMENT_ACCESS_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function setDocumentsAccessState(unlocked) {
+  const gate = document.getElementById('documentAccessGate');
+  const protectedContent = document.getElementById('protectedDocumentsContent');
+  if (gate) gate.hidden = unlocked;
+  if (protectedContent) protectedContent.hidden = !unlocked;
+}
+
+function showDocumentAccessError(message) {
+  const error = document.getElementById('documentAccessError');
+  if (!error) return;
+  error.textContent = message || 'Incorrect password. Please try again.';
+  error.hidden = false;
+}
+
+function hideDocumentAccessError() {
+  const error = document.getElementById('documentAccessError');
+  if (!error) return;
+  error.hidden = true;
+  error.textContent = '';
+}
+
+function bootstrapDocumentsAfterUnlock() {
+  if (documentsBootstrapped) return;
+  documentsBootstrapped = true;
+  initDocumentsPage();
+}
+
+function unlockDocuments() {
+  try {
+    sessionStorage.setItem(DOCUMENT_ACCESS_KEY, 'true');
+  } catch {}
+  setDocumentsAccessState(true);
+  hideDocumentAccessError();
+  bootstrapDocumentsAfterUnlock();
+}
+
+function lockDocuments() {
+  try {
+    sessionStorage.removeItem(DOCUMENT_ACCESS_KEY);
+  } catch {}
+  documentsBootstrapped = false;
+  setDocumentsAccessState(false);
+  hideDocumentAccessError();
+  const passwordInput = document.getElementById('documentAccessPassword');
+  if (passwordInput) passwordInput.value = '';
+}
+
+function initDocumentAccessGate() {
+  const gate = document.getElementById('documentAccessGate');
+  const form = document.getElementById('documentAccessForm');
+  const lockBtn = document.getElementById('lockDocumentsBtn');
+  const passwordInput = document.getElementById('documentAccessPassword');
+  const unlockBtn = form?.querySelector('button[type="submit"]');
+
+  if (!gate) {
+    bootstrapDocumentsAfterUnlock();
+    return;
+  }
+
+  if (isDocumentsUnlocked()) {
+    setDocumentsAccessState(true);
+    bootstrapDocumentsAfterUnlock();
+  } else {
+    setDocumentsAccessState(false);
+  }
+
+  const attemptUnlock = () => {
+    const value = (passwordInput?.value || '').trim();
+    if (!value) {
+      showDocumentAccessError('Enter the shared password.');
+      passwordInput?.focus();
+      return;
+    }
+    if (value === DOCUMENT_ACCESS_PASSWORD) {
+      unlockDocuments();
+    } else {
+      showDocumentAccessError('Incorrect password. Please try again.');
+      passwordInput?.focus();
+    }
+  };
+
+  if (form && !form.dataset.bound) {
+    form.dataset.bound = 'true';
+    form.noValidate = true;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      attemptUnlock();
+    });
+  }
+
+  if (unlockBtn && !unlockBtn.dataset.bound) {
+    unlockBtn.dataset.bound = 'true';
+    unlockBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      attemptUnlock();
+    });
+  }
+
+  if (passwordInput && !passwordInput.dataset.bound) {
+    passwordInput.dataset.bound = 'true';
+    passwordInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        attemptUnlock();
+      }
+    });
+  }
+
+  if (lockBtn && !lockBtn.dataset.bound) {
+    lockBtn.dataset.bound = 'true';
+    lockBtn.addEventListener('click', lockDocuments);
+  }
+}
+
 function heroChrome({ title, subtitle, status, actions = '', quickLinks = '' }) {
   return `
     <header class="hero compact">
@@ -459,6 +766,9 @@ function renderBreadcrumbs(items) {
 }
 
 function renderDocCard({ owner, category, key, title, note, tag = 'Required', tagClass = '', group = '', subgroup = '', travellerId = '' }) {
+  const remarksId = buildRemarksTextareaId({
+    dataset: { docOwner: owner, docCategory: category, docKey: key, docGroup: group, docSubgroup: subgroup }
+  });
   return `
     <article class="doc-row doc-card"
       data-doc-owner="${escapeHtml(owner)}"
@@ -476,6 +786,18 @@ function renderDocCard({ owner, category, key, title, note, tag = 'Required', ta
         </div>
         <p class="doc-row-desc">${escapeHtml(note)}</p>
         <div class="doc-file-name">No file uploaded yet.</div>
+        <div class="doc-remarks-wrap" data-remarks-wrap data-has-remarks="false">
+          <label class="doc-remarks-label" for="${escapeHtml(remarksId)}">Remarks / Notes</label>
+          <textarea
+            class="doc-remarks-input"
+            id="${escapeHtml(remarksId)}"
+            rows="2"
+            maxlength="500"
+            placeholder="Add remarks or reminders..."
+            data-remarks-input></textarea>
+          <div class="doc-remarks-copy" aria-hidden="true"></div>
+          <div class="doc-remarks-status" hidden aria-live="polite"></div>
+        </div>
         <div class="doc-progress-wrap" hidden>
           <div class="doc-progress"><div class="doc-progress-bar"></div></div>
         </div>
@@ -835,6 +1157,7 @@ async function setupFirebaseState() {
 
 async function syncAllDocumentCards() {
   await hydrateCards();
+  await syncRemarksForCards();
   updateDocumentSummaries();
 }
 
@@ -856,6 +1179,46 @@ function initDocumentUploadHandlers() {
 
 function initDocumentAccordions() {
   initPageEnhancements();
+}
+
+let remarksHandlersBound = false;
+
+function initRemarksHandlers() {
+  document.querySelectorAll('.doc-card').forEach((card) => {
+    const input = card.querySelector('.doc-remarks-input');
+    if (!input) return;
+    if (input.value) {
+      syncRemarksWrapperState(card);
+      return;
+    }
+    const local = readLocalRemarks(card);
+    if (local) {
+      applyRemarksValue(card, local, { persistLocal: false });
+    } else {
+      syncRemarksWrapperState(card);
+    }
+  });
+
+  if (remarksHandlersBound) return;
+  remarksHandlersBound = true;
+
+  document.addEventListener('input', (event) => {
+    const input = event.target.closest('.doc-remarks-input');
+    if (!input) return;
+    const card = input.closest('.doc-card');
+    if (!card) return;
+    syncRemarksWrapperState(card);
+    queueRemarksSave(card, input.value);
+  });
+
+  document.addEventListener('blur', (event) => {
+    const input = event.target.closest('.doc-remarks-input');
+    if (!input) return;
+    const card = input.closest('.doc-card');
+    if (!card) return;
+    syncRemarksWrapperState(card);
+    flushRemarksSave(card);
+  }, true);
 }
 
 function updateDocumentSummaries() {
@@ -1065,6 +1428,7 @@ function rerenderPage() {
     renderTravellerDocuments(document.getElementById('travellerDocumentsContainer'), travellerId);
   }
   initPageEnhancements();
+  initRemarksHandlers();
   void bootstrapUploads();
 }
 
@@ -1120,7 +1484,9 @@ function initDocumentsPage() {
   }
   initDocumentAccordions();
   initDocumentUploadHandlers();
+  initRemarksHandlers();
+  startRemarksPolling();
   void bootstrapUploads();
 }
 
-document.addEventListener('DOMContentLoaded', initDocumentsPage);
+document.addEventListener('DOMContentLoaded', initDocumentAccessGate);
