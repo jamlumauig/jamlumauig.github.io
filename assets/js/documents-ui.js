@@ -383,7 +383,7 @@ function renderHub() {
   ];
 
   return `
-    <div class="page compact">
+    <div class="page compact" id="docs-top">
       <header class="hero compact">
         <div class="eyebrow">Traveller Documents</div>
         <h1>Traveller Documents</h1>
@@ -393,6 +393,7 @@ function renderHub() {
         </div>
         <div class="sync-badge" data-sync-status>Checking Firebase sync...</div>
       </header>
+      ${renderBreadcrumbs([{ label: 'Documents Home' }])}
 
       <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
 
@@ -434,6 +435,21 @@ function heroChrome({ title, subtitle, status, actions = '', quickLinks = '' }) 
       <div class="sync-badge" data-sync-status>${escapeHtml(status)}</div>
     </header>
     ${quickLinks}
+  `;
+}
+
+function renderBreadcrumbs(items) {
+  if (!items || !items.length) return '';
+  return `
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      ${items.map((item, index) => {
+        const label = escapeHtml(item.label);
+        if (item.href && index < items.length - 1) {
+          return `<a class="crumb" href="${escapeHtml(item.href)}">${label}</a>`;
+        }
+        return `<span class="crumb">${label}</span>`;
+      }).join('')}
+    </nav>
   `;
 }
 
@@ -495,7 +511,7 @@ function renderGroupPage() {
     .join('');
 
   const shell = `
-    <div class="page">
+    <div class="page" id="docs-top">
       ${heroChrome({
         title: 'Group Trip Documents',
         subtitle: 'Shared transport, hotels, itinerary, budget, and emergency files.',
@@ -506,6 +522,10 @@ function renderGroupPage() {
         `,
         quickLinks: quickLinks ? `<div class="quick-links">${quickLinks}</div>` : ''
       })}
+      ${renderBreadcrumbs([
+        { label: 'Documents Home', href: 'documents.html' },
+        { label: 'Group Trip Documents' }
+      ])}
 
       <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
 
@@ -614,7 +634,7 @@ function renderTravellerPage(travellerId) {
     .join('');
 
   return `
-    <div class="page">
+    <div class="page" id="docs-top">
       ${heroChrome({
         title: `${traveller.label} · Traveller Documents`,
         subtitle: 'Passport, employment, financial proof, tickets, and IO support documents.',
@@ -913,7 +933,7 @@ function renderGroupPageIntro() {
     .join('');
 
   return `
-    <div class="page">
+    <div class="page" id="docs-top">
       ${heroChrome({
         title: 'Group Trip Documents',
         subtitle: 'Shared transport, hotel, itinerary, budget, and emergency files.',
@@ -924,6 +944,10 @@ function renderGroupPageIntro() {
         `,
         quickLinks: quickLinks ? `<div class="quick-links">${quickLinks}</div>` : ''
       })}
+      ${renderBreadcrumbs([
+        { label: 'Documents Home', href: 'documents.html' },
+        { label: 'Group Trip Documents' }
+      ])}
       <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
       <div class="docs-topbar">
         <div class="nav-group">
@@ -950,7 +974,7 @@ function renderTravellerPageIntro(travellerId) {
     .join('');
 
   return `
-    <div class="page">
+    <div class="page" id="docs-top">
       ${heroChrome({
         title: `${traveller.label} · Traveller Documents`,
         subtitle: 'Passport, employment, financial proof, tickets, and IO support documents.',
@@ -963,6 +987,10 @@ function renderTravellerPageIntro(travellerId) {
         `,
         quickLinks: quickLinks ? `<div class="quick-links">${quickLinks}</div>` : ''
       })}
+      ${renderBreadcrumbs([
+        { label: 'Documents Home', href: 'documents.html' },
+        { label: `${traveller.label} · Traveller Documents` }
+      ])}
       <div class="notice">Uploaded files are synced through Firebase Storage. Only share this page with trusted travellers.</div>
       <div class="docs-topbar">
         <div class="nav-group">
