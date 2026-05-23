@@ -368,17 +368,17 @@ function renderHub() {
       href: 'group-documents.html',
       icon: '◌',
       title: 'Group Trip Documents',
-      desc: 'Shared transport, hotel, itinerary, budget, and emergency files.',
-      count: `${groupStateDefaults.length} categories`,
-      open: 'Open Group Files'
+      desc: 'Shared trip files.',
+      count: `${groupStateDefaults.length} sections`,
+      open: 'Open'
     },
     ...Object.keys(travellerData).map((travellerId) => ({
       href: `${travellerId}-documents.html`,
       icon: '◐',
       title: travellerData[travellerId].label || travellerId.replace('-', ' '),
-      desc: 'Passport, employment, financial proof, tickets, and IO support documents.',
-      count: `${travellerData[travellerId].categories.length} categories`,
-      open: `Open ${travellerData[travellerId].label || travellerId}`
+      desc: 'Personal IO checklist.',
+      count: `${travellerData[travellerId].categories.length} sections`,
+      open: 'Open'
     }))
   ];
 
@@ -387,7 +387,7 @@ function renderHub() {
       <header class="hero compact">
         <div class="eyebrow">Traveller Documents</div>
         <h1>Traveller Documents</h1>
-        <p>Group trip files and personal IO document checklists.</p>
+        <p>Shared files and personal checklists.</p>
         <div class="hero-actions">
           <a class="btn primary" href="vietnam-sapa-itinerary.html">Back to Itinerary</a>
         </div>
@@ -400,10 +400,10 @@ function renderHub() {
       <section class="section">
         <div class="section-head">
           <div>
-            <div class="section-label">Choose a section</div>
-            <h2 class="section-title">Documents Hub</h2>
+            <div class="section-label">Sections</div>
+            <h2 class="section-title">Open a page</h2>
           </div>
-          <div class="section-subtitle">Open the section you need. Each page is kept focused and easier to use on mobile.</div>
+          <div class="section-subtitle">Tap a card to open the shared file page or a traveller checklist.</div>
         </div>
         <div class="hub-grid">
           ${counts.map((card) => `
@@ -455,36 +455,31 @@ function renderBreadcrumbs(items) {
 
 function renderDocCard({ owner, category, key, title, note, tag = 'Required', tagClass = '', group = '', subgroup = '', travellerId = '' }) {
   return `
-    <article class="doc-card"
+    <article class="doc-row doc-card"
       data-doc-owner="${escapeHtml(owner)}"
       data-doc-category="${escapeHtml(category)}"
       data-doc-key="${escapeHtml(key)}"
       ${group ? `data-doc-group="${escapeHtml(group)}"` : ''}
       ${subgroup ? `data-doc-subgroup="${escapeHtml(subgroup)}"` : ''}
       ${travellerId ? `data-doc-traveller="${escapeHtml(travellerId)}"` : ''}>
-      <div class="doc-card-head">
-        <div class="doc-meta">
-          <span class="doc-tag ${tagClass}">${escapeHtml(tag)}</span>
-          <div class="doc-title">${escapeHtml(title)}</div>
+      <input class="doc-file-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+      <div class="doc-row-main">
+        <div class="doc-row-title-line">
+          <h4>${escapeHtml(title)}</h4>
+          <span class="doc-required-pill ${tagClass}">${escapeHtml(tag)}</span>
+          <span class="doc-status missing">Missing</span>
         </div>
-        <span class="doc-status needed">Needed</span>
+        <p class="doc-row-desc">${escapeHtml(note)}</p>
+        <div class="doc-file-name">No file uploaded yet.</div>
+        <div class="doc-progress-wrap" hidden>
+          <div class="doc-progress"><div class="doc-progress-bar"></div></div>
+        </div>
+        <div class="doc-error" hidden></div>
       </div>
-      <p class="doc-note doc-description">${escapeHtml(note)}</p>
-      <div class="doc-file-name">No file uploaded yet.</div>
-      <div class="doc-actions">
+      <div class="doc-row-actions">
         <button class="doc-upload-btn" type="button">Upload</button>
-        <a class="doc-download-btn" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
-        <input class="doc-file-input" type="file" hidden accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        <a class="doc-download-btn disabled" href="#" aria-disabled="true" target="_blank" rel="noopener">Download</a>
       </div>
-      <div class="doc-progress-wrap" hidden>
-        <div class="doc-progress"><div class="doc-progress-bar"></div></div>
-      </div>
-      <div class="doc-progress-text">0%</div>
-      <div class="doc-files">
-        <div class="doc-files-title">Uploaded files</div>
-        <div data-doc-files></div>
-      </div>
-      <div class="doc-error" hidden></div>
     </article>
   `;
 }
@@ -553,16 +548,23 @@ function renderGroupDocuments(container) {
 }
 
 function renderGroupCategory(category) {
+  const totalDocs = category.groups.reduce((count, group) => count + group.subgroups.reduce((subCount, subgroup) => {
+    const docs = subgroup.docs.length ? subgroup.docs : group.templateDocs || [];
+    return subCount + docs.length;
+  }, 0), 0);
   return `
-    <section class="section accordion is-open doc-category" id="group-${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
-      <button class="accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
-        <span>
-          <strong>${escapeHtml(category.categoryTitle)}</strong>
-          <span class="sub">Shared files for this category</span>
-        </span>
-        <span class="arrow" aria-hidden="true">▼</span>
-      </button>
-      <div class="accordion-body" id="${escapeHtml(category.categoryKey)}-body">
+    <section class="section accordion is-open doc-section-clean doc-category" id="group-${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}" data-doc-total="${totalDocs}">
+      <div class="doc-section-head doc-accordion-head">
+        <button class="accordion-toggle doc-accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
+          <span>
+            <strong class="doc-section-title">${escapeHtml(category.categoryTitle)}</strong>
+            <span class="sub">${escapeHtml(category.description || 'Shared trip files')}</span>
+          </span>
+          <span class="doc-section-progress" data-doc-summary>0 of ${totalDocs} uploaded</span>
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+      </div>
+      <div class="accordion-body doc-accordion-body" id="${escapeHtml(category.categoryKey)}-body">
         ${category.groups.map((group) => renderGroupCard(category, group)).join('')}
       </div>
     </section>
@@ -571,19 +573,26 @@ function renderGroupCategory(category) {
 
 function renderGroupCard(category, group) {
   const subgroupCount = group.subgroups.filter((item) => !item.fixed).length;
+  const totalDocs = group.subgroups.reduce((count, subgroup) => {
+    const docs = subgroup.docs.length ? subgroup.docs : group.templateDocs || [];
+    return count + docs.length;
+  }, 0);
   return `
-    <article class="group-card doc-parent-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}">
-      <div class="group-card-head">
-        <div>
-          <h3 class="group-card-title">${escapeHtml(group.groupTitle)}</h3>
-          <div class="group-card-subtitle">${escapeHtml(group.summary || category.categoryTitle)}</div>
-          <div class="group-card-summary" data-group-summary>${subgroupCount} booking groups · Shared files</div>
-        </div>
+    <article class="doc-accordion doc-parent-card" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-total="${totalDocs}">
+      <div class="doc-accordion-head">
+        <button class="accordion-toggle doc-accordion-toggle" type="button" aria-expanded="true" aria-controls="${escapeHtml(group.groupKey)}-body" data-accordion-toggle>
+          <span>
+            <strong class="doc-section-title">${escapeHtml(group.groupTitle)}</strong>
+            <span class="sub">${escapeHtml(group.summary || category.categoryTitle)}</span>
+          </span>
+          <span class="doc-section-progress doc-group-progress">${subgroupCount} booking${subgroupCount === 1 ? '' : 's'} · ${totalDocs} docs</span>
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
         <div class="group-actions">
           <button class="add-btn" type="button" data-add-subgroup="${escapeHtml(group.groupKey)}">${escapeHtml(group.addLabel || 'Add Booking')}</button>
         </div>
       </div>
-      <div class="subgroup-list">
+      <div class="accordion-body doc-accordion-body" id="${escapeHtml(group.groupKey)}-body">
         ${group.subgroups.map((subgroup, index) => renderGroupSubgroup(category, group, subgroup, index)).join('')}
       </div>
     </article>
@@ -593,24 +602,23 @@ function renderGroupCard(category, group) {
 function renderGroupSubgroup(category, group, subgroup, index) {
   const openDefault = subgroup.fixed || index === 0;
   const docs = subgroup.docs.length ? subgroup.docs : clone(group.templateDocs || []);
+  const totalDocs = docs.length;
   return `
-    <section class="subgroup doc-parent-card ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
-      <div class="subgroup-head">
-        <div class="subgroup-meta">
-          <div class="subgroup-label">${escapeHtml(subgroup.fixed ? 'Shared Docs' : group.subgroupPrefix || 'Booking')}</div>
-          <div class="subgroup-name">${escapeHtml(subgroup.subgroupLabel)}</div>
-          <div class="subgroup-note">${escapeHtml(subgroup.fixed ? 'Reference files for the whole reservation group' : 'Each document card syncs independently')}</div>
-          <div class="subgroup-summary">${docs.length} document types</div>
-        </div>
+    <section class="subgroup doc-accordion doc-parent-card ${openDefault ? 'is-open' : ''}" data-doc-category="${escapeHtml(category.categoryKey)}" data-doc-group="${escapeHtml(group.groupKey)}" data-doc-subgroup="${escapeHtml(subgroup.subgroupKey)}" data-doc-total="${totalDocs}" data-default-open-mobile="${openDefault ? 'true' : 'false'}">
+      <div class="doc-accordion-head">
+        <button class="toggle-btn doc-accordion-toggle" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" data-subgroup-toggle>
+          <span>
+            <strong class="doc-section-title">${escapeHtml(subgroup.subgroupLabel)}</strong>
+            <span class="sub">${escapeHtml(subgroup.fixed ? 'Shared docs' : 'Booking group')}</span>
+          </span>
+          <span class="doc-section-progress" data-doc-summary>0 of ${totalDocs} uploaded</span>
+          <span class="caret" aria-hidden="true">▼</span>
+        </button>
         <div class="booking-actions">
-          <button class="toggle-btn" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" data-subgroup-toggle>
-            <span>Show Details</span>
-            <span class="caret" aria-hidden="true">▼</span>
-          </button>
           ${subgroup.fixed ? '' : `<button class="remove-btn" type="button" data-remove-subgroup="${escapeHtml(group.groupKey)}" data-subgroup-key="${escapeHtml(subgroup.subgroupKey)}">Remove</button>`}
         </div>
       </div>
-      <div class="subgroup-body" id="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" ${openDefault ? '' : 'hidden'}>
+      <div class="subgroup-body doc-accordion-body" id="${escapeHtml(group.groupKey)}-${escapeHtml(subgroup.subgroupKey)}-body" ${openDefault ? '' : 'hidden'}>
         <div class="doc-grid doc-child-grid">
           ${docs.map((item) => renderDocCard({
             owner: 'group',
@@ -680,17 +688,21 @@ function renderTravellerDocuments(container, travellerId) {
 }
 
 function renderTravellerCategory(travellerId, category) {
+  const totalDocs = category.docs.length;
   const openDefault = true;
   return `
-    <section class="section accordion is-open doc-category" id="${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}">
-      <button class="accordion-toggle" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
-        <span>
-          <strong>${escapeHtml(category.categoryTitle)}</strong>
-          <span class="sub">${escapeHtml(category.docs.length)} document types</span>
-        </span>
-        <span class="arrow" aria-hidden="true">▼</span>
-      </button>
-      <div class="accordion-body" id="${escapeHtml(category.categoryKey)}-body" ${openDefault ? '' : 'hidden'}>
+    <section class="section accordion is-open doc-section-clean doc-category" id="${escapeHtml(category.categoryKey)}" data-category="${escapeHtml(category.categoryKey)}" data-doc-total="${totalDocs}">
+      <div class="doc-section-head doc-accordion-head">
+        <button class="accordion-toggle doc-accordion-toggle" type="button" aria-expanded="${openDefault ? 'true' : 'false'}" aria-controls="${escapeHtml(category.categoryKey)}-body" data-accordion-toggle>
+          <span>
+            <strong class="doc-section-title">${escapeHtml(category.categoryTitle)}</strong>
+            <span class="sub">${escapeHtml(category.description || 'Personal document checklist')}</span>
+          </span>
+          <span class="doc-section-progress" data-doc-summary>0 of ${totalDocs} uploaded</span>
+          <span class="arrow" aria-hidden="true">▼</span>
+        </button>
+      </div>
+      <div class="accordion-body doc-accordion-body" id="${escapeHtml(category.categoryKey)}-body" ${openDefault ? '' : 'hidden'}>
         <div class="doc-grid doc-child-grid">
           ${category.docs.map((item) => renderDocCard({
             owner: travellerId,
@@ -732,7 +744,7 @@ let docHandlersBound = false;
 function setCardStatus(card, text, state) {
   const badge = card.querySelector('.doc-status');
   if (!badge) return;
-  badge.classList.remove('needed', 'uploading', 'uploaded', 'error', 'is-uploading', 'is-uploaded', 'is-error');
+  badge.classList.remove('missing', 'uploading', 'uploaded', 'error', 'needed', 'is-uploading', 'is-uploaded', 'is-error');
   badge.classList.add(state);
   badge.textContent = text;
 }
@@ -748,49 +760,34 @@ function setCardEmpty(card) {
   const fileName = card.querySelector('.doc-file-name');
   const downloadBtn = card.querySelector('.doc-download-btn');
   const progressWrap = card.querySelector('.doc-progress-wrap');
-  const progressText = card.querySelector('.doc-progress-text');
-  const files = card.querySelector('[data-doc-files]');
-  setCardStatus(card, 'Needed', 'needed');
+  const progressBar = card.querySelector('.doc-progress-bar');
+  setCardStatus(card, 'Missing', 'missing');
   setCardError(card, '');
   if (fileName) fileName.textContent = 'No file uploaded yet.';
   if (downloadBtn) {
     downloadBtn.href = '#';
     downloadBtn.setAttribute('aria-disabled', 'true');
+    downloadBtn.classList.add('disabled');
   }
   if (progressWrap) progressWrap.hidden = true;
-  if (progressText) progressText.textContent = '0%';
-  if (files) files.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
+  if (progressBar) progressBar.style.width = '0%';
 }
 
 function setCardUploaded(card, fileNameValue, url) {
   const fileName = card.querySelector('.doc-file-name');
   const downloadBtn = card.querySelector('.doc-download-btn');
   const progressWrap = card.querySelector('.doc-progress-wrap');
-  const progressText = card.querySelector('.doc-progress-text');
+  const progressBar = card.querySelector('.doc-progress-bar');
   setCardStatus(card, 'Uploaded', 'uploaded');
   setCardError(card, '');
   if (fileName) fileName.textContent = fileNameValue;
   if (downloadBtn) {
     downloadBtn.href = url;
     downloadBtn.setAttribute('aria-disabled', 'false');
+    downloadBtn.classList.remove('disabled');
   }
-  if (progressWrap) progressWrap.hidden = false;
-  if (progressText) progressText.textContent = '100%';
-}
-
-function renderFileList(card, items) {
-  const files = card.querySelector('[data-doc-files]');
-  if (!files) return;
-  if (!items.length) {
-    files.innerHTML = '<div class="doc-empty">No files uploaded yet.</div>';
-    return;
-  }
-  files.innerHTML = items.map((item) => `
-    <a class="doc-file-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener">
-      <span>${escapeHtml(item.name)}</span>
-      <span>Download</span>
-    </a>
-  `).join('');
+  if (progressWrap) progressWrap.hidden = true;
+  if (progressBar) progressBar.style.width = '0%';
 }
 
 async function hydrateCards() {
@@ -803,7 +800,6 @@ async function hydrateCards() {
         return;
       }
       setCardUploaded(card, items[0].name, items[0].url);
-      renderFileList(card, items);
     } catch (error) {
       setCardEmpty(card);
       setCardError(card, error?.message || 'Could not load saved files.');
@@ -834,6 +830,7 @@ async function setupFirebaseState() {
 
 async function syncAllDocumentCards() {
   await hydrateCards();
+  updateDocumentSummaries();
 }
 
 function updateFirebaseStatus(message) {
@@ -854,6 +851,16 @@ function initDocumentUploadHandlers() {
 
 function initDocumentAccordions() {
   initPageEnhancements();
+}
+
+function updateDocumentSummaries() {
+  document.querySelectorAll('[data-doc-summary]').forEach((summary) => {
+    const scope = summary.closest('.doc-accordion, .doc-category, .subgroup');
+    if (!scope) return;
+    const cards = [...scope.querySelectorAll('.doc-card')];
+    const uploaded = cards.filter((card) => card.querySelector('.doc-status')?.classList.contains('uploaded')).length;
+    summary.textContent = `${uploaded} of ${cards.length} uploaded`;
+  });
 }
 
 function bindAccordionToggles() {
@@ -912,19 +919,15 @@ function bindAccordionToggles() {
     setCardError(card, '');
     const progressWrap = card.querySelector('.doc-progress-wrap');
     const progressBar = card.querySelector('.doc-progress-bar');
-    const progressText = card.querySelector('.doc-progress-text');
     if (progressWrap) progressWrap.hidden = false;
     if (progressBar) progressBar.style.width = '0%';
-    if (progressText) progressText.textContent = '0%';
 
     try {
       const result = await uploadDocumentForCard(card, file, (pct) => {
         if (progressBar) progressBar.style.width = `${pct}%`;
-        if (progressText) progressText.textContent = `${pct}%`;
       });
       setCardUploaded(card, result.filename, result.url);
-      const items = await loadDocumentFiles(card);
-      renderFileList(card, items);
+      updateDocumentSummaries();
     } catch (error) {
       setCardStatus(card, 'Error', 'error');
       setCardError(card, error?.message || 'Upload failed. Please try again.');
@@ -1069,11 +1072,13 @@ function buildPageHTML() {
 }
 
 function initPageEnhancements() {
-  document.querySelectorAll('.accordion').forEach((section) => {
+  const mobile = window.matchMedia('(max-width: 767px)').matches;
+
+  document.querySelectorAll('.section.doc-section-clean, .section.accordion.doc-category, .doc-category').forEach((section, index) => {
     const body = section.querySelector('.accordion-body');
     const toggle = section.querySelector('[data-accordion-toggle]');
     if (!body || !toggle) return;
-    const open = window.matchMedia('(min-width: 768px)').matches;
+    const open = mobile ? index === 0 : true;
     toggle.setAttribute('aria-expanded', String(open));
     body.hidden = !open;
     section.classList.toggle('is-open', open);
@@ -1082,13 +1087,14 @@ function initPageEnhancements() {
     const body = subgroup.querySelector('.subgroup-body');
     const toggle = subgroup.querySelector('[data-subgroup-toggle]');
     if (!body || !toggle) return;
-    const open = window.matchMedia('(min-width: 768px)').matches || subgroup.dataset.defaultOpenMobile === 'true';
+    const open = mobile ? subgroup.dataset.defaultOpenMobile === 'true' || subgroup === document.querySelector('.subgroup') : true;
     toggle.setAttribute('aria-expanded', String(open));
     body.hidden = !open;
     subgroup.classList.toggle('is-open', open);
     const label = toggle.querySelector('span:first-child');
     if (label) label.textContent = open ? 'Hide Details' : 'Show Details';
   });
+  updateDocumentSummaries();
 }
 
 async function bootstrapUploads() {
