@@ -626,8 +626,14 @@ function isDocumentsUnlocked() {
 function setDocumentsAccessState(unlocked) {
   const gate = document.getElementById('documentAccessGate');
   const protectedContent = document.getElementById('protectedDocumentsContent');
-  if (gate) gate.hidden = unlocked;
-  if (protectedContent) protectedContent.hidden = !unlocked;
+  if (gate) {
+    gate.hidden = unlocked;
+    gate.classList.toggle('is-hidden', unlocked);
+  }
+  if (protectedContent) {
+    protectedContent.hidden = !unlocked;
+    protectedContent.classList.toggle('is-visible', unlocked);
+  }
 }
 
 function showDocumentAccessError(message) {
@@ -635,6 +641,11 @@ function showDocumentAccessError(message) {
   if (!error) return;
   error.textContent = message || 'Incorrect password. Please try again.';
   error.hidden = false;
+  const success = document.getElementById('documentAccessSuccess');
+  if (success) {
+    success.hidden = true;
+    success.textContent = '';
+  }
 }
 
 function hideDocumentAccessError() {
@@ -642,6 +653,18 @@ function hideDocumentAccessError() {
   if (!error) return;
   error.hidden = true;
   error.textContent = '';
+}
+
+function showDocumentAccessSuccess(message) {
+  const success = document.getElementById('documentAccessSuccess');
+  if (!success) return;
+  success.textContent = message || 'Unlocked. Loading documents...';
+  success.hidden = false;
+  const error = document.getElementById('documentAccessError');
+  if (error) {
+    error.hidden = true;
+    error.textContent = '';
+  }
 }
 
 function bootstrapDocumentsAfterUnlock() {
@@ -654,9 +677,11 @@ function unlockDocuments() {
   try {
     sessionStorage.setItem(DOCUMENT_ACCESS_KEY, 'true');
   } catch {}
+  showDocumentAccessSuccess('Unlocked. Loading documents...');
   setDocumentsAccessState(true);
   hideDocumentAccessError();
   bootstrapDocumentsAfterUnlock();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function lockDocuments() {
@@ -666,6 +691,11 @@ function lockDocuments() {
   documentsBootstrapped = false;
   setDocumentsAccessState(false);
   hideDocumentAccessError();
+  const success = document.getElementById('documentAccessSuccess');
+  if (success) {
+    success.hidden = true;
+    success.textContent = '';
+  }
   const passwordInput = document.getElementById('documentAccessPassword');
   if (passwordInput) passwordInput.value = '';
 }
@@ -675,7 +705,7 @@ function initDocumentAccessGate() {
   const form = document.getElementById('documentAccessForm');
   const lockBtn = document.getElementById('lockDocumentsBtn');
   const passwordInput = document.getElementById('documentAccessPassword');
-  const unlockBtn = form?.querySelector('button[type="submit"]');
+  const unlockBtn = document.getElementById('documentAccessUnlockBtn');
 
   if (!gate) {
     bootstrapDocumentsAfterUnlock();

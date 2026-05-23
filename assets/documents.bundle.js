@@ -117,34 +117,12 @@ async function loadDocumentFiles(card) {
   return items.sort((a, b) => new Date(b.timeCreated || 0) - new Date(a.timeCreated || 0));
 }
 async function loadRemarksRecord(docId) {
-  await signInGuest().catch(() => {
-  });
-  if (!(auth == null ? void 0 : auth.currentUser) || !firebaseConfig.databaseURL) return null;
-  const token = await getIdToken(auth.currentUser, false).catch(() => "");
-  if (!token) return null;
-  const base = firebaseConfig.databaseURL.replace(/\/+$/, "");
-  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
-  const res = await fetch(url, { method: "GET" });
-  if (!res.ok) throw new Error(`Remarks load failed (${res.status})`);
-  return await res.json();
+  void docId;
+  return null;
 }
 async function saveRemarksRecord(docId, payload) {
-  await signInGuest().catch(() => {
-  });
-  if (!(auth == null ? void 0 : auth.currentUser) || !firebaseConfig.databaseURL) throw new Error("Firebase is not configured yet.");
-  const token = await getIdToken(auth.currentUser, false).catch(() => "");
-  if (!token) throw new Error("Firebase is not configured yet.");
-  const base = firebaseConfig.databaseURL.replace(/\/+$/, "");
-  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ...payload,
-      updatedAt: Date.now()
-    })
-  });
-  if (!res.ok) throw new Error(`Remarks save failed (${res.status})`);
+  void docId;
+  void payload;
 }
 var firebaseConfig, MAX_FILE_SIZE, ALLOWED_EXT, ALLOWED_MIME, app, auth, storage, initPromise;
 var init_documents_firebase = __esm({
@@ -667,20 +645,42 @@ var require_documents_ui = __commonJS({
     function setDocumentsAccessState(unlocked) {
       const gate = document.getElementById("documentAccessGate");
       const protectedContent = document.getElementById("protectedDocumentsContent");
-      if (gate) gate.hidden = unlocked;
-      if (protectedContent) protectedContent.hidden = !unlocked;
+      if (gate) {
+        gate.hidden = unlocked;
+        gate.classList.toggle("is-hidden", unlocked);
+      }
+      if (protectedContent) {
+        protectedContent.hidden = !unlocked;
+        protectedContent.classList.toggle("is-visible", unlocked);
+      }
     }
     function showDocumentAccessError(message) {
       const error = document.getElementById("documentAccessError");
       if (!error) return;
       error.textContent = message || "Incorrect password. Please try again.";
       error.hidden = false;
+      const success = document.getElementById("documentAccessSuccess");
+      if (success) {
+        success.hidden = true;
+        success.textContent = "";
+      }
     }
     function hideDocumentAccessError() {
       const error = document.getElementById("documentAccessError");
       if (!error) return;
       error.hidden = true;
       error.textContent = "";
+    }
+    function showDocumentAccessSuccess(message) {
+      const success = document.getElementById("documentAccessSuccess");
+      if (!success) return;
+      success.textContent = message || "Unlocked. Loading documents...";
+      success.hidden = false;
+      const error = document.getElementById("documentAccessError");
+      if (error) {
+        error.hidden = true;
+        error.textContent = "";
+      }
     }
     function bootstrapDocumentsAfterUnlock() {
       if (documentsBootstrapped) return;
@@ -692,9 +692,11 @@ var require_documents_ui = __commonJS({
         sessionStorage.setItem(DOCUMENT_ACCESS_KEY, "true");
       } catch {
       }
+      showDocumentAccessSuccess("Unlocked. Loading documents...");
       setDocumentsAccessState(true);
       hideDocumentAccessError();
       bootstrapDocumentsAfterUnlock();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
     function lockDocuments() {
       try {
@@ -704,6 +706,11 @@ var require_documents_ui = __commonJS({
       documentsBootstrapped = false;
       setDocumentsAccessState(false);
       hideDocumentAccessError();
+      const success = document.getElementById("documentAccessSuccess");
+      if (success) {
+        success.hidden = true;
+        success.textContent = "";
+      }
       const passwordInput = document.getElementById("documentAccessPassword");
       if (passwordInput) passwordInput.value = "";
     }
@@ -712,7 +719,7 @@ var require_documents_ui = __commonJS({
       const form = document.getElementById("documentAccessForm");
       const lockBtn = document.getElementById("lockDocumentsBtn");
       const passwordInput = document.getElementById("documentAccessPassword");
-      const unlockBtn = form == null ? void 0 : form.querySelector('button[type="submit"]');
+      const unlockBtn = document.getElementById("documentAccessUnlockBtn");
       if (!gate) {
         bootstrapDocumentsAfterUnlock();
         return;

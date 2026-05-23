@@ -148,31 +148,15 @@ export async function loadDocumentFiles(card) {
 }
 
 export async function loadRemarksRecord(docId) {
-  await signInGuest().catch(() => {});
-  if (!auth?.currentUser || !firebaseConfig.databaseURL) return null;
-  const token = await getIdToken(auth.currentUser, false).catch(() => '');
-  if (!token) return null;
-  const base = firebaseConfig.databaseURL.replace(/\/+$/, '');
-  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
-  const res = await fetch(url, { method: 'GET' });
-  if (!res.ok) throw new Error(`Remarks load failed (${res.status})`);
-  return await res.json();
+  // Temporary fallback: keep remarks local-only until RTDB is provisioned and reachable.
+  // This avoids noisy 404s from an uninitialized/misconfigured database endpoint.
+  void docId;
+  return null;
 }
 
 export async function saveRemarksRecord(docId, payload) {
-  await signInGuest().catch(() => {});
-  if (!auth?.currentUser || !firebaseConfig.databaseURL) throw new Error('Firebase is not configured yet.');
-  const token = await getIdToken(auth.currentUser, false).catch(() => '');
-  if (!token) throw new Error('Firebase is not configured yet.');
-  const base = firebaseConfig.databaseURL.replace(/\/+$/, '');
-  const url = `${base}/travel-document-remarks/${encodeURIComponent(docId)}.json?auth=${encodeURIComponent(token)}`;
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ...payload,
-      updatedAt: Date.now()
-    })
-  });
-  if (!res.ok) throw new Error(`Remarks save failed (${res.status})`);
+  // Temporary fallback: keep remarks local-only until RTDB is provisioned and reachable.
+  // The UI already persists these values locally, so this is intentionally a no-op.
+  void docId;
+  void payload;
 }
