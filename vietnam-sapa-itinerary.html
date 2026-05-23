@@ -948,29 +948,94 @@ footer strong{color:var(--sage)}
 /* ════════════════════════════════════════
    RESPONSIVE
 ════════════════════════════════════════ */
-@media(max-width:600px){
+@media(max-width:767px){
   body{font-size:16px}
-  .quick-nav{top:auto;bottom:16px;right:16px}
-  .quick-nav-toggle{width:48px;height:48px}
+  .quick-nav{top:auto;bottom:18px;right:18px;z-index:1002}
+  .quick-nav-toggle{width:54px;height:54px}
   .quick-nav-backdrop{
     position:fixed;
     inset:0;
-    background:rgba(25,22,18,.35);
-    backdrop-filter:blur(1px);
-    z-index:39;
-    display:none;
+    background:rgba(36,49,38,.28);
+    backdrop-filter:none;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 180ms ease;
+    z-index:1000;
   }
-  .quick-nav-backdrop.is-open{display:block}
+  .quick-nav-backdrop.is-open{
+    opacity:1;
+    pointer-events:auto;
+  }
   .quick-nav-panel{
     position:fixed;
     left:12px;right:12px;bottom:12px;top:auto;
     width:auto;
-    max-height:75vh;
+    max-width:none;
+    max-height:55vh;
+    overflow-y:auto;
+    background:rgba(255,253,248,.98);
+    border:1px solid rgba(198,165,107,.38);
+    border-radius:24px;
+    box-shadow:0 18px 45px rgba(36,49,38,.22);
     padding:14px;
-    border-radius:20px;
-    transform:translateY(110%);
+    transform:translateY(calc(100% + 24px));
+    opacity:0;
+    pointer-events:none;
+    transition:
+      transform 220ms ease,
+      opacity 180ms ease;
+    z-index:1001;
   }
-  .quick-nav-panel.is-open{transform:translateY(0)}
+  .quick-nav-panel.is-open{
+    transform:translateY(0);
+    opacity:1;
+    pointer-events:auto;
+  }
+  .quick-nav-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:4px 4px 10px;
+    margin-bottom:6px;
+    border-bottom:1px solid rgba(198,165,107,.28);
+  }
+  .quick-nav-head strong{
+    font-size:15px;
+    color:var(--text-dark);
+  }
+  .quick-nav-close{
+    width:34px;
+    height:34px;
+    border-radius:999px;
+    border:1px solid rgba(198,165,107,.35);
+    background:#fffaf2;
+    color:var(--text-dark);
+    font-size:18px;
+    line-height:1;
+  }
+  .quick-nav-panel a{
+    display:block;
+    padding:10px 12px;
+    border-radius:12px;
+    color:var(--text-dark);
+    font-size:15px;
+    font-weight:600;
+  }
+  .quick-nav-panel a + a{margin-top:2px}
+  .quick-nav-panel a:active,
+  .quick-nav-panel a:hover{
+    background:rgba(111,135,109,.12);
+    color:var(--sage);
+  }
+  .menu-group-label{
+    font-size:11px;
+    letter-spacing:1.6px;
+    text-transform:uppercase;
+    color:var(--text-soft);
+    padding:10px 12px 4px;
+  }
+  body.quick-menu-open{overflow:hidden}
   .hero{padding:44px 18px 38px}
   .legend-wrap{width:calc(100% - 16px);margin:-14px auto 8px;padding:10px 12px;border-radius:16px}
   .section{padding:30px 16px}
@@ -1125,7 +1190,7 @@ footer strong{color:var(--sage)}
     font-size:10.5pt;line-height:1.5;margin:0;padding:0;
   }
   .screen-itinerary,.print-btn{display:none!important}
-  .quick-nav,.quick-nav-backdrop,.collapse-toggle{display:none!important}
+  .quick-nav,.quick-nav-backdrop,.quick-nav-panel,.collapse-toggle{display:none!important}
   .map-card,
   .infographic-map,
   .illustrated-map,
@@ -1205,19 +1270,26 @@ footer strong{color:var(--sage)}
       <button class="quick-nav-close" type="button" data-menu-close aria-label="Close menu">×</button>
     </div>
 
+    <div class="menu-group-label">Main</div>
     <a href="#top">Go to Top</a>
     <a href="#before-you-fly">Before You Fly</a>
     <a href="documents.html">Traveller Documents</a>
     <a href="#quick-info">Quick Info</a>
+
+    <div class="menu-group-label">Sapa</div>
     <a href="#sapa-adventure">Sapa Adventure</a>
     <a href="#day-1">Day 1</a>
     <a href="#day-2">Day 2</a>
     <a href="#day-3">Day 3</a>
+
+    <div class="menu-group-label">Hanoi</div>
     <a href="#hanoi-city">Hanoi City Experience</a>
     <a href="#day-4">Day 4</a>
     <a href="#day-5">Day 5</a>
     <a href="#day-6">Day 6</a>
     <a href="#day-7">Day 7</a>
+
+    <div class="menu-group-label">Other</div>
     <a href="#budget">Budget</a>
     <a href="#travel-tips">Travel Tips</a>
     <a href="#emergency">Emergency</a>
@@ -2569,6 +2641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.setAttribute('aria-expanded', 'true');
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
+    if (mq.matches) document.body.classList.add('quick-menu-open');
     if (backdrop) {
       backdrop.classList.add('is-open');
       backdrop.setAttribute('aria-hidden', 'false');
@@ -2580,6 +2653,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.setAttribute('aria-expanded', 'false');
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('quick-menu-open');
     if (backdrop) {
       backdrop.classList.remove('is-open');
       backdrop.setAttribute('aria-hidden', 'true');
